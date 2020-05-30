@@ -1,0 +1,14 @@
+{
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules/*"
+    ],
+    "compilerOptions": {
+        "module": "ESNEXT",
+        "target": "ES2016",
+        "types": [ "svelte" ],
+        "moduleResolution": "node"
+    }
+}
