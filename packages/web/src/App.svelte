@@ -1,14 +1,14 @@
 <script>
   import { Router, Route } from 'svelte-routing';
 
-  // import Party from './routes/Party.svelte';
+  import Party from './routes/Party.svelte';
   import Home from './routes/Home.svelte';
 </script>
 
 <Router>
-  <!-- <Route path="/party/:id">
+  <Route path="/party/:id">
     <Party />
-  </Route> -->
+  </Route>
   <Route path="/">
     <Home />
   </Route>
