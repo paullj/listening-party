@@ -42,8 +42,7 @@
         <a
           class="block w-full px-12 py-3 text-lg font-medium text-center rounded-lg shadow-sm bg-primary text-background"
           href="/host"
-          use:link
-        >
+          use:link>
           Host
         </a>
         <div class="w-full py-2 text-sm font-semibold tracking-wide text-center uppercase xl:text-base">Or</div>
@@ -52,14 +51,13 @@
             <input
               id="party-code"
               type="text"
+              required
               class="block h-full px-4 font-mono bg-transparent focus:outline-none"
-              placeholder="Party code"
-            />
+              placeholder="Party code" />
           </div>
           <button
             type="submit"
-            class="block px-12 py-3 text-lg font-medium text-center rounded-lg shadow-sm bg-primary text-background"
-          >
+            class="block px-12 py-3 text-lg font-medium text-center rounded-lg shadow-sm bg-primary text-background">
             Join
           </button>
         </form>
