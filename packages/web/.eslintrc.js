@@ -2,7 +2,7 @@ module.exports = {
   env: { browser: true },
   extends: ['semistandard'],
   plugins: ['svelte3'],
-  //   parser: '@typescript-eslint/parser',
+  parser: '@typescript-eslint/parser',
   overrides: [
     {
       files: ['**/*.svelte'],

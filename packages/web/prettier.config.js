@@ -6,5 +6,5 @@ module.exports = {
   plugins: ['prettier-plugin-svelte'],
   svelteSortOrder: 'styles-scripts-markup',
   svelteStrictMode: false,
-  svelteBracketNewLine: true
+  svelteBracketNewLine: false
 };

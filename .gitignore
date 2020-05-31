@@ -1,0 +1,12 @@
+# Build directories
+dist
+build
+.build
+
+# package directories
+web_modules
+node_modules
+
+# others
+.vercel
+.DS_Store
