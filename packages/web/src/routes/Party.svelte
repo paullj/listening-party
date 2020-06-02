@@ -1,14 +1,18 @@
 <script>
-  import { onMount, getContext } from 'svelte';
+  import { onMount, onDestroy, getContext } from 'svelte';
+  import { dispatcher } from '../utils/WebSocketDispatcher';
+  import { joinParty } from '../modules/party/joinParty';
   import me from '../store/user';
 
   import Player from '../components/player/Player.svelte';
   import ChangeNameModal from '../components/ChangeNameModal.svelte';
 
   import search from '../assets/search-line.svg';
+  import peers from '../store/peers';
 
   onMount(() => {
     const { open } = getContext('modal');
+    joinParty('test');
 
     if (!$me.name) {
       open({
@@ -18,10 +22,26 @@
           closeOnEsc: false
         },
         callbacks: {
-          onClose: () => alert('test')
+          onClose: () => {
+            dispatcher.send('join', {
+              roomId: 'test room',
+              username: $me.name
+            });
+          }
         }
       });
+    } else {
+      dispatcher.send('join', {
+        roomId: 'test room',
+        username: $me.name
+      });
     }
+  });
+
+  onDestroy(() => {
+    $peers.forEach(peer => {
+      peer.close();
+    });
   });
 </script>
 
@@ -33,30 +53,24 @@
         <h1 class="text-3xl font-bold">🎉 Party Name</h1>
       </div>
       <div class="flex overflow-hidden">
-        <img
-          class="inline-block w-8 h-8 border-2 rounded-full border-background"
-          src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt="" />
-        <img
-          class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background"
-          src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt="" />
-        <img
-          class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background"
-          src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
-          alt="" />
-        <img
-          class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background"
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt="" />
+        <div class="inline-block w-8 h-8 border-2 rounded-full border-background bg-primary">
+          <p class="text-center uppercase align-middle text-background">{$me.name[0]}</p>
+        </div>
+
+        {#each $peers as peer}
+          <div class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background bg-secondary">
+            <p class="text-center uppercase align-middle text-background">G</p>
+          </div>
+        {/each}
+
       </div>
     </div>
-
+    <!-- 
     <ul class="flex space-x-1">
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Rock</li>
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Blues</li>
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Country</li>
-    </ul>
+    </ul> -->
   </div>
   <div class="px-4 mt-4">
     <!-- Player -->

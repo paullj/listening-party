@@ -1,0 +1,20 @@
+{
+  "name": "@listeningparty/server",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.5",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "fastify": "^2.14.1",
+    "fastify-websocket": "^1.1.2"
+  }
+}
