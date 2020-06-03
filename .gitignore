@@ -3,10 +3,14 @@ dist
 build
 .build
 
-# package directories
+# Package directories
 web_modules
 node_modules
 
-# others
+# Log files
+*.log
+
+# Others
+.env
 .vercel
-.DS_Store
+*.DS_Store
