@@ -53,10 +53,11 @@
         <h1 class="text-3xl font-bold">🎉 Party Name</h1>
       </div>
       <div class="flex overflow-hidden">
-        <div class="inline-block w-8 h-8 border-2 rounded-full border-background bg-primary">
-          <p class="text-center uppercase align-middle text-background">{$me.name[0]}</p>
-        </div>
-
+        {#if $me.name}
+          <div class="inline-block w-8 h-8 border-2 rounded-full border-background bg-primary">
+            <p class="text-center uppercase align-middle text-background">{$me.name[0]}</p>
+          </div>
+        {/if}
         {#each $peers as peer}
           <div class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background bg-secondary">
             <p class="text-center uppercase align-middle text-background">G</p>

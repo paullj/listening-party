@@ -4,7 +4,7 @@
   import githubLogo from '../assets/github-fill.svg';
 </script>
 
-<div class="pt-8 pb-16 ">
+<div class="pt-8 pb-16">
   <nav class="relative flex items-center justify-between max-w-screen-lg px-6 mx-auto xl:max-w-screen-xl">
     <div class="flex items-center flex-1">
       <div class="flex items-center justify-between w-full">

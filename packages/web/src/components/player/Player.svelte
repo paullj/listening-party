@@ -6,7 +6,7 @@
   const isPlaying = true;
 </script>
 
-<div class="max-w-sm mx-auto">
+<div class="max-w-xs mx-auto">
   <div
     class="w-full bg-black rounded-lg shadow-xl"
     style="padding-bottom: 100%" />
