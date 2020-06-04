@@ -22,7 +22,8 @@ const startServer = async () : Promise<void> => {
 
   app.register(cors, {
     origin: [
-      'http://localhost:8080'
+      'http://localhost:8080',
+      'http://127.0.0.1:8080'
     ],
     credentials: true
   });
@@ -42,21 +43,13 @@ const startServer = async () : Promise<void> => {
   app.register(routes);
 
   app.setErrorHandler((error, request, reply) => {
-    // const statusCode = error.statusCode ?? -1;
-    // if (statusCode >= 500) {
-    //   logger.error(error);
-    // } else if (statusCode >= 400) {
-    //   logger.info(error);
-    // } else {
-    //   logger.error(error);
-    // }
     logger.error(`Error! ${error}`);
     logger.debug(`Requested at '${request.req.url}'`);
     logger.debug(`With payload '${request.body}'`);
     reply.status(500).send({ message: 'Error occurred during request' });
   });
 
-  app.listen(port, '127.0.0.1', (error, address) => {
+  app.listen(port, 'localhost', (error, address) => {
     if (error) {
       logger.error(`Error! ${error}`);
       process.exitCode = 1;

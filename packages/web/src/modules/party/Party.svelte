@@ -1,14 +1,15 @@
 <script>
   import { onMount, onDestroy, getContext } from 'svelte';
-  import { dispatcher } from '../utils/WebSocketDispatcher';
-  import { joinParty } from '../modules/party/joinParty';
-  import me from '../store/user';
+  import { dispatcher } from '../../utils/WebSocketDispatcher';
+  import { joinParty } from './joinParty';
+  
+  import me from '../../stores/user';
+  import peers from '../../stores/peers';
 
-  import Player from '../components/player/Player.svelte';
-  import ChangeNameModal from '../components/ChangeNameModal.svelte';
+  import Player from '../player/Player.svelte';
+  import ChangeNameModal from '../login/ChangeNameModal.svelte';
 
-  import search from '../assets/search-line.svg';
-  import peers from '../store/peers';
+  import search from '../../assets/search-line.svg';
 
   onMount(() => {
     const { open } = getContext('modal');

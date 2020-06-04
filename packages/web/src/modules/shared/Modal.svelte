@@ -1,7 +1,7 @@
 <script>
   import { setContext } from 'svelte';
   import { fade } from 'svelte/transition';
-  import closeIcon from '../assets/close-line.svg';
+  import closeIcon from '../../assets/close-line.svg';
 
   export let closeButton = true;
   export let closeOnEsc = true;

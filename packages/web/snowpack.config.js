@@ -3,7 +3,7 @@ module.exports = {
   scripts: {
     'build:css': 'postcss'
   },
-  plugins: [],
+  plugins: ['@snowpack/plugin-dotenv'],
   installOptions: {
     rollup: {
       plugins: [require('rollup-plugin-svelte')()]

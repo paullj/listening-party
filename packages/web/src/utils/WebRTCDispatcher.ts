@@ -87,7 +87,7 @@ class WebRTCDispatcher {
     });
   }
 
-  receiveOffer (offer: RTCSessionDescriptionInit, from: string) {
+  sendAnswer (offer: RTCSessionDescriptionInit, from: string) {
     this.peer
       .setRemoteDescription(offer)
       .then(() => this.peer.createAnswer())

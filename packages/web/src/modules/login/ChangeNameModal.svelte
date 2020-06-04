@@ -1,5 +1,5 @@
 <script>
-  import user from '../store/user';
+  import user from '../../stores/user';
   import { getContext } from 'svelte';
 
   let newName = $user.name;

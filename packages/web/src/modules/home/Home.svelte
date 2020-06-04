@@ -1,7 +1,7 @@
 <script>
   import { link } from 'svelte-routing';
-  import logo from '../assets/radio-fill.svg';
-  import githubLogo from '../assets/github-fill.svg';
+  import logo from '../../assets/radio-fill.svg';
+  import githubLogo from '../../assets/github-fill.svg';
 </script>
 
 <div class="pt-8 pb-16">

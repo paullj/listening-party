@@ -2,9 +2,9 @@
   import { Router, Route } from 'svelte-routing';
   import './utils/graphql';
 
-  import Party from './routes/Party.svelte';
-  import Home from './routes/Home.svelte';
-  import Modal from './components/Modal.svelte';
+  import Party from './modules/party/Party.svelte';
+  import Home from './modules/home/Home.svelte';
+  import Modal from './modules/shared/Modal.svelte';
 </script>
 
 <Modal>

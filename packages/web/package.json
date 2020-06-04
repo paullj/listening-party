@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@snowpack/app-scripts-svelte": "^1.0.1",
+    "@snowpack/plugin-dotenv": "^1.1.1",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/svelte": "^3.0.0",
     "@typescript-eslint/parser": "^3.0.2",
@@ -30,6 +31,8 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@fabienjuif/graph-client": "^0.5.1",
+    "jwt-lite": "^2.1.0",
     "svelte-routing": "^1.4.2"
   }
 }
