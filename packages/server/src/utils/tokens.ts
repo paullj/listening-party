@@ -24,11 +24,12 @@ const createRefreshToken = (user: User): string => {
 };
 
 const setRefreshToken = (reply: FastifyReply<ServerResponse>, user: User): void => {
-  reply.setCookie(TOKEN_NAME, createRefreshToken(user), {
+  const refresh = createRefreshToken(user);
+  reply.setCookie(TOKEN_NAME, refresh, {
     httpOnly: true,
     path: '/token'
     // TODO: Find out what secure does/means
-    // secure: true,
+    // secure: true
   });
 };
 

@@ -10,12 +10,11 @@ const websockets = async (app: FastifyInstance): Promise<void> => {
 
   app.register(websocketPlugin, {
     options: {
-      maxPayload: 1024 * 1024,
-      path: '/'
+      maxPayload: 1024 * 1024
     }
   });
 
-  app.get('/', { websocket: true }, (connection: SocketStream) => {
+  app.get('/ws', { websocket: true }, (connection: SocketStream) => {
     const socket: WebSocket = connection.socket;
 
     logger.debug(`Client '${clients.length}' connected`);
@@ -86,7 +85,7 @@ const websockets = async (app: FastifyInstance): Promise<void> => {
         rooms[room] = rooms[room].filter(user => user.clientId !== clientId);
       });
       clients[clientId] = null;
-      logger.debug(`Client '${clientId}' connected`);
+      logger.debug(`Client '${clientId}' disconnected`);
     };
   });
 };

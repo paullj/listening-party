@@ -1,5 +1,6 @@
 <script>
   import { Router, Route } from 'svelte-routing';
+  import './utils/graphql';
 
   import Party from './routes/Party.svelte';
   import Home from './routes/Home.svelte';
