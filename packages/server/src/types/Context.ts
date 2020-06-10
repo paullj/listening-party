@@ -9,5 +9,5 @@ export interface Context {
 
 export interface ContextPayload {
   tokenVersion: number;
-  userId: number;
+  userId: string;
 }

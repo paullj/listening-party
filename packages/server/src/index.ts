@@ -10,7 +10,6 @@ import { routes } from './routes';
 import { createDatabaseConnection } from './utils/database';
 import { generateSchema } from './utils/schema';
 import { logger } from './utils/logger';
-import { websockets } from './utils/websockets';
 
 env.config();
 
@@ -29,7 +28,6 @@ const startServer = async () : Promise<void> => {
   });
 
   app.register(cookie);
-  app.register(websockets);
 
   app.register(gql, {
     schema: await generateSchema(),
@@ -37,7 +35,8 @@ const startServer = async () : Promise<void> => {
       return { req, res };
     },
     jit: 1,
-    graphiql: 'playground'
+    graphiql: 'playground',
+    subscription: true
   });
 
   app.register(routes);

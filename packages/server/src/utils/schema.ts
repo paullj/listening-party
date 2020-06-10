@@ -1,17 +1,23 @@
 import { buildSchema, AuthChecker } from 'type-graphql';
+import { Container } from 'typedi';
 import { Context } from '../types/Context';
-import { UserResolver } from '../resolvers/UserResolver';
 import { isAuthorized } from './isAuthorized';
 import { GraphQLSchema } from 'graphql';
+
+import { UserResolver } from '../resolvers/UserResolver';
+import { PartyResolver } from '../resolvers/PartyResolver';
+import { PeerResolver } from '../resolvers/PeerResolver';
 
 const authChecker: AuthChecker<Context> = ({ context }) => isAuthorized(context);
 
 const generateSchema = async () : Promise<GraphQLSchema> => {
   const schema = buildSchema({
     resolvers: [
-      UserResolver
+      UserResolver,
+      PartyResolver,
+      PeerResolver
     ],
-    // emitSchemaFile: true,
+    container: Container,
     authChecker
   });
   return schema;

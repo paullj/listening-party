@@ -1,7 +1,7 @@
 const { colors, fontFamily } = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  purge: ["./src/**/*.svelte", "./public/*.html"],
+  purge: ['./src/**/*.svelte', './public/*.html'],
   theme: {
     colors: {
       black: colors.black,

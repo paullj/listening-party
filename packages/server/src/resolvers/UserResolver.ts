@@ -1,29 +1,24 @@
-import { getRepository } from 'typeorm';
-import { Mutation, Resolver, Query, Ctx, Authorized, Field, ObjectType, Arg } from 'type-graphql';
-import { Context } from '../types/Context';
+import { Repository } from 'typeorm';
+import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Mutation, Resolver, Query, Ctx, Authorized, Arg } from 'type-graphql';
+
 import { User } from '../entity/User';
-import { createAccessToken, setRefreshToken } from '../utils/tokens';
+import { Context } from '../types/Context';
 import { isAuthorized } from '../utils/isAuthorized';
+import { createAccessToken, setRefreshToken } from '../utils/tokens';
+import { LoginResponse } from '../types/LoginResponse';
 
-@ObjectType()
-class LoginResponse {
-  @Field()
-  accessToken!: string;
-}
-
-@Resolver(() => User)
+@Resolver(User)
 class UserResolver {
-  // TODO: remove this
-  @Query(() => String)
-  async hi (): Promise<string> {
-    return 'Hello from the ListeningParty GraphQL API!';
-  }
+  // eslint-disable-next-line no-useless-constructor
+  constructor (
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+  ) {}
 
   @Authorized()
   @Query(() => User, { nullable: true })
   async me (@Ctx() context: Context): Promise<User | null> {
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne(context.payload?.userId);
+    const user = await this.userRepository.findOne(context.payload?.userId);
     if (user) {
       return user;
     }
@@ -32,22 +27,39 @@ class UserResolver {
   }
 
   @Mutation(() => LoginResponse, { nullable: true })
-  async login (@Ctx() context: Context, @Arg('name') name: string): Promise<LoginResponse | null> {
+  async login (
+    @Ctx() context: Context
+  ): Promise<LoginResponse | null> {
     if (isAuthorized(context)) return null;
 
-    const userRepository = getRepository(User);
-    const user = userRepository.create({
-      name,
+    let user = this.userRepository.create({
       tokenVersion: 0
     });
 
-    userRepository.save(user);
+    user = await this.userRepository.save(user);
 
     setRefreshToken(context.res, user);
 
     return {
+      ...user,
       accessToken: createAccessToken(user)
     };
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean, { nullable: true })
+  async changeName (
+    @Ctx() context: Context,
+    @Arg('newName') newName: string
+  ): Promise<boolean> {
+    const user = await this.userRepository.findOne(context.payload?.userId);
+
+    if (user) {
+      user.name = newName;
+      this.userRepository.save(user);
+      return Promise.resolve(true);
+    }
+    return Promise.resolve(false);
   }
 }
 

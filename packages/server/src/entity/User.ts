@@ -1,18 +1,22 @@
-import { Field, ObjectType } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Field, ObjectType, ID } from 'type-graphql';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Party } from './Party';
 
 @ObjectType()
 @Entity()
 class User {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Field()
-  @Column()
-  name!: string;
+  @PrimaryGeneratedColumn('uuid')
+  @Field(() => ID)
+  id!: string;
 
   @Column()
   tokenVersion!: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  name?: string;
+
+  @ManyToOne(() => Party, (party) => party.users, { nullable: true })
+  party?: Party;
 }
 export { User };

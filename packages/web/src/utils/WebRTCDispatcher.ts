@@ -1,6 +1,27 @@
-import { dispatcher } from './WebSocketDispatcher';
+
+// import { dispatcher } from './WebSocketDispatcher';
+
+import { mutation } from './graphqlClient';
 
 type Callback = (data: {}) => void;
+
+const SEND_OFFER_MUTATION = `
+  mutation SendOffer($to: ID!, $offer: String!) {
+    sendOffer(to: $to, offer: $offer)
+  }
+`;
+
+const SEND_ANSWER_MUTATION = `
+  mutation SendAnswer($to: ID!, $answer: String!) {
+    sendAnswer(to: $to, answer: $answer)
+  }
+`;
+
+const SEND_CANDIDATE_MUTATION = `
+  mutation SendCandidate($candidate: String!) {
+    sendCandidate(candidate: $candidate)
+  }
+`;
 
 class WebRTCDispatcher {
   peer: RTCPeerConnection;
@@ -15,11 +36,11 @@ class WebRTCDispatcher {
     });
 
     this.peer.onicecandidate = e => {
-      !e.candidate ||
-      dispatcher.send('send-candidate', {
-        type: 'send-candidate',
-        candidate: e.candidate
-      });
+      if (e.candidate) {
+        mutation(SEND_CANDIDATE_MUTATION, {
+          variables: { candidate: JSON.stringify(e.candidate) }
+        });
+      }
     };
 
     this.channel.onmessage = (message) => {
@@ -41,66 +62,68 @@ class WebRTCDispatcher {
     };
   }
 
-  bind (type: string, callback: Callback) {
+  bind (type: string, callback: Callback): WebRTCDispatcher {
     this.callbacks[type] = this.callbacks[type] || [];
     this.callbacks[type].push(callback);
     return this;
   }
 
-  dispatch (type: string, message) {
+  dispatch (type: string, data: any): void {
     const chain = this.callbacks[type];
     if (typeof chain === 'undefined') return;
-    for (var i = 0; i < chain.length; i++) {
-      chain[i](message);
+    for (let i = 0; i < chain.length; i++) {
+      chain[i](data);
     }
   }
 
-  send (type: string, data: {}) {
-    var payload = JSON.stringify({ type, data });
-    if (this.channel.readyState === 'connecting') {
-      this.bind('open', () => this.channel.send(payload));
-    } else {
+  send (type: string, data: any): WebRTCDispatcher {
+    const payload = JSON.stringify({ type, data });
+    if (this.channel.readyState === 'open') {
       this.channel.send(payload);
+    } else {
+      this.bind('open', () => this.channel.send(payload));
     }
     return this;
   }
 
-  close () {
+  close (): void {
     this.peer.close();
     this.channel.close();
   }
 
-  receiveCandidate (candidate: RTCIceCandidate) {
+  receiveCandidate (candidate: RTCIceCandidate): void {
     this.peer.addIceCandidate(candidate)
       .catch(error => console.error(error));
   }
 
-  sendOffer (to: string) {
-    // Sets the local desc and then send the offer to a signalling server
+  sendOffer (to: string): void {
     this.peer.createOffer().then(offer => {
       this.peer.setLocalDescription(offer);
-
-      dispatcher.send('send-offer', {
-        to,
-        offer
+      mutation(SEND_OFFER_MUTATION, {
+        variables: {
+          to,
+          offer: JSON.stringify(offer)
+        }
       });
     });
   }
 
-  sendAnswer (offer: RTCSessionDescriptionInit, from: string) {
+  sendAnswer (offer: RTCSessionDescriptionInit, from: string): void {
     this.peer
       .setRemoteDescription(offer)
       .then(() => this.peer.createAnswer())
       .then(answer => {
         this.peer.setLocalDescription(answer);
-        dispatcher.send('send-answer', {
-          to: from,
-          answer
+        mutation(SEND_ANSWER_MUTATION, {
+          variables: {
+            to: from,
+            answer: JSON.stringify(answer)
+          }
         });
       });
   }
 
-  receiveAnswer (answer: RTCSessionDescriptionInit) {
+  receiveAnswer (answer: RTCSessionDescriptionInit): void {
     this.peer.setRemoteDescription(answer);
   }
 }

@@ -1,9 +1,15 @@
 
 import { WebRTCDispatcher } from '../utils/WebRTCDispatcher';
 
+interface User {
+  id: string,
+  name: string,
+  connection: WebRTCDispatcher
+}
+
 function createPeersStore () {
   const subscribers = [];
-  const peers: { [id: string]: WebRTCDispatcher} = {};
+  const peers: { [id: string]: User} = {};
 
   const remove = (id: string | number) => {
     delete peers[id];
@@ -13,11 +19,19 @@ function createPeersStore () {
     }
   };
 
-  const add = (id) => {
-    !peers[id] || peers[id].close();
+  const add = (user: Partial<User>) => {
+    const id = user.id;
+    if (peers[id]) {
+      console.log('peer force closed');
+      peers[id].connection.close();
+    }
 
-    peers[id] = new WebRTCDispatcher();
-    peers[id].bind('close', () => {
+    peers[id] = {
+      id,
+      name: user.name,
+      connection: new WebRTCDispatcher()
+    };
+    peers[id].connection.bind('close', () => {
       console.log('peer closed');
       remove(id);
     });

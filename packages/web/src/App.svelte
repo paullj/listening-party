@@ -1,6 +1,5 @@
 <script>
   import { Router, Route } from 'svelte-routing';
-  import './utils/graphql';
 
   import Party from './modules/party/Party.svelte';
   import Home from './modules/home/Home.svelte';
@@ -9,8 +8,8 @@
 
 <Modal>
   <Router>
-    <Route path="/party/:id">
-      <Party />
+    <Route path="/party/:id" let:params>
+      <Party id={params.id}/>
     </Route>
     <Route path="/">
       <Home />

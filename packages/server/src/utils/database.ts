@@ -1,6 +1,9 @@
-import { createConnection, Connection, DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
+import { Container } from 'typedi';
+import { createConnection, Connection, DefaultNamingStrategy, NamingStrategyInterface, useContainer } from 'typeorm';
 import { snakeCase } from 'typeorm/util/StringUtils';
 import { logger } from './logger';
+
+useContainer(Container);
 
 const createDatabaseConnection = (): Promise<Connection> => {
   try {

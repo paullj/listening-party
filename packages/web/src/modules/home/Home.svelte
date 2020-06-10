@@ -1,7 +1,28 @@
 <script>
-  import { link } from 'svelte-routing';
+  import { link, navigate } from 'svelte-routing';
   import logo from '../../assets/radio-fill.svg';
   import githubLogo from '../../assets/github-fill.svg';
+  import { mutation } from '../../utils/graphqlClient';
+
+  const FIND_PARTY = `
+    mutation FindParty($pin: String!) {
+      findParty(pin: $pin)
+    }
+  `;
+  
+  let pin;
+
+  const handleSubmit = () => {
+    mutation(FIND_PARTY, { variables: { pin } })
+      .then(({ data }) => {
+        const { findParty } = data;
+        if (findParty) {
+          navigate(`party/${findParty}`);
+        } else {
+          console.error('Party not found!');
+        }
+      });
+  };
 </script>
 
 <div class="pt-8 pb-16">
@@ -46,13 +67,13 @@
           Host
         </a>
         <div class="w-full py-2 text-sm font-semibold tracking-wide text-center uppercase xl:text-base">Or</div>
-        <form class="flex w-full space-x-2" on:submit={() => alert('test')}>
+        <form class="flex w-full space-x-2" on:submit|preventDefault={handleSubmit}>
           <div class="flex-grow w-full bg-white border-4 rounded-lg shadow-inner focus-within:shadow-outline">
             <input
-              id="party-code"
+              bind:value={pin}
               type="text"
               required
-              class="block h-full px-4 font-mono bg-transparent focus:outline-none"
+              class="block w-full h-full px-4 font-mono uppercase bg-transparent focus:outline-none"
               placeholder="Party code" />
           </div>
           <button
