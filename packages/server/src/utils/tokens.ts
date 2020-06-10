@@ -1,6 +1,8 @@
 import { sign } from 'jsonwebtoken';
 import { FastifyReply } from 'fastify';
 import { ServerResponse } from 'http';
+import { addWeeks } from 'date-fns';
+
 import { User } from '../entity/User';
 import { TOKEN_NAME } from '../constants';
 
@@ -27,7 +29,8 @@ const setRefreshToken = (reply: FastifyReply<ServerResponse>, user: User): void 
   const refresh = createRefreshToken(user);
   reply.setCookie(TOKEN_NAME, refresh, {
     httpOnly: true,
-    path: '/token'
+    path: '/token',
+    expires: addWeeks(Date.now(), 1)
     // TODO: Find out what secure does/means
     // secure: true
   });
