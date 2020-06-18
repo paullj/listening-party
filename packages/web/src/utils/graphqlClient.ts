@@ -11,23 +11,9 @@ import {
 } from '@urql/core';
 import { pipe, subscribe as wonkaSubscribe } from 'wonka';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { authExchange, isTokenExpired, refreshToken, getToken } from './authExchange';
+import { authExchange } from './authExchange';
 import { errorExchange } from './errorExchange';
-import user from '../stores/user';
-
-const subscriptionClient = new SubscriptionClient('ws://localhost:4000/graphql', {
-  reconnect: true
-  // connectionParams: async () => {
-  //   if (isTokenExpired()) { await refreshToken(); }
-
-  //   return {
-  //     headers: {
-  //       Authorization: `Bearer ${getToken()}`
-  //     }
-  //   };
-  // }
-
-});
+import me from '../stores/me';
 
 const LOGIN_MUTATION = `
   mutation Login {
@@ -38,7 +24,18 @@ const LOGIN_MUTATION = `
   }
 `;
 
+const LEAVE_PARTY_MUTATION = `
+  mutation LeaveParty {
+    leaveParty 
+  }
+`;
+
 export const initClient = (): Client => {
+  const subscriptionClient = new SubscriptionClient('ws://localhost:4000/graphql', {
+    reconnect: true,
+    lazy: true
+  });
+
   const client = createClient({
     url: import.meta.env.SNOWPACK_PUBLIC_API_URL + '/graphql',
     fetchOptions: {
@@ -65,11 +62,22 @@ export const initClient = (): Client => {
     .then(({ data, error }) => {
       if (data.login) {
         const { id, accessToken } = data.login;
-        user.set({ id, accessToken });
+        me.set({ id, accessToken });
         console.info('Authentication successful.');
       }
       if (error) console.log(error);
     });
+
+  // subscriptionClient.onDisconnected(() => {
+  //   client.mutation(LEAVE_PARTY_MUTATION)
+  //     .toPromise()
+  //     .then(({ data, error }) => {
+  //       if (data) {
+  //         alert('Party left');
+  //       }
+  //       if (error) alert(error);
+  //     });
+  // });
   return client;
 };
 

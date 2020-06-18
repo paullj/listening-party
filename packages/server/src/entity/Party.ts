@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, OneToMany, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index, ManyToOne, OneToMany, BeforeInsert, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { User } from './User';
 import { generateRandomPin } from '../utils/pin';
 
@@ -28,8 +28,14 @@ class Party {
   host!: User;
 
   @Field(() => [User])
-  @OneToMany(() => User, (user) => user.party)
+  @OneToMany(() => User, (user) => user.party, { nullable: true })
   users?: User[];
+
+  @CreateDateColumn()
+  createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 
   @BeforeInsert()
   setPin (): void {

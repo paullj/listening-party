@@ -1,6 +1,6 @@
 <script>
   import { getContext, onMount } from 'svelte';
-  import user from '../../stores/user';
+  import me from '../../stores/me';
   import Label from '../shared/Label.svelte';
 
   let newName;
@@ -8,7 +8,7 @@
   const { close } = getContext('modal');
 
   onMount(() => {
-    const unsubscribe = user.subscribe(user => (newName = user.name));
+    const unsubscribe = me.subscribe(me => (newName = me.name));
 
     return () => {
       unsubscribe();
@@ -16,8 +16,8 @@
   });
 
   const handleSubmit = () => {
-    if (newName !== $user.name) {
-      user.setName(newName);
+    if (newName !== $me.name) {
+      me.setName(newName);
     }
     close();
   };

@@ -1,5 +1,5 @@
 import { Field, ObjectType, ID } from 'type-graphql';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Party } from './Party';
 
 @ObjectType()
@@ -17,6 +17,12 @@ class User {
   name?: string;
 
   @ManyToOne(() => Party, (party) => party.users, { nullable: true })
-  party?: Party;
+  party?: Party | null;
+
+  @CreateDateColumn()
+  createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
 export { User };

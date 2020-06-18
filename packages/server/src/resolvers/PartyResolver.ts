@@ -8,6 +8,7 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { CreatePartyInput } from '../types/CreatePartyInput';
 import { JoinPartyResponse } from '../types/JoinPartyResponse';
 import { isUUID } from 'class-validator';
+import { logger } from '../utils/logger';
 
 @Resolver(() => Party)
 class PartyResolver {
@@ -121,7 +122,7 @@ class PartyResolver {
   ): Promise<boolean> {
     const me = await this.userRepository.findOne(context.payload?.userId);
     if (me) {
-      me.party = undefined;
+      me.party = null;
       await this.userRepository.save(me);
     }
 

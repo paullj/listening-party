@@ -1,6 +1,3 @@
-
-// import { dispatcher } from './WebSocketDispatcher';
-
 import { mutation } from './graphqlClient';
 
 type Callback = (data: {}) => void;
@@ -29,18 +26,22 @@ class WebRTCDispatcher {
   callbacks: { [key: string]: Callback[] } = {};
 
   constructor () {
-    this.peer = new RTCPeerConnection();
+    this.peer = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'turn:numb.viagenie.ca', credential: 'muazkh', username: 'webrtc@live.com' }
+      ]
+    });
     this.channel = this.peer.createDataChannel('message', {
       negotiated: true,
       id: 0
     });
 
-    this.peer.onicecandidate = e => {
-      if (e.candidate) {
-        mutation(SEND_CANDIDATE_MUTATION, {
-          variables: { candidate: JSON.stringify(e.candidate) }
-        });
-      }
+    this.channel.onclose = () => {
+      this.dispatch('close', null);
+    };
+    this.channel.onopen = () => {
+      this.dispatch('open', null);
     };
 
     this.channel.onmessage = (message) => {
@@ -54,11 +55,12 @@ class WebRTCDispatcher {
       this.dispatch(json.type, json.data);
     };
 
-    this.channel.onclose = () => {
-      this.dispatch('close', null);
-    };
-    this.channel.onopen = () => {
-      this.dispatch('open', null);
+    this.peer.onicecandidate = e => {
+      if (e.candidate) {
+        mutation(SEND_CANDIDATE_MUTATION, {
+          variables: { candidate: JSON.stringify(e.candidate) }
+        });
+      }
     };
   }
 
@@ -113,13 +115,13 @@ class WebRTCDispatcher {
       .setRemoteDescription(offer)
       .then(() => this.peer.createAnswer())
       .then(answer => {
-        this.peer.setLocalDescription(answer);
         mutation(SEND_ANSWER_MUTATION, {
           variables: {
             to: from,
             answer: JSON.stringify(answer)
           }
         });
+        this.peer.setLocalDescription(answer);
       });
   }
 

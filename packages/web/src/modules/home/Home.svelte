@@ -73,7 +73,7 @@
               bind:value={pin}
               type="text"
               required
-              class="block w-full h-full px-4 font-mono uppercase bg-transparent focus:outline-none"
+              class="block w-full h-full px-4 font-mono uppercase bg-transparent sm:w-64 focus:outline-none"
               placeholder="Party code" />
           </div>
           <button

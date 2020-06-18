@@ -1,7 +1,7 @@
 import { writable, get } from 'svelte/store';
 import { mutation } from '../utils/graphqlClient';
-import peers from './peers';
-import user from './user';
+import users from './users';
+import me from './me';
 
 const PARTY_QUERY = `
   query Party($id: ID!) {
@@ -31,7 +31,6 @@ const JOIN_PARTY_MUTATION = `
 const LEAVE_PARTY_MUTATION = `
   mutation LeaveParty {
     leaveParty
-
   }
   `;
 
@@ -62,12 +61,11 @@ const createPartyStore = () => {
       const { data } = await mutation(JOIN_PARTY_MUTATION, { variables: { id } });
       if (data.joinParty) {
         const others = data.joinParty.users;
-        const me = get(user).id;
         others.forEach(client => {
-          if (client.id !== me) {
-            const peer = peers.add(client).connection;
-            peer.sendOffer(client.id);
-            console.log(`sent offer to ${client.id}`);
+          if (client.id !== get(me).id) {
+            const user = users.add(client);
+            user.peer.sendOffer(client.id);
+            console.log(`sent offer to ${client.name}`);
           }
         });
       }
@@ -75,7 +73,6 @@ const createPartyStore = () => {
     },
     leave: async (): Promise<boolean> => {
       const { data } = await mutation(LEAVE_PARTY_MUTATION);
-
       return data.leaveParty;
     }
   };

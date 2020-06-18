@@ -2,8 +2,8 @@
   import { onMount, onDestroy, getContext } from 'svelte';
   import { navigate } from 'svelte-routing';
 
-  import me from '../../stores/user';
-  import peers from '../../stores/peers';
+  import me from '../../stores/me';
+  import users from '../../stores/users';
   import party from '../../stores/party';
 
   import Player from '../player/Player.svelte';
@@ -56,27 +56,32 @@
   
     unsubscribeCandidate = subscribe(RECEIVE_CANDIDATE_SUBSCRIPTION, ({ receiveCandidate }) => {
       const { from, candidate } = receiveCandidate;
-      if (from.id === $me.id) {
-        console.log('from me');
-      } else {
-        peers.get(from.id).connection.receiveCandidate(JSON.parse(candidate));
+      if (from.id !== $me.id) {
+        const client = users.get(from.id);
+        if (client) {
+          const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
+          client.peer.receiveCandidate(iceCandidate);
+        }
+        console.log(`received candidate from ${from.name}`);
       }
     }, { variables: { to: id } });
   
     unsubscribeOffer = subscribe(RECEIVE_OFFER_SUBSCRIPTION, ({ receiveOffer }) => {
       const { from, offer } = receiveOffer;
-      console.log(`received offer from ${from}`);
+      console.log(`received offer from ${from.name}`);
+      const client = users.add(from);
+      client.peer.sendAnswer(JSON.parse(offer), from.id);
 
-      const peer = peers.add(from);
-      peer.connection.sendAnswer(JSON.parse(offer), from.id);
-      console.log(`sent answer back to ${from}`);
+      console.log(`sent answer back to ${from.name}`);
     }, { variables: { me: $me.id } });
   
     unsubscribeAnswer = subscribe(RECEIVE_ANSWER_SUBSCRIPTION, ({ receiveAnswer }) => {
       const { from, answer } = receiveAnswer;
-      peers.get(from).connection.receiveAnswer(JSON.parse(answer));
-
-      console.log(`received answer from ${from}`);
+      const client = users.get(from.id);
+      if (client) {
+        client.peer.receiveAnswer(JSON.parse(answer));
+      }
+      console.log(`received answer from ${from.name}`);
     }, { variables: { me: $me.id } });
 
     if (doesPartyExist) {
@@ -100,20 +105,24 @@
     }
   });
 
-  onDestroy(() => {
+  const cleanup = () => {
     party.leave();
   
     unsubscribeCandidate();
     unsubscribeOffer();
     unsubscribeAnswer();
   
-    $peers.forEach((peer) => {
+    $users.forEach((peer) => {
       peer.close();
     });
+  };
+
+  onDestroy(() => {
+    cleanup();
   });
 </script>
 
-<div class="pt-4 pb-16 sm:flex">
+<div class="pt-4 pb-16 sm:flex" on:unload={() => cleanup()}>
   <div class="px-6">
     <!-- Sidebar -->
     <div class="flex items-center justify-between space-x-2">
@@ -126,14 +135,14 @@
             <p class="text-center uppercase align-middle text-background">{$me.name[0]}</p>
           </div>
         {/if}
-        {#each $peers as peer}
+        {#each $users as client}
           <div class="inline-block w-8 h-8 -ml-1 border-2 rounded-full border-background bg-secondary">
-            <p class="text-center uppercase align-middle text-background">{peer.name[0]}</p>
+            <p class="text-center uppercase align-middle text-background">{client.name[0]}</p>
           </div>
         {/each}
       </div>
     </div>
-    <!-- 
+  <!-- 
     <ul class="flex space-x-1">
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Rock</li>
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Blues</li>
