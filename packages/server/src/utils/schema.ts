@@ -7,6 +7,7 @@ import { GraphQLSchema } from 'graphql';
 import { UserResolver } from '../resolvers/UserResolver';
 import { PartyResolver } from '../resolvers/PartyResolver';
 import { PeerResolver } from '../resolvers/PeerResolver';
+import { TrackResolver } from '../resolvers/TrackResolver';
 
 const authChecker: AuthChecker<Context> = ({ context }) => isAuthorized(context);
 
@@ -15,7 +16,8 @@ const generateSchema = async () : Promise<GraphQLSchema> => {
     resolvers: [
       UserResolver,
       PartyResolver,
-      PeerResolver
+      PeerResolver,
+      TrackResolver
     ],
     container: Container,
     authChecker

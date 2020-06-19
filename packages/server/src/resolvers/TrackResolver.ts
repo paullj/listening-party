@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import {
   Resolver,
   Arg,
@@ -16,9 +15,9 @@ import { spotifyApi } from '../services/spotify';
 class TrackResolver {
   @Authorized()
   @Query(() => [Track])
-  async searchTracks (@Arg('query') query: string): Promise<Track[] | null> {
+  async searchTracks (@Arg('term') term: string): Promise<Track[] | null> {
     const spotifyData = await spotifyApi
-      .searchTracks(query)
+      .searchTracks(term)
       .then((response) => {
         if (response.statusCode === 200) return response.body.tracks?.items;
         return undefined;

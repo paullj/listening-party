@@ -4,7 +4,7 @@ const connectSpotify = () => {
   const spotifyApi = new SpotifyWebApi({
     clientId: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    redirectUri: 'http://localhost:5000'
+    redirectUri: 'http://127.0.0.1:4000'
   });
 
   // Retrieve an access token
@@ -17,12 +17,14 @@ const connectSpotify = () => {
       spotifyApi.setAccessToken(data.body.access_token);
     },
     (err) => {
+      console.log(err);
       console.log(
         'Something went wrong when retrieving an access token',
         err.message
       );
     }
   );
+
   return spotifyApi;
 };
 

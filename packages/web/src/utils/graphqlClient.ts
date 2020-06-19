@@ -67,17 +67,6 @@ export const initClient = (): Client => {
       }
       if (error) console.log(error);
     });
-
-  // subscriptionClient.onDisconnected(() => {
-  //   client.mutation(LEAVE_PARTY_MUTATION)
-  //     .toPromise()
-  //     .then(({ data, error }) => {
-  //       if (data) {
-  //         alert('Party left');
-  //       }
-  //       if (error) alert(error);
-  //     });
-  // });
   return client;
 };
 

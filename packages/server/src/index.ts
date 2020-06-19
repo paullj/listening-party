@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import env from 'dotenv';
+import 'dotenv/config';
 
 import fastify from 'fastify';
 import gql from 'fastify-gql';
@@ -10,8 +10,6 @@ import { routes } from './routes';
 import { createDatabaseConnection } from './utils/database';
 import { generateSchema } from './utils/schema';
 import { logger } from './utils/logger';
-
-env.config();
 
 const port = Number(process.env.PORT) || 4000;
 

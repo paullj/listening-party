@@ -5,12 +5,13 @@
   import me from '../../stores/me';
   import users from '../../stores/users';
   import party from '../../stores/party';
+  import search from '../../stores/search';
 
   import Player from '../player/Player.svelte';
   import ChangeNameModal from '../login/ChangeNameModal.svelte';
+  import Search from '../shared/Search.svelte';
+  import Track from '../shared/Track.svelte';
   // import HostPartyModal from '../host/HostPartyModal.svelte';
-
-  import search from '../../assets/search-line.svg';
   import { subscribe } from '../../utils/graphqlClient';
 
   const RECEIVE_CANDIDATE_SUBSCRIPTION = `
@@ -47,71 +48,85 @@
     }`;
 
   let unsubscribeCandidate, unsubscribeOffer, unsubscribeAnswer;
+  let query;
 
   export let id;
+
   const { open } = getContext('modal');
 
   onMount(async () => {
     const doesPartyExist = await party.get(id);
-  
-    unsubscribeCandidate = subscribe(RECEIVE_CANDIDATE_SUBSCRIPTION, ({ receiveCandidate }) => {
-      const { from, candidate } = receiveCandidate;
-      if (from.id !== $me.id) {
+
+    unsubscribeCandidate = subscribe(
+      RECEIVE_CANDIDATE_SUBSCRIPTION,
+      ({ receiveCandidate }) => {
+        const { from, candidate } = receiveCandidate;
+        if (from.id !== $me.id) {
+          const client = users.get(from.id);
+          if (client) {
+            const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
+            client.peer.receiveCandidate(iceCandidate);
+          }
+          console.log(`received candidate from ${from.name}`);
+        }
+      },
+      { variables: { to: id } }
+    );
+
+    unsubscribeOffer = subscribe(
+      RECEIVE_OFFER_SUBSCRIPTION,
+      ({ receiveOffer }) => {
+        const { from, offer } = receiveOffer;
+        console.log(`received offer from ${from.name}`);
+        const client = users.add(from);
+        client.peer.sendAnswer(JSON.parse(offer), from.id);
+
+        console.log(`sent answer back to ${from.name}`);
+      },
+      { variables: { me: $me.id } }
+    );
+
+    unsubscribeAnswer = subscribe(
+      RECEIVE_ANSWER_SUBSCRIPTION,
+      ({ receiveAnswer }) => {
+        const { from, answer } = receiveAnswer;
         const client = users.get(from.id);
         if (client) {
-          const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
-          client.peer.receiveCandidate(iceCandidate);
+          client.peer.receiveAnswer(JSON.parse(answer));
         }
-        console.log(`received candidate from ${from.name}`);
-      }
-    }, { variables: { to: id } });
-  
-    unsubscribeOffer = subscribe(RECEIVE_OFFER_SUBSCRIPTION, ({ receiveOffer }) => {
-      const { from, offer } = receiveOffer;
-      console.log(`received offer from ${from.name}`);
-      const client = users.add(from);
-      client.peer.sendAnswer(JSON.parse(offer), from.id);
-
-      console.log(`sent answer back to ${from.name}`);
-    }, { variables: { me: $me.id } });
-  
-    unsubscribeAnswer = subscribe(RECEIVE_ANSWER_SUBSCRIPTION, ({ receiveAnswer }) => {
-      const { from, answer } = receiveAnswer;
-      const client = users.get(from.id);
-      if (client) {
-        client.peer.receiveAnswer(JSON.parse(answer));
-      }
-      console.log(`received answer from ${from.name}`);
-    }, { variables: { me: $me.id } });
+        console.log(`received answer from ${from.name}`);
+      },
+      { variables: { me: $me.id } }
+    );
 
     if (doesPartyExist) {
       open({
         component: ChangeNameModal,
         options: {
           closeButton: false,
-          closeOnEsc: false
+          closeOnEsc: false,
         },
         callbacks: {
-          onClose: () => party.join(id)
-        }
+          onClose: () => party.join(id),
+        },
       });
     } else {
       open({
         message: 'Party not found!',
         callbacks: {
-          onClose: () => navigate('/')
-        }
+          onClose: () => navigate('/'),
+        },
       });
     }
   });
 
   const cleanup = () => {
     party.leave();
-  
+
     unsubscribeCandidate();
     unsubscribeOffer();
     unsubscribeAnswer();
-  
+
     $users.forEach((peer) => {
       peer.close();
     });
@@ -142,7 +157,7 @@
         {/each}
       </div>
     </div>
-  <!-- 
+    <!-- 
     <ul class="flex space-x-1">
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Rock</li>
       <li class="px-2 py-1 text-xs font-medium leading-none rounded-full bg-secondary text-background">Blues</li>
@@ -154,11 +169,22 @@
     <!-- Player -->
     <Player />
   </div>
-  <div class="px-4 mt-4">
-    <!-- Queue -->
-    <div class="relative border-4 rounded-lg focus-within:shadow-outline border-secondary">
-      <img class="absolute w-6 h-full ml-2" src={search} alt="listening party logo" />
-      <input type="text" class="w-full h-12 pl-12 pr-2 bg-transparent focus:outline-none" />
+  <div class="flex flex-col flex-grow min-h-0">
+    <Search bind:query />
+    <div class="flex-grow max-h-full min-h-0 overflow-x-hidden overflow-y-auto">
+      {#if query}
+        {#each $search as track}
+          <Track {track}>
+            <button on:click={() => addTrackToQueue(track)}>Add</button>
+          </Track>
+        {/each}
+      {:else}
+        <!-- {#each $queue as track, i}
+          <Track {track}>
+            <div slot="initial">{i + 1}</div>
+          </Track>
+        {/each} -->
+      {/if}
     </div>
   </div>
 </div>
