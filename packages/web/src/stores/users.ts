@@ -64,10 +64,17 @@ function createPeersStore () {
     };
   };
 
+  const send = (type, data) => {
+    users.forEach((client) => {
+      client.peer.send(type, data);
+    });
+  };
+
   return {
     subscribe,
     get,
     add,
+    send,
     remove
   };
 }

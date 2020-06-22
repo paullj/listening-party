@@ -1,4 +1,4 @@
-import { mutation } from './graphqlClient';
+import { mutate } from './graphqlClient';
 
 type Callback = (data: {}) => void;
 
@@ -52,12 +52,14 @@ class WebRTCDispatcher {
         console.error('Invalid JSON');
         json = {};
       }
+      console.log(json);
       this.dispatch(json.type, json.data);
     };
 
     this.peer.onicecandidate = e => {
       if (e.candidate) {
-        mutation(SEND_CANDIDATE_MUTATION, {
+        mutate({
+          request: SEND_CANDIDATE_MUTATION,
           variables: { candidate: JSON.stringify(e.candidate) }
         });
       }
@@ -101,7 +103,8 @@ class WebRTCDispatcher {
   sendOffer (to: string): void {
     this.peer.createOffer().then(offer => {
       this.peer.setLocalDescription(offer);
-      mutation(SEND_OFFER_MUTATION, {
+      mutate({
+        request: SEND_OFFER_MUTATION,
         variables: {
           to,
           offer: JSON.stringify(offer)
@@ -115,7 +118,8 @@ class WebRTCDispatcher {
       .setRemoteDescription(offer)
       .then(() => this.peer.createAnswer())
       .then(answer => {
-        mutation(SEND_ANSWER_MUTATION, {
+        mutate({
+          request: SEND_ANSWER_MUTATION,
           variables: {
             to: from,
             answer: JSON.stringify(answer)

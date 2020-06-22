@@ -1,7 +1,6 @@
 import {
   Client,
   OperationContext,
-  OperationResult,
   createClient,
   dedupExchange,
   fetchExchange,
@@ -21,12 +20,6 @@ const LOGIN_MUTATION = `
       id  
       accessToken
     }
-  }
-`;
-
-const LEAVE_PARTY_MUTATION = `
-  mutation LeaveParty {
-    leaveParty 
   }
 `;
 
@@ -72,25 +65,28 @@ export const initClient = (): Client => {
 
 const client = initClient();
 
-interface Context extends Partial<OperationContext> {
-  variables?: Record<string, unknown>
+type Data = Record<string, any>;
+type RequestOptions = {
+  request: string,
+  variables?: Data,
+  context?: Partial<OperationContext>
 }
 
-type Result = OperationResult<any>;
-
-const query = (query: string, context?: Context): Promise<Result> => {
-  return client.query(query, context?.variables, context).toPromise();
+const query = (options: RequestOptions): Promise<Data> => {
+  const request = client.query(options.request, options?.variables, options?.context).toPromise();
+  return Promise.resolve(request.then((response) => (response.data)));
 };
 
-const mutate = async (query: string, context?: Context): Promise<Result> => {
-  return client.mutation(query, context.variables, context).toPromise();
+const mutate = (options: RequestOptions): Promise<Data> => {
+  const request = client.mutation(options.request, options?.variables, options?.context).toPromise();
+  return Promise.resolve(request.then((response) => (response.data)));
 };
 
-const subscribe = (query: string, handler: (data: any) => void, context?: Context): () => void => {
-  const request = createRequest(query, context.variables);
+const subscribe = (options: RequestOptions, handler: (data: Data) => void): () => void => {
+  const request = createRequest(options.request, options?.variables);
 
   const { unsubscribe } = pipe(
-    client.executeSubscription(request, context),
+    client.executeSubscription(request, options?.context),
     wonkaSubscribe(result => {
       handler(result.data);
     })
@@ -98,4 +94,4 @@ const subscribe = (query: string, handler: (data: any) => void, context?: Contex
   return unsubscribe;
 };
 
-export { client, query, mutate as mutation, subscribe };
+export { client, query, mutate, subscribe };

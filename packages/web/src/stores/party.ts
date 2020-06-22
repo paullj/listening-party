@@ -1,5 +1,5 @@
 import { writable, get } from 'svelte/store';
-import { mutation } from '../utils/graphqlClient';
+import { mutate } from '../utils/graphqlClient';
 import users from './users';
 import me from './me';
 
@@ -41,39 +41,43 @@ interface Party {
 }
 
 const createPartyStore = () => {
-  const { subscribe, update, set } = writable<Party>({}, () => {
-    return () => {
-      //
-    };
-  });
+  const { subscribe, set } = writable<Party>({});
 
   return {
     subscribe,
     get: async (id: string): Promise<boolean> => {
-      const { data } = await mutation(PARTY_QUERY, { variables: { id } });
-      if (data.party) {
-        set(data.party);
+      const { party } = await mutate({
+        request: PARTY_QUERY,
+        variables: { id }
+      });
+
+      if (party) {
+        set(party);
         return Promise.resolve(true);
       }
+
       return Promise.resolve(false);
     },
-    join: async (id: string): Promise<boolean> => {
-      const { data } = await mutation(JOIN_PARTY_MUTATION, { variables: { id } });
-      if (data.joinParty) {
-        const others = data.joinParty.users;
+    join: async (id: string) => {
+      const { joinParty } = await mutate({
+        request: JOIN_PARTY_MUTATION,
+        variables: { id }
+      });
+      if (joinParty) {
+        const others = joinParty.users;
         others.forEach(client => {
           if (client.id !== get(me).id) {
             const user = users.add(client);
             user.peer.sendOffer(client.id);
-            console.log(`sent offer to ${client.name}`);
           }
         });
       }
-      return Promise.resolve(false);
     },
     leave: async (): Promise<boolean> => {
-      const { data } = await mutation(LEAVE_PARTY_MUTATION);
-      return data.leaveParty;
+      const { leaveParty } = await mutate({
+        request: LEAVE_PARTY_MUTATION
+      });
+      return leaveParty;
     }
   };
 };

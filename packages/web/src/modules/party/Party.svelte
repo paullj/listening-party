@@ -7,45 +7,14 @@
   import party from '../../stores/party';
   import search from '../../stores/search';
 
-  import Player from '../player/Player.svelte';
   import ChangeNameModal from '../login/ChangeNameModal.svelte';
+  import Player from '../player/Player.svelte';
   import Search from '../shared/Search.svelte';
   import Track from '../shared/Track.svelte';
   // import HostPartyModal from '../host/HostPartyModal.svelte';
-  import { subscribe } from '../../utils/graphqlClient';
-
-  const RECEIVE_CANDIDATE_SUBSCRIPTION = `
-    subscription ReceiveCandidate($to: ID!){
-      receiveCandidate(to: $to) {
-        from {
-          id
-          name
-        }
-        candidate
-      }
-    }`;
-
-  const RECEIVE_OFFER_SUBSCRIPTION = `
-    subscription ReceiveOffer($me: ID!){
-      receiveOffer(me: $me) {
-        from {
-          id
-          name
-        }
-        offer
-      }
-    }`;
-
-  const RECEIVE_ANSWER_SUBSCRIPTION = `
-    subscription ReceiveAnswer($me: ID!){
-      receiveAnswer(me: $me) {
-        from {
-          id
-          name
-        }
-        answer
-      }
-    }`;
+  import { subscribeToCandidate } from './subscribeToCandidates';
+  import { subscribeToOffer } from './subscribeToOffer';
+  import { subscribeToAnswer } from './subscribeToAnswer';
 
   let unsubscribeCandidate, unsubscribeOffer, unsubscribeAnswer;
   let query;
@@ -57,65 +26,27 @@
   onMount(async () => {
     const doesPartyExist = await party.get(id);
 
-    unsubscribeCandidate = subscribe(
-      RECEIVE_CANDIDATE_SUBSCRIPTION,
-      ({ receiveCandidate }) => {
-        const { from, candidate } = receiveCandidate;
-        if (from.id !== $me.id) {
-          const client = users.get(from.id);
-          if (client) {
-            const iceCandidate = new RTCIceCandidate(JSON.parse(candidate));
-            client.peer.receiveCandidate(iceCandidate);
-          }
-          console.log(`received candidate from ${from.name}`);
-        }
-      },
-      { variables: { to: id } }
-    );
-
-    unsubscribeOffer = subscribe(
-      RECEIVE_OFFER_SUBSCRIPTION,
-      ({ receiveOffer }) => {
-        const { from, offer } = receiveOffer;
-        console.log(`received offer from ${from.name}`);
-        const client = users.add(from);
-        client.peer.sendAnswer(JSON.parse(offer), from.id);
-
-        console.log(`sent answer back to ${from.name}`);
-      },
-      { variables: { me: $me.id } }
-    );
-
-    unsubscribeAnswer = subscribe(
-      RECEIVE_ANSWER_SUBSCRIPTION,
-      ({ receiveAnswer }) => {
-        const { from, answer } = receiveAnswer;
-        const client = users.get(from.id);
-        if (client) {
-          client.peer.receiveAnswer(JSON.parse(answer));
-        }
-        console.log(`received answer from ${from.name}`);
-      },
-      { variables: { me: $me.id } }
-    );
+    unsubscribeCandidate = subscribeToCandidate();
+    unsubscribeOffer = subscribeToOffer();
+    unsubscribeAnswer = subscribeToAnswer();
 
     if (doesPartyExist) {
       open({
         component: ChangeNameModal,
         options: {
           closeButton: false,
-          closeOnEsc: false,
+          closeOnEsc: false
         },
         callbacks: {
-          onClose: () => party.join(id),
-        },
+          onClose: () => party.join(id)
+        }
       });
     } else {
       open({
         message: 'Party not found!',
         callbacks: {
-          onClose: () => navigate('/'),
-        },
+          onClose: () => navigate('/')
+        }
       });
     }
   });
@@ -175,7 +106,7 @@
       {#if query}
         {#each $search as track}
           <Track {track}>
-            <button on:click={() => addTrackToQueue(track)}>Add</button>
+            <button on:click={() => users.send('add-to-queue', track)}>Add</button>
           </Track>
         {/each}
       {:else}

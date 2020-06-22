@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { query, mutation } from '../utils/graphqlClient';
+import { query, mutate } from '../utils/graphqlClient';
 
 const ME_QUERY = `
   query Me {
@@ -24,14 +24,11 @@ interface User {
 
 const createUserStore = () => {
   const { subscribe, update, set } = writable<User>({}, () => {
-    query(ME_QUERY)
-      .then(({ data }) => {
-        set(data.me);
-      });
-
-    return () => {
-      //
-    };
+    query({
+      request: ME_QUERY
+    }).then(({ me }) => {
+      set(me);
+    });
   });
 
   return {
@@ -39,7 +36,8 @@ const createUserStore = () => {
     set,
     setName: (newName: string) => {
       update(user => ({ ...user, name: newName }));
-      mutation(CHANGE_NAME_MUTATION, {
+      mutate({
+        request: CHANGE_NAME_MUTATION,
         variables: { newName }
       });
     }

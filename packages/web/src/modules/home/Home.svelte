@@ -2,7 +2,7 @@
   import { link, navigate } from 'svelte-routing';
   import logo from '../../assets/radio-fill.svg';
   import githubLogo from '../../assets/github-fill.svg';
-  import { mutation } from '../../utils/graphqlClient';
+  import { mutate } from '../../utils/graphqlClient';
 
   const FIND_PARTY = `
     mutation FindParty($pin: String!) {
@@ -13,15 +13,16 @@
   let pin;
 
   const handleSubmit = () => {
-    mutation(FIND_PARTY, { variables: { pin } })
-      .then(({ data }) => {
-        const { findParty } = data;
-        if (findParty) {
-          navigate(`party/${findParty}`);
-        } else {
-          console.error('Party not found!');
-        }
-      });
+    mutate({
+      request: FIND_PARTY,
+      variables: { pin }
+    }).then(({ findParty }) => {
+      if (findParty) {
+        navigate(`party/${findParty}`);
+      } else {
+        console.error('Party not found!');
+      }
+    });
   };
 </script>
 

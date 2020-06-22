@@ -14,22 +14,20 @@ const SEARCH_TRACKS_QUERY = `
   `;
 
 const createSearch = () => {
-  const { subscribe, set } = writable([], () => {
-    return () => {
-      //
-    };
-  });
+  const { subscribe, set } = writable([]);
 
   const clear = () => set([]);
 
   const execute = (term) => {
     if (term) {
-      query(SEARCH_TRACKS_QUERY, { variables: { term } })
-        .then((response) => {
-          if (response.data) {
-            set(response.data.searchTracks);
-          }
-        });
+      query({
+        request: SEARCH_TRACKS_QUERY,
+        variables: { term }
+      }).then(({ searchTracks }) => {
+        if (searchTracks) {
+          set(searchTracks);
+        }
+      });
     } else {
       clear();
     }
