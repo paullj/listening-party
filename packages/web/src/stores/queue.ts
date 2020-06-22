@@ -13,7 +13,7 @@ const createQueue = () => {
     };
   });
 
-  const add = (track, id) => {
+  const add = (track) => {
     update((data) => [...data, track]);
 
     // getClient()
@@ -46,4 +46,4 @@ const createQueue = () => {
   };
 };
 
-export const queue = createQueue();
+export default createQueue();

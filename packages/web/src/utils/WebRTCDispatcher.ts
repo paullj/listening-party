@@ -52,7 +52,6 @@ class WebRTCDispatcher {
         console.error('Invalid JSON');
         json = {};
       }
-      console.log(json);
       this.dispatch(json.type, json.data);
     };
 
@@ -69,11 +68,13 @@ class WebRTCDispatcher {
   bind (type: string, callback: Callback): WebRTCDispatcher {
     this.callbacks[type] = this.callbacks[type] || [];
     this.callbacks[type].push(callback);
+    console.log('bind: ' + type + '  ' + this.callbacks[type]);
     return this;
   }
 
   dispatch (type: string, data: any): void {
     const chain = this.callbacks[type];
+    console.log('dispatch: ' + type + '  ' + JSON.stringify(chain));
     if (typeof chain === 'undefined') return;
     for (let i = 0; i < chain.length; i++) {
       chain[i](data);

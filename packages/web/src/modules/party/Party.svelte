@@ -1,71 +1,73 @@
 <script>
-  import { onMount, onDestroy, getContext } from 'svelte';
-  import { navigate } from 'svelte-routing';
+import { onMount, onDestroy, getContext } from 'svelte';
+import { navigate } from 'svelte-routing';
 
-  import me from '../../stores/me';
-  import users from '../../stores/users';
-  import party from '../../stores/party';
-  import search from '../../stores/search';
+import me from '../../stores/me';
+import users from '../../stores/users';
+import party from '../../stores/party';
+import search from '../../stores/search';
+import queue from '../../stores/queue';
 
-  import ChangeNameModal from '../login/ChangeNameModal.svelte';
-  import Player from '../player/Player.svelte';
-  import Search from '../shared/Search.svelte';
-  import Track from '../shared/Track.svelte';
-  // import HostPartyModal from '../host/HostPartyModal.svelte';
-  import { subscribeToCandidate } from './subscribeToCandidates';
-  import { subscribeToOffer } from './subscribeToOffer';
-  import { subscribeToAnswer } from './subscribeToAnswer';
+import ChangeNameModal from '../login/ChangeNameModal.svelte';
+import Player from '../player/Player.svelte';
+import Search from '../shared/Search.svelte';
+import Track from '../shared/Track.svelte';
+// import HostPartyModal from '../host/HostPartyModal.svelte';
+import { subscribeToCandidate } from './subscribeToCandidates';
+import { subscribeToOffer } from './subscribeToOffer';
+import { subscribeToAnswer } from './subscribeToAnswer';
+import { addToQueue } from './addToQueue';
 
-  let unsubscribeCandidate, unsubscribeOffer, unsubscribeAnswer;
-  let query;
+let unsubscribeCandidate, unsubscribeOffer, unsubscribeAnswer;
+let query;
 
-  export let id;
+export let id;
 
-  const { open } = getContext('modal');
+const { open } = getContext('modal');
 
-  onMount(async () => {
-    const doesPartyExist = await party.get(id);
+onMount(async () => {
+  const doesPartyExist = await party.get(id);
 
-    unsubscribeCandidate = subscribeToCandidate();
-    unsubscribeOffer = subscribeToOffer();
-    unsubscribeAnswer = subscribeToAnswer();
+  unsubscribeCandidate = subscribeToCandidate();
+  unsubscribeOffer = subscribeToOffer();
+  unsubscribeAnswer = subscribeToAnswer();
 
-    if (doesPartyExist) {
-      open({
-        component: ChangeNameModal,
-        options: {
-          closeButton: false,
-          closeOnEsc: false
-        },
-        callbacks: {
-          onClose: () => party.join(id)
-        }
-      });
-    } else {
-      open({
-        message: 'Party not found!',
-        callbacks: {
-          onClose: () => navigate('/')
-        }
-      });
-    }
-  });
-
-  const cleanup = () => {
-    party.leave();
-
-    unsubscribeCandidate();
-    unsubscribeOffer();
-    unsubscribeAnswer();
-
-    $users.forEach((peer) => {
-      peer.close();
+  if (doesPartyExist) {
+    open({
+      component: ChangeNameModal,
+      options: {
+        closeButton: false,
+        closeOnEsc: false
+      },
+      callbacks: {
+        onClose: () => party.join(id)
+      }
     });
-  };
+  } else {
+    open({
+      message: 'Party not found!',
+      callbacks: {
+        onClose: () => navigate('/')
+      }
+    });
+  }
+});
 
-  onDestroy(() => {
-    cleanup();
+const cleanup = () => {
+  party.leave();
+
+  unsubscribeCandidate();
+  unsubscribeOffer();
+  unsubscribeAnswer();
+
+  $users.forEach((peer) => {
+    peer.close();
   });
+};
+
+onDestroy(() => {
+  cleanup();
+});
 </script>
 
 <div class="pt-4 pb-16 sm:flex" on:unload={() => cleanup()}>
@@ -106,15 +108,15 @@
       {#if query}
         {#each $search as track}
           <Track {track}>
-            <button on:click={() => users.send('add-to-queue', track)}>Add</button>
+            <button on:click={() => addToQueue(track)}>Add</button>
           </Track>
         {/each}
       {:else}
-        <!-- {#each $queue as track, i}
+        {#each $queue as track, i}
           <Track {track}>
             <div slot="initial">{i + 1}</div>
           </Track>
-        {/each} -->
+        {/each}
       {/if}
     </div>
   </div>

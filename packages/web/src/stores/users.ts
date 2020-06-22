@@ -70,11 +70,18 @@ function createPeersStore () {
     });
   };
 
+  const bind = (type: string, callback) => {
+    users.forEach((client) => {
+      client.peer.bind(type, callback);
+    });
+  };
+
   return {
     subscribe,
     get,
     add,
     send,
+    bind,
     remove
   };
 }

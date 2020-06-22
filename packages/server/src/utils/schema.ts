@@ -20,6 +20,7 @@ const generateSchema = async () : Promise<GraphQLSchema> => {
       TrackResolver
     ],
     container: Container,
+    validate: false,
     authChecker
   });
   return schema;
