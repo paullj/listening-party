@@ -19,9 +19,10 @@
     <slot name="initial" />
   </div>
   <div class="flex-shrink-0 w-12 h-12 overflow-hidden bg-gray-900 rounded">
-    <!-- {#if track.albumCover}
-      <LazyImage src={track.albumCover} alt="{track.album} cover art" />
-    {/if} -->
+    {#if track.albumCover}
+      <img src={track.albumCover} alt="{track.album} cover art" />
+      <!-- <LazyImage src={track.albumCover} alt="{track.album} cover art" /> -->
+    {/if}
   </div>
   <div class="flex-grow truncate">
     {#if track.title}

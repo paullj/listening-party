@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 import { query } from '../utils/graphqlClient';
 
 const SEARCH_TRACKS_QUERY = `
@@ -13,31 +13,36 @@ const SEARCH_TRACKS_QUERY = `
     }
   `;
 
-const createSearch = () => {
-  const { subscribe, set } = writable([]);
+const createSearchTerm = () => {
+  const { subscribe, set } = writable('');
 
-  const clear = () => set([]);
-
-  const execute = (term) => {
-    if (term) {
-      query({
-        request: SEARCH_TRACKS_QUERY,
-        variables: { term }
-      }).then(({ searchTracks }) => {
-        if (searchTracks) {
-          set(searchTracks);
-        }
-      });
-    } else {
-      clear();
-    }
-  };
+  const clear = () => set('');
 
   return {
     subscribe,
     clear,
-    execute
+    set
   };
 };
 
-export default createSearch();
+const searchTerm = createSearchTerm();
+
+const createSearchResults = () => {
+  return derived(searchTerm, async ($searchTerm) => {
+    if ($searchTerm) {
+      const { searchTracks } = await query({
+        request: SEARCH_TRACKS_QUERY,
+        variables: { term: $searchTerm }
+      });
+      return searchTracks ?? [];
+    }
+    return [];
+  });
+};
+
+const searchResults = createSearchResults();
+
+export {
+  searchTerm,
+  searchResults
+};

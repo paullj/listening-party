@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 
 const QUEUE_TRACK_MUTATION = `
   mutation AddToQueue($track: AddTrackInput!, $roomId: String!) {
@@ -45,5 +45,5 @@ const createQueue = () => {
     set
   };
 };
-
-export default createQueue();
+export const queue = createQueue();
+export const nowPlaying = derived(queue, $queue => $queue[0]);

@@ -1,5 +1,6 @@
 
 import { WebRTCDispatcher } from '../utils/WebRTCDispatcher';
+import { queue } from './queue';
 
 interface User {
   id: string,
@@ -34,6 +35,7 @@ function createPeersStore () {
         console.log(`${user.name} peer closed`);
         remove(user.id);
       });
+      peer.bind('addToQueue', queue.add);
 
       users.set(user.id, {
         id: user.id,

@@ -1,7 +1,7 @@
 import { mutate } from '../../utils/graphqlClient';
-import queue from '../../stores/queue';
 import users from '../../stores/users';
-import search from '../../stores/search';
+import { queue } from '../../stores/queue';
+import { searchTerm } from '../../stores/search';
 
 const QUEUE_TRACK_MUTATION = `
   mutation AddToQueue($track: AddTrackInput!) {
@@ -18,6 +18,7 @@ const QUEUE_TRACK_MUTATION = `
 `;
 
 export const addToQueue = (track) => {
+  queue.add(track);
   mutate({
     request: QUEUE_TRACK_MUTATION,
     variables: {
@@ -31,7 +32,6 @@ export const addToQueue = (track) => {
     }
   }).then(({ addToQueue }) => {
     users.send('addToQueue', addToQueue);
-    queue.add(addToQueue);
   });
-  search.clear();
+  searchTerm.clear();
 };
