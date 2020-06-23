@@ -1,31 +1,6 @@
 <script context="module">
   let isPlayerReady = false;
-</script>
-
-<script>
-  import { onMount } from 'svelte';
   const youtubeApiSource = 'https://www.youtube.com/iframe_api';
-  
-  let player;
-  let isPlaying;
-
-  onMount(() => {
-    if (!isScriptLoaded(youtubeApiSource)) {
-      const tag = document.createElement('script');
-      tag.src = youtubeApiSource;
-      const rootScript = document.getElementsByTagName('script')[0];
-      rootScript.parentNode.insertBefore(tag, rootScript);
-    }
-    window.onYouTubeIframeAPIReady = function () {
-      window.dispatchEvent(new Event('youtubePlayerReady'));
-    };
-    window.addEventListener('youtubePlayerReady', function () {
-      if (isPlayerReady === false) {
-        isPlayerReady = true;
-        createPlayer();
-      }
-    });
-  });
 
   const isScriptLoaded = (url = '') => {
     var scripts = document.getElementsByTagName('script');
@@ -35,12 +10,55 @@
     return false;
   };
 
+  if (!isScriptLoaded(youtubeApiSource)) {
+    const tag = document.createElement('script');
+    tag.src = youtubeApiSource;
+    const rootScript = document.getElementsByTagName('script')[0];
+    rootScript.parentNode.insertBefore(tag, rootScript);
+  }
+  window.onYouTubeIframeAPIReady = () => {
+    isPlayerReady = true;
+  };
+</script>
+
+<script>
+  import { onMount } from 'svelte';
+  import { nowPlaying } from '../../stores/queue';
+  import { state } from '../../stores/state';
+  import { PartyState } from '../../constants';
+  
+  let player;
+
+  onMount(async () => {
+    if (isPlayerReady) {
+      await createPlayer();
+    }
+
+    const unsubscribeNowPlaying = nowPlaying.subscribe((value) => {
+      console.log(value.providerId);
+      setById(value.providerId);
+    });
+    const unsubscribeState = state.subscribe((value) => {
+      if (value === PartyState.Play) {
+        play();
+      }
+      if (value === PartyState.Pause) {
+        pause();
+      }
+    });
+
+    return () => {
+      unsubscribeNowPlaying();
+      unsubscribeState();
+    };
+  });
+
   const onStateChange = (event) => {
     // console.log(event);
   };
 
   const createPlayer = (videoId) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // eslint-disable-next-line no-undef
       player = new YT.Player('player', {
         videoId,
@@ -55,23 +73,35 @@
         events: {
           onReady: (event) => resolve(event),
           onStateChange,
-          onError: (error) => console.log(error)
+          onError: (error) => console.error(error)
         }
       });
     });
   };
 
   export const setById = async (videoId) => {
-    if (player) player.loadVideoById(videoId, 0);
+    if (player) {
+      player.loadVideoById(videoId, 0);
+    } else {
+      createPlayer(videoId);
+    }
   };
 
   export const play = async () => {
-    if (!player) await createPlayer();
-
-    isPlaying = isPlaying ? player.pauseVideo() : player.playVideo();
+    if (!player) {
+      await createPlayer();
+    }
+    player.playVideo();
+  };
+  
+  export const pause = async () => {
+    if (!player) {
+      await createPlayer();
+    }
+    player.pauseVideo();
   };
 </script>
 
 <div class="relative w-full" style="padding-top: 100%">
-  <div id="player" class="absolute inset-0 w-full h-full bg-black" />
+  <div id="player" class="absolute inset-0 w-full h-full bg-black rounded-lg" />
 </div>

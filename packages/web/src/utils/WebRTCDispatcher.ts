@@ -1,6 +1,6 @@
 import { mutate } from './graphqlClient';
 
-type Callback = (data: {}) => void;
+type Callback = (data: any) => void;
 
 const SEND_OFFER_MUTATION = `
   mutation SendOffer($to: ID!, $offer: String!) {
@@ -28,8 +28,7 @@ class WebRTCDispatcher {
   constructor () {
     this.peer = new RTCPeerConnection({
       iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'turn:numb.viagenie.ca', credential: 'muazkh', username: 'webrtc@live.com' }
+        { urls: 'stun:stun.l.google.com:19302' }
       ]
     });
     this.channel = this.peer.createDataChannel('message', {
@@ -68,13 +67,11 @@ class WebRTCDispatcher {
   bind (type: string, callback: Callback): WebRTCDispatcher {
     this.callbacks[type] = this.callbacks[type] || [];
     this.callbacks[type].push(callback);
-    console.log('bind: ' + type + '  ' + this.callbacks[type]);
     return this;
   }
 
   dispatch (type: string, data: any): void {
     const chain = this.callbacks[type];
-    console.log('dispatch: ' + type + '  ' + JSON.stringify(chain));
     if (typeof chain === 'undefined') return;
     for (let i = 0; i < chain.length; i++) {
       chain[i](data);

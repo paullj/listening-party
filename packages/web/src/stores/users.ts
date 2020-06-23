@@ -1,6 +1,8 @@
 
 import { WebRTCDispatcher } from '../utils/WebRTCDispatcher';
 import { queue } from './queue';
+import { PartyEventType } from '../constants';
+import { state } from './state';
 
 interface User {
   id: string,
@@ -35,7 +37,10 @@ function createPeersStore () {
         console.log(`${user.name} peer closed`);
         remove(user.id);
       });
-      peer.bind('addToQueue', queue.add);
+      peer.bind(PartyEventType.AddToQueue, queue.add);
+      peer.bind(PartyEventType.ChangeState, (newState) => {
+        state.set(newState);
+      });
 
       users.set(user.id, {
         id: user.id,
