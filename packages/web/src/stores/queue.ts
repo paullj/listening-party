@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 const QUEUE_TRACK_MUTATION = `
   mutation AddToQueue($track: AddTrackInput!, $roomId: String!) {
@@ -6,15 +6,24 @@ const QUEUE_TRACK_MUTATION = `
   }
 `;
 
+const createNowPlaying = () => {
+  const { subscribe, set } = writable(null);
+
+  return {
+    subscribe,
+    set
+  };
+};
+
+export const nowPlaying = createNowPlaying();
+
 const createQueue = () => {
-  const { subscribe, set, update } = writable([], () => {
-    return () => {
-      //
-    };
-  });
+  const { subscribe, set, update } = writable([]);
 
   const add = (track) => {
-    update((data) => [...data, track]);
+    update((data) => {
+      return [...data, track];
+    });
 
     // getClient()
     //   .mutation(QUEUE_TRACK_MUTATION, {
@@ -39,11 +48,24 @@ const createQueue = () => {
     //   });
   };
 
+  const next = () => {
+    update((data) => {
+      if (data.length > 0) {
+        const newCurrent = data[0];
+        nowPlaying.set(newCurrent);
+        return data.slice(1);
+      } else {
+        nowPlaying.set({});
+        return [];
+      }
+    });
+  };
+
   return {
     subscribe,
+    set,
     add,
-    set
+    next
   };
 };
 export const queue = createQueue();
-export const nowPlaying = derived(queue, $queue => $queue[0]);

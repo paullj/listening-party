@@ -1,10 +1,10 @@
 <script>
-import { searchTerm } from '../../stores/search';
-import searchIcon from '../../assets/search-line.svg';
+  import { searchTerm } from '../../stores/search';
+  import searchIcon from '../../assets/search-line.svg';
 </script>
 
 <div class="px-4 mt-4">
-  <div class="relative border-4 rounded-lg focus-within:shadow-outline border-secondary">
+  <div class="relative border-4 rounded-lg focus-within:shadow-outline border-secondary ">
     <img class="absolute w-6 h-full ml-2" src={searchIcon} alt="listening party logo" />
     <input
       type="text"
@@ -13,4 +13,3 @@ import searchIcon from '../../assets/search-line.svg';
       bind:value={$searchTerm} />
   </div>
 </div>
-                 

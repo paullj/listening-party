@@ -29,17 +29,18 @@ function createPeersStore () {
     const currentUser = get(user.id);
 
     if (!currentUser) {
-      // return currentUser;
-      // console.log(`${user.name} peer force closed`);
-      // currentUser.peer.close();
       const peer = new WebRTCDispatcher();
       peer.bind('close', () => {
         console.log(`${user.name} peer closed`);
         remove(user.id);
       });
+      // TODO: Move this to a more sensible place.
       peer.bind(PartyEventType.AddToQueue, queue.add);
       peer.bind(PartyEventType.ChangeState, (newState) => {
         state.set(newState);
+      });
+      peer.bind(PartyEventType.SkipTrack, () => {
+        queue.next();
       });
 
       users.set(user.id, {

@@ -1,24 +1,25 @@
 <script>
-  import { playTrack } from './playTrack';
-  import { pauseTrack } from './pauseTrack';
+import { skipTrack } from './skipTrack';
+import { playTrack } from './playTrack';
+import { pauseTrack } from './pauseTrack';
 
-  import { nowPlaying } from '../../stores/queue';
-  import { state } from '../../stores/state';
+import { nowPlaying } from '../../stores/queue';
+import { state } from '../../stores/state';
 
-  import YoutubePlayer from './YoutubePlayer.svelte';
+import YoutubePlayer from './YoutubePlayer.svelte';
 
-  import { PartyState } from '../../constants';
-  import play from '../../assets/play-fill.svg';
-  import pause from '../../assets/pause-fill.svg';
-  import skip from '../../assets/skip-forward-fill.svg';
+import { PartyState } from '../../constants';
+import play from '../../assets/play-fill.svg';
+import pause from '../../assets/pause-fill.svg';
+import skip from '../../assets/skip-forward-fill.svg';
 
-  const toggleState = () => {
-    if ($state !== PartyState.Play) {
-      playTrack();
-    } else {
-      pauseTrack();
-    }
-  };
+const toggleState = () => {
+  if ($state !== PartyState.Play) {
+    playTrack();
+  } else {
+    pauseTrack();
+  }
+};
 </script>
 
 <div class="w-full max-w-xs mx-auto">
@@ -37,8 +38,8 @@
         src={$state === PartyState.Play ? pause : play}
         alt="{$state === PartyState.Play ? 'pause' : 'play'} icon" />
     </button>
-    <div>
+    <button on:click={skipTrack}>
       <img class="w-12 h-12" src={skip} alt="skip icon" />
-    </div>
+    </button>
   </div>
 </div>

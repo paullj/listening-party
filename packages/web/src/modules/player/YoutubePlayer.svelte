@@ -35,15 +35,23 @@
     }
 
     const unsubscribeNowPlaying = nowPlaying.subscribe((value) => {
-      console.log(value.providerId);
-      setById(value.providerId);
+      if (value && value.providerId) {
+        setById(value.providerId);
+      } else {
+        stop();
+      }
     });
     const unsubscribeState = state.subscribe((value) => {
-      if (value === PartyState.Play) {
-        play();
-      }
-      if (value === PartyState.Pause) {
-        pause();
+      switch (value) {
+        case PartyState.Play:
+          play();
+          break;
+        case PartyState.Pause:
+          pause();
+          break;
+        default:
+          stop();
+          break;
       }
     });
 
@@ -85,7 +93,8 @@
     } else {
       createPlayer(videoId);
     }
-  };
+    $state === PartyState.Play ? play() : stop();
+};
 
   export const play = async () => {
     if (!player) {
@@ -100,8 +109,15 @@
     }
     player.pauseVideo();
   };
+  
+  export const stop = async () => {
+    if (!player) {
+      await createPlayer();
+    }
+    player.stopVideo();
+  };
 </script>
 
-<div class="relative w-full" style="padding-top: 100%">
+<div class="relative w-full cursor-not-allowed pointer-events-none" style="padding-top: 100%">
   <div id="player" class="absolute inset-0 w-full h-full bg-black rounded-lg" />
 </div>
