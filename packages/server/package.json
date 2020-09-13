@@ -37,7 +37,7 @@
     "graphql": "^14",
     "gun": "^0.2020.520",
     "jsonwebtoken": "^8.5.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",
     "spotify-web-api-node": "^4.0.0",
