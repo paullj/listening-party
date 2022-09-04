@@ -6,10 +6,10 @@ import { assign, InterpreterFrom } from 'xstate';
 import { useInterpret } from '@xstate/react';
 import { SocketContext } from './SocketProvider';
 import { useNavigate } from 'react-router-dom';
-import { createPeer, MAX_MESH_SIZE } from '../../helpers/Mesh';
+import { createPeer, MAX_MESH_SIZE } from '../../helpers/peers';
 
 import type { PropsWithChildren } from 'react';
-import type { Peer } from '../../helpers/Mesh';
+import type { Peer } from '../../helpers/peers';
 import { isJSON } from '../../utils/isJSON';
 
 const MachineContext = createContext({

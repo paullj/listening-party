@@ -1,5 +1,5 @@
 import { createMachine, assign } from "xstate";
-import { createPeer } from "../helpers/Mesh";
+import { createPeer } from "../helpers/peers";
 
 interface StateContext {
 	userId: string;
