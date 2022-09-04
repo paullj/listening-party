@@ -6,7 +6,7 @@ import { assign, InterpreterFrom } from 'xstate';
 import { useInterpret } from '@xstate/react';
 import { SocketContext } from './SocketProvider';
 import { useNavigate } from 'react-router-dom';
-import { createPeer, MAX_MESH_SIZE } from '../../helpers/peers';
+import { createPeer } from '../../helpers/peers';
 
 import type { PropsWithChildren } from 'react';
 import type { Peer } from '../../helpers/peers';
@@ -29,10 +29,7 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 			sendLeaveRoom: ({ roomId }) => socket.sendEvent("Leave", { roomId }),
 			addToMesh: assign({
 				mesh: (context, event) => {
-					if (
-						context.mesh.size >= MAX_MESH_SIZE ||
-						context.mesh.has(event.userId)
-					)
+					if (context.mesh.has(event.userId))
 						return context.mesh;
 
 					const peers: Map<string, Peer> = new Map<string, Peer>(context.mesh);
@@ -41,6 +38,7 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 					const { connection, channel } = newPeer;
 
 					connection.onnegotiationneeded = () => {
+						return;
 						connection.createOffer()
 							.then((offer) => connection.setLocalDescription(offer))
 							.then(() =>

@@ -4,8 +4,6 @@ export interface Peer {
 	channel: RTCDataChannel;
 }
 
-export const MAX_MESH_SIZE = 5;
-
 export const createPeer = (userId: string): Peer => {
 	const connection = new RTCPeerConnection({
 		iceServers: [

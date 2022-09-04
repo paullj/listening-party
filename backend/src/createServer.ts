@@ -2,6 +2,8 @@ import { WebSocket, WebSocketServer } from "ws";
 import crypto from "crypto";
 import { isJSON } from "./utils/isJSON";
 
+const MAX_ROOM_SIZE = 10;
+
 interface Room {
 	name: string;
 	connections: Map<string, WebSocket>;
@@ -58,6 +60,13 @@ const messageFunctionMap: FunctionMap<MessageTypeDataMap> = {
 
 		if (rooms.has(roomId)) {
 			const room = rooms.get(roomId)!;
+
+			if (room.connections.size >= MAX_ROOM_SIZE) {
+				sendData(socket, "Error", {
+					message: `Room '${roomId}' is full`,
+				});
+				return;
+			}
 
 			if (!room.connections.has(userId)) {
 				room.connections.set(userId, socket);
