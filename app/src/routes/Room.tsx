@@ -42,7 +42,7 @@ const Room = () => {
 					stateService.off(listener);
 				}
 			};
-			stateService.onTransition(listener)
+			stateService.onTransition(listener);
 		}
 	}, [id, stateService]);
 

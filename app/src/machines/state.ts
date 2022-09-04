@@ -1,5 +1,4 @@
 import { createMachine, assign } from "xstate";
-import { createPeer } from "../helpers/peers";
 
 interface StateContext {
 	userId: string;
@@ -64,7 +63,6 @@ const stateMachine = createMachine(
 				},
 			},
 			idle: {
-				entry: "navigateToHome",
 				on: {
 					JOIN_ROOM: { target: "join", actions: "setRoomId" },
 					CREATE_ROOM: "create",
@@ -99,7 +97,7 @@ const stateMachine = createMachine(
 					},
 					LEAVE_ROOM: {
 						target: "idle",
-						actions: "sendLeaveRoom",
+						actions: ["sendLeaveRoom", "navigateToHome"],
 					},
 					RECIEVE_OFFER: {
 						actions: "recieveOffer",
@@ -145,7 +143,7 @@ const stateMachine = createMachine(
 					},
 				},
 				on: {
-					RESET: "idle",
+					RESET: { target: "idle", actions: "navigateToHome" },
 					RETRY: "back",
 				},
 			},

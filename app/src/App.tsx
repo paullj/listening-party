@@ -10,6 +10,7 @@ import Room from './routes/Room';
 
 import 'uno.css'
 import '@unocss/reset/tailwind.css'
+import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
 	return (
@@ -20,11 +21,20 @@ function App() {
 				<BrowserRouter>
 					<SocketProvider>
 						<MachineProvider>
-							<Routes>
-								<Route path="/" element={<Home />}></Route>
-								<Route path="/room/:id" element={<Room />}></Route>
-							</Routes>
-							<UserInfo></UserInfo>
+							<div className="w-full h-full flex flex-col">
+								<div className="flex-shrink">
+									<ErrorMessage />
+								</div>
+								<div className="flex-grow">
+									<Routes>
+										<Route path="/" element={<Home />}></Route>
+										<Route path="/room/:id" element={<Room />}></Route>
+									</Routes>
+								</div>
+								<div className="flex-shrink">
+									<UserInfo></UserInfo>
+								</div>
+							</div>
 						</MachineProvider>
 					</SocketProvider>
 				</BrowserRouter>
