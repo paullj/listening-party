@@ -40,6 +40,20 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 
 					const { connection, channel } = newPeer;
 
+					connection.onnegotiationneeded = () => {
+						connection.createOffer()
+							.then((offer) => connection.setLocalDescription(offer))
+							.then(() =>
+								socket.sendEvent("SendOffer", {
+									roomId: context.roomId,
+									to: event.userId,
+									offer: JSON.stringify(connection.localDescription)
+								}))
+							.catch((err) => {
+								console.error("Negogiation error!")
+							});
+					};
+
 					connection.onicecandidate = ({ candidate }) => {
 						if (candidate) {
 							socket.sendEvent("SendCandidate", {
@@ -61,15 +75,18 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 									to: event.userId,
 									offer: JSON.stringify(connection.localDescription?.toJSON()),
 								});
+							})
+							.catch((err) => {
+								console.error("Offer initiation error!")
 							});
 					}
 
 					channel.onopen = () => {
-						console.log("open channel");
+						// console.log("open channel");
 					};
 
 					channel.close = () => {
-						console.log("closed channel");
+						// console.log("closed channel");
 					};
 
 					channel.onmessage = (message) => {
@@ -85,29 +102,40 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 			recieveOffer: (context, event) => {
 				if (context.mesh.has(event.userId)) {
 					const { connection } = context.mesh.get(event.userId)!;
-					connection
-						.setRemoteDescription(event.offer)
-						.then(() => connection.createAnswer())
-						.then((answer) => connection.setLocalDescription(answer))
-						.then(() => {
-							socket.sendEvent("SendAnswer", {
-								roomId: context.roomId,
-								to: event.userId,
-								answer: JSON.stringify(connection.localDescription?.toJSON()),
+					if (!connection.remoteDescription)
+						connection
+							.setRemoteDescription(event.offer)
+							.then(() => connection.createAnswer())
+							.then((answer) => connection.setLocalDescription(answer))
+							.then(() => {
+								socket.sendEvent("SendAnswer", {
+									roomId: context.roomId,
+									to: event.userId,
+									answer: JSON.stringify(connection.localDescription?.toJSON()),
+								});
+							})
+							.catch((err) => {
+								console.error("Offer recieve error!")
 							});
-						});
 				}
 			},
 			recieveAnswer: (context, event) => {
 				if (context.mesh.has(event.userId)) {
 					const { connection } = context.mesh.get(event.userId)!;
-					connection.setRemoteDescription(event.answer);
+					if (!connection.remoteDescription)
+						connection.setRemoteDescription(event.answer)
+							.catch((err) => {
+								console.error("Answer recieve error!")
+							});
 				}
 			},
 			recieveCandidate: (context, event) => {
 				if (context.mesh.has(event.userId)) {
 					const { connection } = context.mesh.get(event.userId)!;
-					connection.addIceCandidate(event.candidate);
+					connection.addIceCandidate(event.candidate)
+						.catch((err) => {
+							console.error("Candidate recieve error!")
+						});
 				}
 			},
 		}
@@ -154,17 +182,29 @@ const MachineProvider = ({ children }: PropsWithChildren) => {
 	}, []);
 
 	useEffect(() => {
-		socket.subscribe("Error", handleError);
-		socket.subscribe("Connected", handleConnected);
-		socket.subscribe("JoinSuccesful", ({ roomName, connections }) => handleJoinSuccess(roomName, connections));
-		socket.subscribe("CreateSuccessful", ({ roomId }) => handleCreateSuccess(roomId));
-		socket.subscribe("AddPeer", ({ userId }) => handleAddPeer(userId));
-		socket.subscribe("RemovePeer", ({ userId }) => handleRemovePeer(userId));
-		socket.subscribe("RecieveOffer", ({ from, offer }) => handleRecieveOffer(from, offer));
-		socket.subscribe("RecieveAnswer", ({ from, answer }) => handleRecieveAnswer(from, answer));
-		socket.subscribe("RecieveCandidate", ({ from, candidate }) => handleRecieveCandidate(from, candidate));
+		const unsubscribeError = socket.subscribe("Error", handleError);
+		const unsubscribeConnected = socket.subscribe("Connected", handleConnected);
+		const unsubscribeJoinSuccesful = socket.subscribe("JoinSuccesful", ({ roomName, connections }) => handleJoinSuccess(roomName, connections));
+		const unsubscribeCreateSuccessful = socket.subscribe("CreateSuccessful", ({ roomId }) => handleCreateSuccess(roomId));
+		const unsubscribeAddPeer = socket.subscribe("AddPeer", ({ userId }) => handleAddPeer(userId));
+		const unsubscribeRemovePeer = socket.subscribe("RemovePeer", ({ userId }) => handleRemovePeer(userId));
+		const unsubscribeRecieveOffer = socket.subscribe("RecieveOffer", ({ from, offer }) => handleRecieveOffer(from, offer));
+		const unsubscribeRecieveAnswer = socket.subscribe("RecieveAnswer", ({ from, answer }) => handleRecieveAnswer(from, answer));
+		const unsubscribeRecieveCandidate = socket.subscribe("RecieveCandidate", ({ from, candidate }) => handleRecieveCandidate(from, candidate));
 
-	}, [handleConnected]);
+		return () => {
+			unsubscribeError();
+			unsubscribeConnected();
+			unsubscribeJoinSuccesful();
+			unsubscribeCreateSuccessful();
+			unsubscribeAddPeer();
+			unsubscribeRemovePeer();
+			unsubscribeRecieveOffer();
+			unsubscribeRecieveAnswer();
+			unsubscribeRecieveCandidate();
+		}
+
+	}, []);
 
 
 	return (
