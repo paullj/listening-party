@@ -2,7 +2,10 @@ import { useInterpret } from "@xstate/react";
 import { useNavigate } from "react-router-dom";
 import { roomMachine } from "../machines/room";
 import { useCallback, useContext, useEffect } from "react";
-import { Callback, SocketContext } from "../providers/SocketProvider";
+import {
+	Callback,
+	SocketContext,
+} from "../components/providers/SocketProvider";
 
 const useRoomService = () => {
 	const navigate = useNavigate();

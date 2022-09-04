@@ -2,7 +2,10 @@ import { useInterpret } from "@xstate/react";
 
 import { meshMachine } from "../machines/mesh";
 import { useCallback, useContext, useEffect } from "react";
-import { Callback, SocketContext } from "../providers/SocketProvider";
+import {
+	Callback,
+	SocketContext,
+} from "../components/providers/SocketProvider";
 
 const useMeshService = () => {
 	const meshService = useInterpret(meshMachine, {});

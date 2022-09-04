@@ -21,11 +21,11 @@ type MessageTypeDataMap = {
 	RemovePeer: { roomId: string; userId: string };
 
 	SendOffer: { roomId: string; to: string; offer: string };
-	RecieveOffer: { offer: string };
+	RecieveOffer: { from: string; offer: string };
 	SendAnswer: { roomId: string; to: string; answer: string };
-	RecieveAnswer: { answer: string };
+	RecieveAnswer: { from: string; answer: string };
 	SendCandidate: { roomId: string; to: string; candidate: string };
-	RecieveCandidate: { candidate: string };
+	RecieveCandidate: { from: string; candidate: string };
 };
 
 type FunctionMap<T> = {
@@ -79,26 +79,29 @@ const messageFunctionMap: FunctionMap<MessageTypeDataMap> = {
 			message: `Can't find room, '${roomId}'!`,
 		});
 	},
-	SendOffer: (_, { roomId, to, offer }) => {
+	SendOffer: (userId, { roomId, to, offer }) => {
 		sendMessage("RecieveOffer", roomId, to, {
+			from: userId,
 			offer,
 		});
 	},
-	SendAnswer: (_, { roomId, to, answer }) => {
+	SendAnswer: (userId, { roomId, to, answer }) => {
 		sendMessage("RecieveAnswer", roomId, to, {
+			from: userId,
 			answer,
 		});
 	},
 	SendCandidate: (from, { roomId, to, candidate }) => {
-		console.log(
-			`From [${from.slice(0, 6)}] to [${to.slice(0, 6)}] in room [${roomId}]`
-		);
+		// console.log(
+		// 	`From [${from.slice(0, 6)}] to [${to.slice(0, 6)}] in room [${roomId}]`
+		// );
 		sendMessage(
 			"RecieveCandidate",
 			roomId,
 			to,
 			{
 				candidate,
+				from,
 			},
 			false
 		);

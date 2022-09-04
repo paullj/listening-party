@@ -1,6 +1,6 @@
 import { createMachine, interpret } from "xstate";
 import { assign } from "xstate/lib/actions";
-import { socket } from "../providers/SocketProvider";
+import { socket } from "../components/providers/SocketProvider";
 import { isJSON } from "../utils/isJSON";
 
 export interface PeerContext {

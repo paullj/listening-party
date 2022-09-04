@@ -2,7 +2,10 @@ import { useInterpret } from "@xstate/react";
 
 import { userMachine } from "../machines/user";
 import { useCallback, useContext, useEffect } from "react";
-import { Callback, SocketContext } from "../providers/SocketProvider";
+import {
+	Callback,
+	SocketContext,
+} from "../components/providers/SocketProvider";
 
 const useUserService = () => {
 	const socket = useContext(SocketContext);

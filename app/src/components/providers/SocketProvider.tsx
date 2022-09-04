@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { WebSocketDispatcher } from "../helpers/WebSocketDispatcher";
+import { WebSocketDispatcher } from "../../helpers/WebSocketDispatcher";
 
-import type { Subscriber } from "../helpers/WebSocketDispatcher";
+import type { Subscriber } from "../../helpers/WebSocketDispatcher";
 import type { PropsWithChildren } from 'react';
 
 export type MessageTypeDataMap = {
@@ -18,11 +18,12 @@ export type MessageTypeDataMap = {
 	RemovePeer: { roomId: string; userId: string };
 
 	SendOffer: { roomId: string; to: string; offer: string };
-	RecieveOffer: { offer: string };
+	RecieveOffer: { from: string; offer: string };
 	SendAnswer: { roomId: string; to: string; answer: string };
-	RecieveAnswer: { answer: string };
+	RecieveAnswer: { from: string; answer: string };
 	SendCandidate: { roomId: string; to: string; candidate: string };
 	RecieveCandidate: { from: string; candidate: string };
+
 };
 
 export const socket = new WebSocketDispatcher<MessageTypeDataMap>(
@@ -33,13 +34,11 @@ type Callback<T extends keyof MessageTypeDataMap> = (data: MessageTypeDataMap[T]
 
 export const SocketContext = createContext(socket);
 
-export const SocketProvider = ({ children }: PropsWithChildren) => {
+export const SocketProvider = ({ children }: PropsWithChildren) => (
+	<SocketContext.Provider value={socket}>
+		{children}
+	</SocketContext.Provider>
+);
 
-	return (
-		<SocketContext.Provider value={socket}>
-			{children}
-		</SocketContext.Provider>
-	);
-};
 
 export type { Callback };

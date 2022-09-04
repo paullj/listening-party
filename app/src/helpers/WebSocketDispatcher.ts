@@ -56,19 +56,25 @@ class WebSocketDispatcher<T extends TypeDataMap> extends WebSocket {
 	subscribe<K extends keyof (T & DefaultDataMap)>(
 		type: K,
 		subscriber: Subscriber<T, DefaultDataMap, K>
-	): WebSocketDispatcher<T> {
+	): () => void {
 		this.subscribers[type] = this.subscribers[type] || [];
 		if (!this.subscribers[type]?.includes(subscriber))
 			this.subscribers[type]?.push(subscriber);
 
-		return this;
+		return () => this.unsubscribe(type, subscriber);
 	}
 
 	unsubscribe<K extends keyof (T & DefaultDataMap)>(
 		type: K,
 		subscriber: Subscriber<T, DefaultDataMap, K>
-	): WebSocketDispatcher<T> {
-		throw "Not yet implemented";
+	): void {
+		if (this.subscribers[type] && this.subscribers[type]?.length) {
+			if (this.subscribers[type]?.includes(subscriber)) {
+				delete this.subscribers[type]![
+					this.subscribers[type]!.indexOf(subscriber)!
+				];
+			}
+		}
 	}
 
 	private dispatch<K extends keyof (T & DefaultDataMap)>(
