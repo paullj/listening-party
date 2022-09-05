@@ -1,5 +1,5 @@
 import { createServer } from "./createServer";
 
-const PORT = 4000;
+const port = Number.parseInt(process.env.PORT!) || 8080;
 
-createServer(PORT);
+createServer(port);
