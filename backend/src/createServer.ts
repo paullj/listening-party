@@ -2,6 +2,8 @@ import { WebSocket, WebSocketServer } from "ws";
 import crypto from "crypto";
 import { isJSON } from "./utils/isJSON";
 
+import type { Server } from "http";
+
 const MAX_ROOM_SIZE = 10;
 
 interface Room {
@@ -135,8 +137,8 @@ rooms.set("abc123", {
 	connections: new Map<string, WebSocket>(),
 });
 
-const createServer = (port: number) => {
-	const server = new WebSocketServer({ port });
+const createServer = (port: number, httpServer: Server) => {
+	const server = new WebSocketServer({ server: httpServer });
 
 	server.on("connection", (socket: WebSocket) => {
 		let userId: string = crypto.randomUUID();
