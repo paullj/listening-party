@@ -40,7 +40,7 @@ interface StateSchema {
 
 const initialContext: StateContext = {
 	userId: "",
-	roomId: "",
+	roomId: "abc123",
 	roomName: "",
 	mesh: new Map<string, Peer>(),
 };

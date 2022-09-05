@@ -1,9 +1,16 @@
 import type { ButtonHTMLAttributes, DetailedHTMLProps, FC } from 'react';
 
-const Button: FC<DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>> = (props) => (
-	<button {...props} className="bg-gray-300 border-gray-400 border-4 min-w-32 px-2 py-1 rounded-lg" >
+interface ButtonProps extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+	color?: string
+}
+
+const Button: FC<ButtonProps> = (props) => {
+	const { color = "gray" } = props;
+	const className = `bg-${color}-200 px-4 py-2 rounded hover:bg-${color}-400 active:bg-${color}-500 transition`;
+
+	return (<button {...props} className={className} >
 		{props.children}
-	</button>
-)
+	</button>)
+}
 
 export default Button;

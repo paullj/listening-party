@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "@xstate/react";
-import { MachineContext } from "../components/providers/MachineProvider";
+
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import { MachineContext } from "../components/providers/MachineProvider";
 
 import type { FormEventHandler, ChangeEventHandler } from "react";
 
@@ -17,7 +18,6 @@ const Room = () => {
 	const hasFailed = useSelector(stateService, (state) => state.matches("failure"));
 
 	const [message, setMessage] = useState("Hi!");
-
 
 	const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = async (event) => {
 		setMessage(event?.currentTarget.value)
@@ -49,24 +49,27 @@ const Room = () => {
 	if (hasFailed) {
 		return (
 			<div>
-				<button className="button-red" onClick={() => { stateService.send("RETRY") }}>Retry</button>
-				<button className="button-red" onClick={() => { stateService.send("RESET") }}>Back</button>
+				<Button color="red" onClick={() => { stateService.send("RETRY") }}>Retry</Button>
+				<Button color="red" onClick={() => { stateService.send("RESET") }}>Back</Button>
 			</div>
 		)
 	}
 	else {
 		return (
 			<div>
-				<button className="button-red" onClick={() => stateService.send("LEAVE_ROOM")}>Leave</button>
-				<div>
-					<p>Room ID: <span className="font-mono">
-						{roomId}
-					</span>
+				<Button color="red" onClick={() => stateService.send("LEAVE_ROOM")}>Leave</Button>
+				<div className="mt-8">
+					<p className="text-2xl font-light align-center">
+						<span className="mr-2">
+							{roomName}
+						</span>
+						<span className="font-mono text-base">
+							({roomId})
+						</span>
 					</p>
-					<p>Room Name: {roomName}</p>
 				</div>
-				<div>
-					<p className="mt-2 underline">Peers ({mesh.length})</p>
+				<div className="mt-4">
+					<p className="">Peers ({mesh.length})</p>
 					<ul>
 						{mesh.map(({ userId, connection, channel }) =>
 							<li key={userId}>
@@ -76,8 +79,8 @@ const Room = () => {
 					</ul>
 				</div>
 
-				<div>
-					<form onSubmit={handleSend} >
+				<div className="mt-4">
+					<form onSubmit={handleSend} className="space-x-1">
 						<Input type="text" value={message} onChange={handleChangeMessage}></Input>
 						<Button>Send</Button>
 					</form>

@@ -1,13 +1,19 @@
-import { useContext, useState } from 'react';
+import { ChangeEventHandler, useContext, useState } from 'react';
+
+import useDigitInput from '../hooks/useDigitInput';
 
 import { MachineContext } from '../components/providers/MachineProvider';
 import Button from '../components/common/Button';
-import useDigitInput from '../hooks/useDigitInput';
+import Input from '../components/common/Input';
 
 import type { FormEventHandler } from "react";
+import { useSelector } from '@xstate/react';
 
 const Home = () => {
-	const [roomId, setRoomId] = useState("abc123");
+	const { stateService } = useContext(MachineContext);
+	const initialRoomId = useSelector(stateService, (state) => state.context.roomId);
+
+	const [roomId, setRoomId] = useState(initialRoomId);
 
 	const digits = useDigitInput({
 		acceptedCharacters: /^[aA-zZ0-9]$/,
@@ -16,29 +22,32 @@ const Home = () => {
 		onChange: setRoomId,
 	});
 
-	const { stateService } = useContext(MachineContext);
-
-	const handleCreateRoom: FormEventHandler<HTMLFormElement> = async (e) => {
-		e.preventDefault();
+	const handleChangeRoomId: ChangeEventHandler<HTMLInputElement> = async (event) => {
+		setRoomId(event.currentTarget.value);
+	}
+	const handleCreateRoom: FormEventHandler<HTMLFormElement> = async (event) => {
+		event.preventDefault();
 		stateService.send("CREATE_ROOM");
 	}
-	const handleJoinRoom: FormEventHandler<HTMLFormElement> = async (e) => {
-		e.preventDefault();
+	const handleJoinRoom: FormEventHandler<HTMLFormElement> = async (event) => {
+		event.preventDefault();
 		stateService.send({ type: "JOIN_ROOM", roomId });
 	}
 
 	return (
-		<div className='flex-full flex flex-col items-center justify-center'>
-			<form onSubmit={handleJoinRoom} className="space-x-2">
+		<div className='flex flex-col space-y-4'>
+			<p className='leading-none font-light'>Enter code to join existing room</p>
+			<form onSubmit={handleJoinRoom} className="space-x-2 font-mono">
+				{/* <Input size={6} maxLength={6} minLength={6} onChange={handleChangeRoomId} /> */}
 				<div className="font-mono text-xl inline-flex flex-row justify-around space-x-1">
 					{digits.map((digit, i) =>
-						<input key={i} size={1} placeholder="x" className="lowercase text-center text-white box-border border-4 border-gray-400 bg-gray-400 px-1.5 py-0.5 rounded-lg" autoFocus={i === 0} inputMode="text" {...digit} />)}
+						<input key={i} size={1} placeholder="x" className="lowercase text-center border-box text-gray-600 box-border border-4 border-gray-300 bg-gray-100 px-1.5 py-0.5 rounded" autoFocus={i === 0} inputMode="text" {...digit} />)}
 				</div>
 				<Button>Join Room</Button>
 			</form>
 
-			<div className='flex mt-4 space-x-2 items-center'>
-				<p className='leading-none text-right font-light'>Enter code above to join existing room or create a new room</p>
+			<div className='flex space-x-2 items-center'>
+				<p className='leading-none text-right font-light'>or create a new room</p>
 				<form onSubmit={handleCreateRoom} >
 					<Button>Create Room</Button>
 				</form>
