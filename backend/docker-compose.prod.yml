@@ -1,0 +1,9 @@
+version: "3"
+services:
+  node-express-docker:
+    environment:
+      - NODE_ENV=production
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: pnpm start

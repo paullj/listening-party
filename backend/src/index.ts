@@ -1,3 +1,5 @@
 import { createServer } from "./createServer";
 
-createServer(8080);
+const PORT = 4000;
+
+createServer(PORT);

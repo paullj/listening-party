@@ -2,13 +2,13 @@
 	"name": "backend",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "/dist/index.js",
 	"scripts": {
 		"test": "jest",
 		"dev": "nodemon -w src -i **.test.ts src/index.ts",
-		"clean": "rimraf ./build",
-		"build": "pnpm clean && tsc --project tsconfig.build.json",
-		"start": "node ./build/index.js"
+		"clean": "rimraf ./dist",
+		"build": "pnpm clean && NODE_ENV=production tsc --project tsconfig.build.json",
+		"start": "NODE_ENV=production node ./dist/index.js"
 	},
 	"keywords": [],
 	"author": "",
