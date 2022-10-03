@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react';
 import type { SocketEventType, SocketEventDataMap } from '../models/socket';
 
 export const socket = new WebSocketDispatcher<SocketEventDataMap>(
-	"ws://localhost:8080"
+	import.meta.env.VITE_SOCKET_ENDPOINT || "ws://localhost:8080"
 );
 
 type Callback<T extends SocketEventType> = (data: SocketEventDataMap[T]) => void
