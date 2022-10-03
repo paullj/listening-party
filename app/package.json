@@ -7,8 +7,7 @@
 		"dev": "vite",
 		"build": "pnpm clean && NODE_ENV=production tsc && vite build",
 		"clean": "rimraf ./dist",
-		"preview": "vite preview",
-		"postinstall": "xstate typegen \"./src/**/*.ts?(x)\""
+		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@xstate/react": "^3.0.1",
