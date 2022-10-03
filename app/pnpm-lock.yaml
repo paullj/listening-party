@@ -5,6 +5,7 @@ specifiers:
   '@types/react-dom': ^18.0.6
   '@unocss/reset': ^0.45.26
   '@vitejs/plugin-react': ^2.1.0
+  '@xstate/cli': ^0.3.3
   '@xstate/react': ^3.0.1
   lastfm-node-client: ^2.2.0
   react: ^18.2.0
@@ -31,6 +32,7 @@ devDependencies:
   '@types/react-dom': 18.0.6
   '@unocss/reset': 0.45.26
   '@vitejs/plugin-react': 2.1.0_vite@3.1.4
+  '@xstate/cli': 0.3.3
   rimraf: 3.0.2
   typescript: 4.8.4
   unocss: 0.45.26_vite@3.1.4
@@ -623,6 +625,31 @@ packages:
       - supports-color
     dev: true
 
+  /@xstate/cli/0.3.3:
+    resolution: {integrity: sha512-yY0CyUP+ipeSKiklNAYfY51CZObVQ0y48TJHVPfxnfGbsqwj+6rZkC1mAg9yF/Zu56DCDZTtUBKmY4BsOVDLVw==}
+    hasBin: true
+    dependencies:
+      '@babel/core': 7.19.3
+      '@xstate/machine-extractor': 0.7.1_prc4eevly4zoqpyjqtec3g7awm
+      '@xstate/tools-shared': 1.2.3_prc4eevly4zoqpyjqtec3g7awm
+      chokidar: 3.5.3
+      commander: 8.3.0
+      xstate: 4.33.6
+    transitivePeerDependencies:
+      - prettier
+      - supports-color
+    dev: true
+
+  /@xstate/machine-extractor/0.7.1_prc4eevly4zoqpyjqtec3g7awm:
+    resolution: {integrity: sha512-dQEt6enmHXtD93vDcMefhb5bh1zh0mLCRT8CvYJjCpTjaTth7sXqlU6ri1qP0HDR6IbU9s2/WVNw7Oy7O/Sqfg==}
+    peerDependencies:
+      '@babel/core': ^7
+      xstate: ^4
+    dependencies:
+      '@babel/core': 7.19.3
+      xstate: 4.33.6
+    dev: true
+
   /@xstate/react/3.0.1_ptifxsuzjlvytalhuenru25rrq:
     resolution: {integrity: sha512-/tq/gg92P9ke8J+yDNDBv5/PAxBvXJf2cYyGDByzgtl5wKaxKxzDT82Gj3eWlCJXkrBg4J5/V47//gRJuVH2fA==}
     peerDependencies:
@@ -642,6 +669,18 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
     dev: false
+
+  /@xstate/tools-shared/1.2.3_prc4eevly4zoqpyjqtec3g7awm:
+    resolution: {integrity: sha512-6CL2Tz2S0+FSSP+940G9glMHG8g326amsVoU+b5wkY2KsbPrGga53r25PjiiP7bGrNtf4SCSsbYW/NClrHmZGQ==}
+    peerDependencies:
+      prettier: ^2.3.1
+      xstate: ^4
+    dependencies:
+      '@xstate/machine-extractor': 0.7.1_prc4eevly4zoqpyjqtec3g7awm
+      xstate: 4.33.6
+    transitivePeerDependencies:
+      - '@babel/core'
+    dev: true
 
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -744,6 +783,11 @@ packages:
 
   /colorette/2.0.19:
     resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
+    dev: true
+
+  /commander/8.3.0:
+    resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
+    engines: {node: '>= 12'}
     dev: true
 
   /concat-map/0.0.1:
@@ -1728,7 +1772,6 @@ packages:
 
   /xstate/4.33.6:
     resolution: {integrity: sha512-A5R4fsVKADWogK2a43ssu8Fz1AF077SfrKP1ZNyDBD8lNa/l4zfR//Luofp5GSWehOQr36Jp0k2z7b+sH2ivyg==}
-    dev: false
 
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
