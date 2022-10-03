@@ -1,10 +1,6 @@
-export interface Peer {
-	userId: string;
-	connection: RTCPeerConnection;
-	channel: RTCDataChannel;
-}
+import type { Peer } from "../models/peer";
 
-export const createPeer = (userId: string): Peer => {
+const createPeer = (userId: string): Peer => {
 	const connection = new RTCPeerConnection({
 		iceServers: [
 			{
@@ -30,3 +26,5 @@ export const createPeer = (userId: string): Peer => {
 		channel,
 	};
 };
+
+export { createPeer };

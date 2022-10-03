@@ -1,10 +1,34 @@
 import { createMachine, assign } from "xstate";
+import { clearMesh, removeFromMesh } from "./mesh";
 
 interface StateContext {
 	userId: string;
 	roomId: string;
 	roomName: string;
 	mesh: Map<string, Peer>;
+	messages: Message[];
+	tracks: Track[];
+}
+
+interface RTCData {
+	id: string;
+	created: Date;
+	userId: string;
+}
+
+interface Track extends RTCData {
+	title: string;
+	artist: string;
+	album: string;
+	votes: Vote[];
+}
+
+interface Vote extends RTCData {
+	trackId: string;
+}
+
+interface Message extends RTCData {
+	content: string;
 }
 
 interface Peer {
@@ -23,6 +47,7 @@ type StateEvent =
 	| { type: "CREATE_ROOM" }
 	| { type: "ADD_TO_ROOM"; userId: string; initiate: boolean }
 	| { type: "REMOVE_FROM_ROOM"; userId: string }
+	| { type: "ADD_MESSAGE"; userId: string; content: string; created: Date }
 	| { type: "RECIEVE_OFFER"; userId: string; offer: RTCSessionDescriptionInit }
 	| {
 			type: "RECIEVE_ANSWER";
@@ -39,10 +64,12 @@ interface StateSchema {
 }
 
 const initialContext: StateContext = {
-	userId: "",
 	roomId: "abc123",
+	userId: "",
 	roomName: "",
 	mesh: new Map<string, Peer>(),
+	messages: [],
+	tracks: [],
 };
 
 const stateMachine = createMachine(
@@ -53,6 +80,9 @@ const stateMachine = createMachine(
 		schema: {} as StateSchema,
 		initial: "initial",
 		predictableActionArguments: true,
+		on: {
+			RESET: { target: "idle", actions: "navigateToHome" },
+		},
 		states: {
 			initial: {
 				after: {
@@ -99,6 +129,9 @@ const stateMachine = createMachine(
 						target: "idle",
 						actions: ["sendLeaveRoom", "navigateToHome"],
 					},
+					ADD_MESSAGE: {
+						actions: "addMessage",
+					},
 					RECIEVE_OFFER: {
 						actions: "recieveOffer",
 					},
@@ -127,6 +160,7 @@ const stateMachine = createMachine(
 				exit: "clearMesh",
 			},
 			failure: {
+				entry: "navigateToError",
 				initial: "default",
 				states: {
 					default: {
@@ -143,7 +177,6 @@ const stateMachine = createMachine(
 					},
 				},
 				on: {
-					RESET: { target: "idle", actions: "navigateToHome" },
 					RETRY: "back",
 				},
 			},
@@ -159,36 +192,34 @@ const stateMachine = createMachine(
 		},
 		services: {},
 		actions: {
+			addMessage: assign({
+				messages: (context, event) => [
+					...context.messages,
+					{
+						id: "",
+						userId: event.userId,
+						content: event.content,
+						created: event.created,
+					},
+				],
+			}),
 			setUserId: assign({ userId: (_, event) => event.userId }),
 			setRoomId: assign({ roomId: (_, event) => event.roomId! }),
 			setRoomName: assign({ roomName: (_, event) => event.roomName! }),
 			removeFromMesh: assign({
-				mesh: (context, event) => {
-					if (!context.mesh.has(event.userId)) return context.mesh;
-
-					const peers = new Map<string, Peer>(context.mesh);
-					const { connection, channel } = context.mesh.get(event.userId)!;
-
-					channel.close();
-					connection.close();
-					peers.delete(event.userId);
-					return peers;
-				},
+				mesh: (context, event) => removeFromMesh(context.mesh, event.userId),
 			}),
-			clearMesh: assign({
-				mesh: (context) => {
-					context.mesh.forEach((peer) => {
-						peer.channel.close();
-						peer.connection.close();
-					});
-					context.mesh.clear();
-					return context.mesh;
-				},
-			}),
+			clearMesh: assign({ mesh: (context) => clearMesh(context.mesh) }),
 			sendData: (context, event) => {
 				context.mesh.forEach((peer) => {
 					if (peer.channel.readyState === "open") {
-						peer.channel.send(JSON.stringify(event.data));
+						peer.channel.send(
+							JSON.stringify({
+								...event.data,
+								created: new Date().toISOString(),
+								userId: context.userId,
+							})
+						);
 					}
 				});
 			},

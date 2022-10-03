@@ -6,6 +6,7 @@ specifiers:
   '@unocss/reset': ^0.45.1
   '@vitejs/plugin-react': ^2.0.0
   '@xstate/react': ^3.0.1
+  lastfm-node-client: ^2.2.0
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.3.0
@@ -17,6 +18,7 @@ specifiers:
 
 dependencies:
   '@xstate/react': 3.0.1_s4tw23nljnzciuwak2opd4zszu
+  lastfm-node-client: 2.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.3.0_biqbaboplfbrettd7655fr4n2y
@@ -1137,6 +1139,11 @@ packages:
   /kolorist/1.5.1:
     resolution: {integrity: sha512-lxpCM3HTvquGxKGzHeknB/sUjuVoUElLlfYnXZT73K8geR9jQbroGlSCFBax9/0mpGoD3kzcMLnOlGQPJJNyqQ==}
     dev: true
+
+  /lastfm-node-client/2.2.0:
+    resolution: {integrity: sha512-nhHxrRPaNKIJnEuRov68HGjQRAFel2UWnG86ieQAklaVOdBciC6DO0vajZjzPZGqwvUAxQzDHPsp2ceDOtKW2w==}
+    engines: {node: '>=8.10.0'}
+    dev: false
 
   /local-pkg/0.4.2:
     resolution: {integrity: sha512-mlERgSPrbxU3BP4qBqAvvwlgW4MTg78iwJdGGnv7kibKjWcJksrG3t6LB5lXI93wXRDvG4NpUgJFmTG4T6rdrg==}

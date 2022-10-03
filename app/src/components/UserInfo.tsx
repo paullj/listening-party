@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useSelector } from "@xstate/react";
-import { MachineContext } from "./providers/MachineProvider";
+import { MachineContext } from "../context/MachineProvider";
 
 const UserInfo: React.FC<{}> = () => {
 	const { stateService } = useContext(MachineContext);

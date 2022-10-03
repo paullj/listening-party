@@ -4,7 +4,7 @@ import { useSelector } from "@xstate/react";
 
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import { MachineContext } from "../components/providers/MachineProvider";
+import { MachineContext } from "../context/MachineProvider";
 
 import type { FormEventHandler, ChangeEventHandler } from "react";
 
@@ -14,6 +14,7 @@ const Room = () => {
 
 	const { roomId, roomName } = useSelector(stateService, (state) => state.context);
 	const mesh = useSelector(stateService, (state) => [...state.context.mesh.values()]);
+	const messages = useSelector(stateService, (state) => state.context.messages);
 	const hasJoined = useSelector(stateService, (state) => state.matches("room"));
 	const hasFailed = useSelector(stateService, (state) => state.matches("failure"));
 
@@ -28,8 +29,15 @@ const Room = () => {
 		stateService.send({
 			type: "SEND_DATA",
 			data: {
-				message
+				content: message,
+				date: new Date().toISOString()
 			}
+		});
+		stateService.send({
+			type: "ADD_MESSAGE",
+			content: message,
+			created: new Date(),
+			userId: "hi"
 		});
 		setMessage('');
 	}
@@ -79,11 +87,19 @@ const Room = () => {
 					</ul>
 				</div>
 
+				<ul>
+					{messages.map(({ userId, content, created }) =>
+						<li key={created.toISOString()}>
+							{content}
+						</li>)}
+				</ul>
+
 				<div className="mt-4">
 					<form onSubmit={handleSend} className="space-x-1">
 						<Input type="text" value={message} onChange={handleChangeMessage}></Input>
 						<Button>Send</Button>
 					</form>
+
 				</div>
 			</div>
 

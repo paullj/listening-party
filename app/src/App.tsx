@@ -1,16 +1,16 @@
 import { BrowserRouter, Route, Routes, } from "react-router-dom";
 import { SWRConfig } from 'swr'
 
-import { MachineProvider } from './components/providers/MachineProvider';
-import { SocketProvider } from './components/providers/SocketProvider';
+import { MachineProvider } from './context/MachineProvider';
+import { SocketProvider } from './context/SocketProvider';
 import UserInfo from "./components/UserInfo";
 
 import Home from './routes/Home';
 import Room from './routes/Room';
+import Error from './routes/Error';
 
 import 'uno.css'
 import '@unocss/reset/tailwind.css'
-import ErrorMessage from "./components/ErrorMessage";
 
 function App() {
 	return (
@@ -22,13 +22,11 @@ function App() {
 					<SocketProvider>
 						<MachineProvider>
 							<div className="w-full h-full flex flex-col">
-								<div className="flex-shrink">
-									<ErrorMessage />
-								</div>
 								<div className="flex-grow">
 									<Routes>
 										<Route path="/" element={<Home />}></Route>
 										<Route path="/room/:id" element={<Room />}></Route>
+										<Route path="/error" element={<Error />}></Route>
 									</Routes>
 								</div>
 								<div className="flex-shrink">

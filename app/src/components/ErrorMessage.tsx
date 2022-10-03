@@ -1,6 +1,6 @@
 import { useSelector } from "@xstate/react"
 import { useContext, useEffect, useState } from "react"
-import { MachineContext } from "./providers/MachineProvider"
+import { MachineContext } from "../context/MachineProvider"
 
 interface ErrorMeta {
 	[key: string]: string
