@@ -14,18 +14,18 @@
 		"lastfm-node-client": "^2.2.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"react-router-dom": "^6.3.0",
+		"react-router-dom": "^6.4.1",
 		"swr": "^1.3.0",
-		"xstate": "^4.33.4"
+		"xstate": "^4.33.6"
 	},
 	"devDependencies": {
-		"@types/react": "^18.0.15",
+		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
-		"@unocss/reset": "^0.45.1",
-		"@vitejs/plugin-react": "^2.0.0",
+		"@unocss/reset": "^0.45.26",
+		"@vitejs/plugin-react": "^2.1.0",
 		"rimraf": "^3.0.2",
-		"typescript": "^4.6.4",
-		"unocss": "^0.45.1",
-		"vite": "^3.0.0"
+		"typescript": "^4.8.4",
+		"unocss": "^0.45.26",
+		"vite": "^3.1.4"
 	}
 }
