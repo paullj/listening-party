@@ -8,6 +8,7 @@ specifiers:
   '@xstate/cli': ^0.3.3
   '@xstate/react': ^3.0.1
   lastfm-node-client: ^2.2.0
+  prettier: ^2.7.1
   react: ^18.2.0
   react-dom: ^18.2.0
   react-router-dom: ^6.4.1
@@ -32,7 +33,8 @@ devDependencies:
   '@types/react-dom': 18.0.6
   '@unocss/reset': 0.45.26
   '@vitejs/plugin-react': 2.1.0_vite@3.1.4
-  '@xstate/cli': 0.3.3
+  '@xstate/cli': 0.3.3_prettier@2.7.1
+  prettier: 2.7.1
   rimraf: 3.0.2
   typescript: 4.8.4
   unocss: 0.45.26_vite@3.1.4
@@ -625,13 +627,13 @@ packages:
       - supports-color
     dev: true
 
-  /@xstate/cli/0.3.3:
+  /@xstate/cli/0.3.3_prettier@2.7.1:
     resolution: {integrity: sha512-yY0CyUP+ipeSKiklNAYfY51CZObVQ0y48TJHVPfxnfGbsqwj+6rZkC1mAg9yF/Zu56DCDZTtUBKmY4BsOVDLVw==}
     hasBin: true
     dependencies:
       '@babel/core': 7.19.3
       '@xstate/machine-extractor': 0.7.1_prc4eevly4zoqpyjqtec3g7awm
-      '@xstate/tools-shared': 1.2.3_prc4eevly4zoqpyjqtec3g7awm
+      '@xstate/tools-shared': 1.2.3_yij2euqypozy2qkzpbwqbo2ssm
       chokidar: 3.5.3
       commander: 8.3.0
       xstate: 4.33.6
@@ -670,13 +672,14 @@ packages:
       - '@types/react'
     dev: false
 
-  /@xstate/tools-shared/1.2.3_prc4eevly4zoqpyjqtec3g7awm:
+  /@xstate/tools-shared/1.2.3_yij2euqypozy2qkzpbwqbo2ssm:
     resolution: {integrity: sha512-6CL2Tz2S0+FSSP+940G9glMHG8g326amsVoU+b5wkY2KsbPrGga53r25PjiiP7bGrNtf4SCSsbYW/NClrHmZGQ==}
     peerDependencies:
       prettier: ^2.3.1
       xstate: ^4
     dependencies:
       '@xstate/machine-extractor': 0.7.1_prc4eevly4zoqpyjqtec3g7awm
+      prettier: 2.7.1
       xstate: 4.33.6
     transitivePeerDependencies:
       - '@babel/core'
@@ -1454,6 +1457,12 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /queue-microtask/1.2.3:
