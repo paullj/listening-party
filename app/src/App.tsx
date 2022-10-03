@@ -1,30 +1,38 @@
 import { BrowserRouter, Route, Routes, } from "react-router-dom";
 import { SWRConfig } from 'swr'
 
-import { MachineProvider } from './providers/MachineProvider';
-import { SocketProvider } from './providers/SocketProvider';
+import { MachineProvider } from './context/MachineProvider';
+import { SocketProvider } from './context/SocketProvider';
 import UserInfo from "./components/UserInfo";
 
 import Home from './routes/Home';
 import Room from './routes/Room';
+import Error from './routes/Error';
 
 import 'uno.css'
 import '@unocss/reset/tailwind.css'
 
 function App() {
 	return (
-		<div className="App">
+		<div className="p-2 w-screen h-screen">
 			<SWRConfig value={{
 				fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
 			}}>
 				<BrowserRouter>
 					<SocketProvider>
 						<MachineProvider>
-							<UserInfo></UserInfo>
-							<Routes>
-								<Route path="/" element={<Home />}></Route>
-								<Route path="/room/:id" element={<Room />}></Route>
-							</Routes>
+							<div className="w-full h-full flex flex-col">
+								<div className="flex-grow">
+									<Routes>
+										<Route path="/" element={<Home />}></Route>
+										<Route path="/room/:id" element={<Room />}></Route>
+										<Route path="/error" element={<Error />}></Route>
+									</Routes>
+								</div>
+								<div className="flex-shrink">
+									<UserInfo></UserInfo>
+								</div>
+							</div>
 						</MachineProvider>
 					</SocketProvider>
 				</BrowserRouter>

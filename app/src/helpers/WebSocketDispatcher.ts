@@ -56,19 +56,16 @@ class WebSocketDispatcher<T extends TypeDataMap> extends WebSocket {
 	subscribe<K extends keyof (T & DefaultDataMap)>(
 		type: K,
 		subscriber: Subscriber<T, DefaultDataMap, K>
-	): WebSocketDispatcher<T> {
+	): () => void {
 		this.subscribers[type] = this.subscribers[type] || [];
-		if (!this.subscribers[type]?.includes(subscriber))
+		if (!this.subscribers[type]?.includes(subscriber)) {
 			this.subscribers[type]?.push(subscriber);
-
-		return this;
-	}
-
-	unsubscribe<K extends keyof (T & DefaultDataMap)>(
-		type: K,
-		subscriber: Subscriber<T, DefaultDataMap, K>
-	): WebSocketDispatcher<T> {
-		throw "Not yet implemented";
+			const index = this.subscribers[type]!.length - 1;
+			return () => {
+				this.subscribers[type]!.splice(index, 1);
+			};
+		}
+		return () => {};
 	}
 
 	private dispatch<K extends keyof (T & DefaultDataMap)>(
@@ -90,7 +87,11 @@ class WebSocketDispatcher<T extends TypeDataMap> extends WebSocket {
 		if (this.readyState === WebSocket.OPEN) {
 			this.send(payload);
 		} else {
-			this.subscribe("Open", () => this.send(payload));
+			const openCallback = () => {
+				this.send(payload);
+				unsubscribe();
+			};
+			const unsubscribe = this.subscribe("Open", openCallback);
 		}
 		return this;
 	}
