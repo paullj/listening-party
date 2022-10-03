@@ -10,7 +10,7 @@ services:
       - ./:/usr/app
     container_name: node-express-docker
     expose:
-      - "4000"
+      - "8080"
     ports:
-      - "4000:4000"
+      - "8080:8080"
     command: npm run dev

@@ -15,7 +15,6 @@ import type { Server } from "http";
 import type { Room } from "./models/room";
 import type { SocketEvent, SocketEventData } from "./models/socket";
 import type { WebSocket } from "ws";
-import { parse } from "path";
 
 let rooms: Map<string, Room> = new Map();
 
