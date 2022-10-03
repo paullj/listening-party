@@ -8,6 +8,6 @@ COPY package.json ./
 COPY pnpm-lock.yaml ./
 RUN pnpm install
 COPY . .
-EXPOSE PORT
+EXPOSE $PORT
 RUN pnpm build
 CMD pnpm start
