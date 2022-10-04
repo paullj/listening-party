@@ -8,9 +8,6 @@ import Home from './routes/Home';
 import Room from './routes/Room';
 import Error from './routes/Error';
 
-import 'uno.css'
-import '@unocss/reset/tailwind.css'
-
 function App() {
 	return (
 		<BrowserRouter>

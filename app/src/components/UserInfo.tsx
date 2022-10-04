@@ -14,7 +14,7 @@ const UserInfo = () => {
 		<Stack position="absolute" bottom={2} left={2} direction="row" alignItems="center" >
 			<Badge rounded="full" w={3} h={3} bg={isDisconnected ? "red.400" : "green.400"} />
 			<Badge variant="outline" rounded="md" px={1.5}>{userId.slice(0, 6)}</Badge>
-			{states.map((state, i) => <Badge px={1.5} rounded="md" variant='outline'>{state}</Badge>)}
+			{states.map((state, i) => <Badge key={i} px={1.5} rounded="md" variant='outline'>{state}</Badge>)}
 		</Stack>
 	)
 }

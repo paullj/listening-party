@@ -1,3 +1,4 @@
+import { Text, Alert, AlertIcon, AlertTitle, AlertDescription, Badge, Box } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react"
 import { useContext, useEffect, useState } from "react"
 import { MachineContext } from "../context/MachineProvider"
@@ -28,17 +29,23 @@ const ErrorMessage = () => {
 
 	if (failure)
 		return (
-			<div className="rounded-md bg-red-100 px-4 py-2 mb-2">
-				<h2 className="text-red-500 font-bold inline">Error!</h2>
-				<ul className="inline ml-2">
-					{errors.map(({ path, message }, i) =>
-						<li className="font-light text-red-900" key={i}>
-							{message}
-							<span className="font-bold text-red-300 ml-1">{path}</span>
-						</li>
-					)}
-				</ul>
-			</div>
+			<Alert status='error'>
+				<AlertIcon />
+				<Box>
+
+					<AlertTitle>Oh no!</AlertTitle>
+					<AlertDescription>
+						{errors.map(({ path, message }, i) => (
+							<>
+								<Text as="span">
+									{message}
+								</Text>
+								<Badge variant="subtle" colorScheme="red">{path}</Badge>
+							</>
+						))}
+					</AlertDescription>
+				</Box>
+			</Alert >
 		)
 	else
 		return (<></>)

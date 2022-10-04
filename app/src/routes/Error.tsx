@@ -1,26 +1,14 @@
+import { Button, Container, Flex, IconButton } from "@chakra-ui/react";
+import { ResetIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { MouseEventHandler, useContext, useEffect } from "react";
-import Button from "../components/common/Button";
+
 import ErrorMessage from "../components/ErrorMessage";
 import { MachineContext } from "../context/MachineProvider";
 
-interface ErrorProps {
-
-}
-
-const Error = (props: ErrorProps) => {
+const Error = () => {
 	const { stateService } = useContext(MachineContext)
 	const hasFailed = useSelector(stateService, (state) => state.matches("failure"));
-
-
-	const handleBack: MouseEventHandler<HTMLButtonElement> = async (event) => {
-		event.preventDefault();
-		stateService.send("RESET")
-	}
-	const handleRetry: MouseEventHandler<HTMLButtonElement> = async (event) => {
-		event.preventDefault();
-		stateService.send("RETRY")
-	}
 
 	useEffect(() => {
 		if (!hasFailed) {
@@ -30,9 +18,11 @@ const Error = (props: ErrorProps) => {
 
 
 	return (<>
-		<ErrorMessage />
-		<Button onClick={handleBack}>Back</Button>
-		<Button onClick={handleRetry}>Retry</Button>
+		<Container h="100vh">
+			<IconButton bg="red.300" _hover={{ bg: "red.400" }} _active={{ bg: "red.500" }} aria-label='Reset' icon={<ResetIcon />} onClick={() => stateService.send("RESET")} />
+			<IconButton ml={2} aria-label='Retry' icon={<ReloadIcon />} onClick={() => stateService.send("RETRY")} />
+			<ErrorMessage />
+		</Container>
 	</>);
 }
 export default Error;

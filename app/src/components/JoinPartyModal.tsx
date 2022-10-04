@@ -33,9 +33,9 @@ const JoinPartyModal = ({ isOpen, onClose, onSubmit }: JoinPartyModalProps) => {
 				<ModalCloseButton />
 				<ModalBody>
 					<HStack>
-						<Button variant="ghost" onClick={handlePastePin}>
+						{/* <Button variant="ghost" onClick={() => handlePastePin()}>
 							<Icon as={ClipboardIcon} />
-						</Button>
+						</Button> */}
 						<PinInput type='alphanumeric' value={pin} onChange={handleChangePin}>
 							<PinInputField textTransform="uppercase" />
 							<PinInputField textTransform="uppercase" />
@@ -44,7 +44,7 @@ const JoinPartyModal = ({ isOpen, onClose, onSubmit }: JoinPartyModalProps) => {
 							<PinInputField textTransform="uppercase" />
 							<PinInputField textTransform="uppercase" />
 						</PinInput>
-						<Button onClick={() => onSubmit(pin)}>Join</Button>
+						<Button flexGrow={1} onClick={() => onSubmit(pin)}>Join</Button>
 					</HStack>
 				</ModalBody>
 

@@ -1,4 +1,4 @@
-- [ ] Add Chakra UI
+- [x] Add Chakra UI
 - [ ] Add idea of owner of room
 - [ ] Add tracks to rooms
 - [ ] Sync of data in room
