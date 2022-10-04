@@ -10,7 +10,8 @@ interface SocketEvent {
 type SocketEventData<T extends SocketEventType> = SocketEventDataMap[T];
 
 interface SocketEventDataMap {
-	Connected: { userId: string };
+	Connect: {};
+	ConnectSuccessful: { userId: string };
 	Error: { message: string };
 
 	// Room Events

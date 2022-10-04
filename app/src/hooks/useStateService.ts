@@ -1,7 +1,7 @@
 import { useInterpret } from "@xstate/react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { assign } from "xstate";
+import { assign, type InterpreterFrom } from "xstate";
 
 import { SocketContext } from "../context/SocketProvider";
 import { createPeer } from "../machines/peer";
@@ -11,7 +11,7 @@ import { isJSON } from "../utils/isJSON";
 import type { Mesh } from "../models/mesh";
 import type { Peer } from "../models/peer";
 
-const useStateService = () => {
+const useStateService = (): InterpreterFrom<typeof stateMachine> => {
 	const socket = useContext(SocketContext);
 	const navigate = useNavigate();
 
@@ -145,6 +145,7 @@ const useStateService = () => {
 			},
 		},
 	});
+
 	return stateService;
 };
 

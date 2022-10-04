@@ -13,7 +13,6 @@ const MachineContext = createContext({
 
 const MachineProvider = ({ children }: PropsWithChildren) => {
 	const stateService = useStateService();
-
 	useSocketReciever(stateService);
 
 	return (

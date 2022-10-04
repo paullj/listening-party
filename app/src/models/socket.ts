@@ -7,8 +7,9 @@ interface SocketEvent {
 
 type SocketEventData<T extends SocketEventType> = SocketEventDataMap[T];
 
-type SocketEventDataMap = {
-	Connected: { userId: string };
+interface SocketEventDataMap {
+	Connect: {};
+	ConnectSuccessful: { userId: string };
 	Error: { message: string };
 
 	// Room Events
@@ -29,8 +30,7 @@ type SocketEventDataMap = {
 	RecieveAnswer: { from: string; answer: string };
 	SendCandidate: { roomId: string; to: string; candidate: string };
 	RecieveCandidate: { from: string; candidate: string };
-};
-
+}
 type SocketEventHandler<T extends SocketEventType> = (
 	userId: string,
 	socket: WebSocket,

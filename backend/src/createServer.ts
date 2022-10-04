@@ -29,10 +29,6 @@ const createSocketServer = (httpServer: Server) => {
 	server.on("connection", (socket: WebSocket) => {
 		let userId: string = generateUUID();
 
-		sendData("Connected", socket, {
-			userId,
-		});
-
 		socket.on("message", (message: string) => {
 			if (!isJSON(message)) {
 				console.error(`Error! Received invalid JSON from client: '${message}'`);
@@ -42,6 +38,11 @@ const createSocketServer = (httpServer: Server) => {
 			const parsedEvent = JSON.parse(message) as SocketEvent;
 
 			switch (parsedEvent.type) {
+				case "Connect":
+					sendData("ConnectSuccessful", socket, {
+						userId,
+					});
+					break;
 				case "CreateRoom":
 					const createRoomData =
 						parsedEvent.data as SocketEventData<"CreateRoom">;

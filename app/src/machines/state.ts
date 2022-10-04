@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, State } from "xstate";
 import { clearMesh, removeFromMesh } from "./mesh";
 
 interface StateContext {

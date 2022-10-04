@@ -1,7 +1,7 @@
 import { isJSON } from "../utils/isJSON";
 
 type DefaultDataMap = {
-	Open: { test: number };
+	Open: {};
 	Close: {};
 };
 
@@ -38,8 +38,9 @@ class WebSocketDispatcher<T extends TypeDataMap> extends WebSocket {
 		this.onclose = () => {
 			this.dispatch("Close", {});
 		};
+
 		this.onopen = () => {
-			this.dispatch("Open", { test: 9 });
+			this.dispatch("Open", {});
 		};
 
 		this.onmessage = (message) => {

@@ -13,7 +13,7 @@ const useSocketReciever = (
 		stateService.send({ type: "ERROR", message });
 	}, []);
 
-	const handleConnected = useCallback(({ userId }: any) => {
+	const handleConnectSucessful = useCallback(({ userId }: any) => {
 		stateService.send({ type: "SET_USER_ID", userId });
 	}, []);
 
@@ -68,7 +68,10 @@ const useSocketReciever = (
 
 	useEffect(() => {
 		const unsubscribeError = socket.subscribe("Error", handleError);
-		const unsubscribeConnected = socket.subscribe("Connected", handleConnected);
+		const unsubscribeConnectSucessful = socket.subscribe(
+			"ConnectSuccessful",
+			handleConnectSucessful
+		);
 		const unsubscribeJoinSuccesful = socket.subscribe(
 			"JoinSuccesful",
 			({ roomName, connections }) => handleJoinSuccess(roomName, connections)
@@ -96,9 +99,11 @@ const useSocketReciever = (
 			({ from, candidate }) => handleRecieveCandidate(from, candidate)
 		);
 
+		socket.sendEvent("Connect", {});
+
 		return () => {
 			unsubscribeError();
-			unsubscribeConnected();
+			unsubscribeConnectSucessful();
 			unsubscribeJoinSuccesful();
 			unsubscribeCreateSuccessful();
 			unsubscribeAddPeer();
@@ -107,7 +112,18 @@ const useSocketReciever = (
 			unsubscribeRecieveAnswer();
 			unsubscribeRecieveCandidate();
 		};
-	}, []);
+	}, [
+		socket,
+		handleError,
+		handleConnectSucessful,
+		handleJoinSuccess,
+		handleCreateSuccess,
+		handleAddPeer,
+		handleRemovePeer,
+		handleRecieveOffer,
+		handleRecieveAnswer,
+		handleRecieveCandidate,
+	]);
 };
 
 export { useSocketReciever };
