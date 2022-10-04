@@ -6,7 +6,7 @@ type DefaultDataMap = {
 };
 
 type TypeDataMap = {
-	[key: string]: {};
+	[key: string]: any;
 };
 
 type ConditionalDataMap<T, D, K extends keyof (T & D)> = K extends keyof D
