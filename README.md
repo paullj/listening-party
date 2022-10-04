@@ -2,14 +2,24 @@
 
 Full-stack TypeScript app for a shared peer-to-peer music queue between friends. React frontend with state machines, docker-ised node backend with WebSocket signalling server for peer-to-peer WebRTC.
 
-# What is this?
+## What is this?
 This web app lets users joins rooms and add songs to a shared queue. Users can search Spotify/Last.fm for songs to add to the queue.
 
 Users can either just add songs and vote or also play music along with the room. ie. If you are in the same room/car you can join as a voter or if you are remote you can all listen to a synced music queue.
 
 *A paid spotify account is required to play songs.*
 
-# How does this work?
+## What libraries does this use?
+### Frontend
+- React - For reactivity in the app
+- XState - For global state management
+- Chakra UI - As a component library
+- Typescript - For type security
+
+### Backend
+- Express 
+
+## How does this work?
 It uses the [WebRTC API](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API) to faciliate peer-to-peer connections. The peers are connected in a mesh configuration where each peer has a seperate connection with each other peer, without a server.
 
 Initially however, to create each peer-to-peer connection, an intemediary signalling server is used. 

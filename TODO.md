@@ -1,0 +1,7 @@
+- [ ] Add Chakra UI
+- [ ] Add idea of owner of room
+- [ ] Add tracks to rooms
+- [ ] Sync of data in room
+- [ ] Add votes to tracks
+- [ ] Ping/pong to check if user is alive
+- [ ] Delete empty rooms
