@@ -5,11 +5,7 @@ import { generateRandomString } from "../../utils/generateRandomString";
 import type { WebSocket } from "ws";
 import type { SocketEventHandler } from "../../models/socket";
 
-const createRoom: SocketEventHandler<"CreateRoom"> = (
-	_userId,
-	socket,
-	data
-) => {
+const createRoom: SocketEventHandler<"CreateRoom"> = (userId, socket, data) => {
 	let roomId = "";
 	while (!roomId || rooms.has(roomId)) {
 		roomId = generateRandomString(6, "0123456789abcdefghijklmnopqrstuvwxyz");
@@ -17,6 +13,7 @@ const createRoom: SocketEventHandler<"CreateRoom"> = (
 
 	rooms.set(roomId, {
 		name: data.roomName,
+		owner: userId,
 		connections: new Map<string, WebSocket>(),
 	});
 
