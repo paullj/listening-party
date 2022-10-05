@@ -7,13 +7,14 @@ specifiers:
   '@radix-ui/react-icons': ^1.1.1
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
-  '@unocss/reset': ^0.45.26
   '@vitejs/plugin-react': ^2.1.0
   '@xstate/cli': ^0.3.3
   '@xstate/react': ^3.0.1
+  boring-avatars: ^1.7.0
   framer-motion: ^7.5.2
   prettier: ^2.7.1
   react: ^18.2.0
+  react-confetti: ^6.1.0
   react-dom: ^18.2.0
   react-router-dom: ^6.4.1
   rimraf: ^3.0.2
@@ -27,8 +28,10 @@ dependencies:
   '@emotion/styled': 11.10.4_g3tud4ene45llglqap74b5kkse
   '@radix-ui/react-icons': 1.1.1_react@18.2.0
   '@xstate/react': 3.0.1_ptifxsuzjlvytalhuenru25rrq
+  boring-avatars: 1.7.0
   framer-motion: 7.5.2_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
+  react-confetti: 6.1.0_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.4.1_biqbaboplfbrettd7655fr4n2y
   xstate: 4.33.6
@@ -36,7 +39,6 @@ dependencies:
 devDependencies:
   '@types/react': 18.0.21
   '@types/react-dom': 18.0.6
-  '@unocss/reset': 0.45.26
   '@vitejs/plugin-react': 2.1.0_vite@3.1.4
   '@xstate/cli': 0.3.3_prettier@2.7.1
   prettier: 2.7.1
@@ -1621,10 +1623,6 @@ packages:
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@unocss/reset/0.45.26:
-    resolution: {integrity: sha512-9X0cSvGPXdZ1KAuiWzFWtcoyfC7b8j4GYHr4lDXRkPC5oI3CJhw4WcdvzTHVPqOX2CKqq731H4GhcQ5c5LBuHA==}
-    dev: true
-
   /@vitejs/plugin-react/2.1.0_vite@3.1.4:
     resolution: {integrity: sha512-am6rPyyU3LzUYne3Gd9oj9c4Rzbq5hQnuGXSMT6Gujq45Il/+bunwq3lrB7wghLkiF45ygMwft37vgJ/NE8IAA==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1755,6 +1753,10 @@ packages:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
     dev: true
+
+  /boring-avatars/1.7.0:
+    resolution: {integrity: sha512-ZNHd8J7C/V0IjQMGQowLJ5rScEFU23WxePigH6rqKcT2Esf0qhYvYxw8s9i3srmlfCnCV00ddBjaoGey1eNOfA==}
+    dev: false
 
   /brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -2446,6 +2448,16 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-confetti/6.1.0_react@18.2.0:
+    resolution: {integrity: sha512-7Ypx4vz0+g8ECVxr88W9zhcQpbeujJAVqL14ZnXJ3I23mOI9/oBVTQ3dkJhUmB0D6XOtCZEM6N0Gm9PMngkORw==}
+    engines: {node: '>=10.18'}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      tween-functions: 1.2.0
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -2679,6 +2691,10 @@ packages:
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+    dev: false
+
+  /tween-functions/1.2.0:
+    resolution: {integrity: sha512-PZBtLYcCLtEcjL14Fzb1gSxPBeL7nWvGhO5ZFPGqziCcr8uvHp0NDmdjBchp6KHL+tExcg0m3NISmKxhU394dA==}
     dev: false
 
   /typescript/4.8.4:

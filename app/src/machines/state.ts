@@ -1,40 +1,16 @@
-import { createMachine, assign, State } from "xstate";
+import { createMachine, assign } from "xstate";
+import { Mesh } from "../models/mesh";
+import { Peer } from "../models/peer";
+import { Message, Track } from "../models/RTCData";
 import { clearMesh, removeFromMesh } from "./mesh";
 
 interface StateContext {
 	userId: string;
 	roomId: string;
 	roomName: string;
-	mesh: Map<string, Peer>;
+	mesh: Mesh;
 	messages: Message[];
 	tracks: Track[];
-}
-
-interface RTCData {
-	id: string;
-	created: Date;
-	userId: string;
-}
-
-interface Track extends RTCData {
-	title: string;
-	artist: string;
-	album: string;
-	votes: Vote[];
-}
-
-interface Vote extends RTCData {
-	trackId: string;
-}
-
-interface Message extends RTCData {
-	content: string;
-}
-
-interface Peer {
-	userId: string;
-	connection: RTCPeerConnection;
-	channel: RTCDataChannel;
 }
 
 type StateEvent =
@@ -47,13 +23,12 @@ type StateEvent =
 	| { type: "CREATE_ROOM" }
 	| { type: "ADD_TO_ROOM"; userId: string; initiate: boolean }
 	| { type: "REMOVE_FROM_ROOM"; userId: string }
-	| { type: "ADD_MESSAGE"; userId: string; content: string; created: Date }
+	| { type: "ADD_MESSAGE" } & Omit<Message, "id">
+	| { type: "ADD_TRACK"; } & Omit<Track, "id" | "votes">
+	| { type: "REMOVE_TRACK"; id: string}
+	| { type: "REMOVE_MESSAGE"; userId: string; content: string; created: Date }
 	| { type: "RECIEVE_OFFER"; userId: string; offer: RTCSessionDescriptionInit }
-	| {
-			type: "RECIEVE_ANSWER";
-			userId: string;
-			answer: RTCSessionDescriptionInit;
-	  }
+	| { type: "RECIEVE_ANSWER"; userId: string; answer: RTCSessionDescriptionInit; }
 	| { type: "RECIEVE_CANDIDATE"; userId: string; candidate: RTCIceCandidate }
 	| { type: "SEND_DATA"; data: any }
 	| { type: "LEAVE_ROOM" };
@@ -86,7 +61,7 @@ const stateMachine = createMachine(
 		states: {
 			initial: {
 				after: {
-					3000: "failure.signal",
+					3000: { target: "failure.signal" },
 				},
 				on: {
 					SET_USER_ID: { target: "idle", actions: ["setUserId"] },
@@ -95,26 +70,26 @@ const stateMachine = createMachine(
 			idle: {
 				on: {
 					JOIN_ROOM: { target: "join", actions: "setRoomId" },
-					CREATE_ROOM: "create",
+					CREATE_ROOM: { target: "create" },
 				},
 			},
 			join: {
 				entry: "sendJoinRoom",
 				after: {
-					3000: "failure.join",
+					3000: { target: "failure.join" },
 				},
 				on: {
-					ERROR: "failure.join",
+					ERROR: { target: "failure.join" },
 					SUCCESS: { target: "room", actions: "setRoomName" },
 				},
 			},
 			create: {
 				entry: "sendCreateRoom",
 				after: {
-					3000: "failure.create",
+					3000: { target: "failure.create" },
 				},
 				on: {
-					ERROR: "failure.create",
+					ERROR: { target: "failure.create" },
 					SUCCESS: { target: "join", actions: "setRoomId" },
 				},
 			},
@@ -131,6 +106,12 @@ const stateMachine = createMachine(
 					},
 					ADD_MESSAGE: {
 						actions: "addMessage",
+					},
+					ADD_TRACK: {
+						actions: "addTrack",
+					},
+					REMOVE_TRACK: {
+						actions: "removeTrack",
 					},
 					RECIEVE_OFFER: {
 						actions: "recieveOffer",
@@ -196,10 +177,23 @@ const stateMachine = createMachine(
 				messages: (context, event) => [
 					...context.messages,
 					{
-						id: "",
+						id: event.userId + event.created.toISOString(),
 						userId: event.userId,
 						content: event.content,
 						created: event.created,
+					},
+				],
+			}),
+			addTrack: assign({
+				tracks: (context, event) => [
+					...context.tracks,
+					{
+						id: event.userId + event.created.toISOString(),
+						userId: event.userId,
+						created: event.created,
+						album: event.album,
+						artist: event.artist,
+						title: event.title,
 					},
 				],
 			}),
