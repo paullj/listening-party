@@ -1,16 +1,12 @@
 import { createMachine, assign } from "xstate";
-import { Mesh } from "../models/mesh";
-import { Peer } from "../models/peer";
-import { clearMesh, removeFromMesh } from "./mesh";
 
-interface StateContext {
+interface RoomContext {
 	userId: string;
 	roomId: string;
 	roomName: string;
-	mesh: Mesh;
 }
 
-type StateEvent =
+type RoomEvent =
 	| { type: "ERROR"; message: string }
 	| { type: "RESET" }
 	| { type: "RETRY" }
@@ -18,36 +14,25 @@ type StateEvent =
 	| { type: "SET_USER_ID"; userId: string }
 	| { type: "JOIN_ROOM"; roomId: string }
 	| { type: "CREATE_ROOM" }
-	| { type: "ADD_TO_ROOM"; userId: string; initiate: boolean }
-	| { type: "REMOVE_FROM_ROOM"; userId: string }
-	| { type: "RECIEVE_OFFER"; userId: string; offer: RTCSessionDescriptionInit }
-	| {
-			type: "RECIEVE_ANSWER";
-			userId: string;
-			answer: RTCSessionDescriptionInit;
-	  }
-	| { type: "RECIEVE_CANDIDATE"; userId: string; candidate: RTCIceCandidate }
-	| { type: "SEND_DATA"; data: any }
 	| { type: "LEAVE_ROOM" };
 
-interface StateSchema {
-	context: StateContext;
-	events: StateEvent;
+interface RoomSchema {
+	context: RoomContext;
+	events: RoomEvent;
 }
 
-const initialContext: StateContext = {
+const initialContext: RoomContext = {
 	roomId: "abc123",
 	userId: "",
 	roomName: "",
-	mesh: new Map<string, Peer>(),
 };
 
-const stateMachine = createMachine(
+const roomMachine = createMachine(
 	{
-		id: "state",
+		id: "room",
 		context: initialContext,
-		tsTypes: {} as import("./state.typegen").Typegen0,
-		schema: {} as StateSchema,
+		tsTypes: {} as import("./room.typegen").Typegen0,
+		schema: {} as RoomSchema,
 		initial: "initial",
 		predictableActionArguments: true,
 		on: {
@@ -90,41 +75,12 @@ const stateMachine = createMachine(
 			},
 			room: {
 				entry: "navigateToRoom",
-				initial: "empty",
 				on: {
-					ADD_TO_ROOM: {
-						actions: "addToMesh",
-					},
 					LEAVE_ROOM: {
 						target: "idle",
 						actions: ["sendLeaveRoom", "navigateToHome"],
 					},
-					RECIEVE_OFFER: {
-						actions: "recieveOffer",
-					},
 				},
-				states: {
-					empty: {
-						always: { cond: "roomIsNotEmpty", target: "active" },
-					},
-					active: {
-						on: {
-							REMOVE_FROM_ROOM: {
-								actions: "removeFromMesh",
-							},
-							RECIEVE_ANSWER: {
-								actions: "recieveAnswer",
-							},
-							RECIEVE_CANDIDATE: {
-								actions: "recieveCandidate",
-							},
-							SEND_DATA: {
-								actions: "sendData",
-							},
-						},
-					},
-				},
-				exit: "clearMesh",
 			},
 			failure: {
 				entry: "navigateToError",
@@ -135,6 +91,11 @@ const stateMachine = createMachine(
 					},
 					signal: {
 						meta: "The signalling server can not be reached!",
+						on: {
+							RESET: {
+								target: "#room.initial",
+							},
+						},
 					},
 					join: {
 						meta: "Could not join room!",
@@ -149,39 +110,20 @@ const stateMachine = createMachine(
 			},
 			back: {
 				type: "history",
-				history: "shallow",
+				history: "deep",
 			},
 		},
 	},
 	{
-		guards: {
-			roomIsNotEmpty: (context) => context.mesh.size > 0,
-		},
+		guards: {},
 		services: {},
 		actions: {
 			setUserId: assign({ userId: (_, event) => event.userId }),
 			setRoomId: assign({ roomId: (_, event) => event.roomId! }),
 			setRoomName: assign({ roomName: (_, event) => event.roomName! }),
-			removeFromMesh: assign({
-				mesh: (context, event) => removeFromMesh(context.mesh, event.userId),
-			}),
-			clearMesh: assign({ mesh: (context) => clearMesh(context.mesh) }),
-			sendData: (context, event) => {
-				context.mesh.forEach((peer) => {
-					if (peer.channel.readyState === "open") {
-						peer.channel.send(
-							JSON.stringify({
-								...event.data,
-								created: new Date().toISOString(),
-								userId: context.userId,
-							})
-						);
-					}
-				});
-			},
 		},
 	}
 );
 
-export { stateMachine };
-export type { StateContext, StateEvent };
+export { roomMachine };
+export type { RoomContext, RoomEvent };

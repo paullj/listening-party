@@ -15,6 +15,7 @@ import type { Server } from "http";
 import type { Room } from "./models/room";
 import type { SocketEvent, SocketEventData } from "./models/socket";
 import type { WebSocket } from "ws";
+import { getConnections } from "./sockets/events/getConnections";
 
 let rooms: Map<string, Room> = new Map();
 
@@ -52,6 +53,11 @@ const createSocketServer = (httpServer: Server) => {
 				case "JoinRoom":
 					const joinRoomData = parsedEvent.data as SocketEventData<"JoinRoom">;
 					joinRoom(userId, socket, joinRoomData);
+					break;
+				case "GetConnections":
+					const getConnectionsData =
+						parsedEvent.data as SocketEventData<"GetConnections">;
+					getConnections(userId, socket, getConnectionsData);
 					break;
 				case "SendOffer":
 					const sendOfferData =

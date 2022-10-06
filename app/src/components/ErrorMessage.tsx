@@ -1,10 +1,18 @@
-import { Text, Alert, AlertIcon, AlertTitle, AlertDescription, Badge, Box } from "@chakra-ui/react";
-import { useSelector } from "@xstate/react"
-import { useEffect, useState } from "react"
-import { useStateContext } from "../context/StateContext"
+import {
+	Text,
+	Alert,
+	AlertIcon,
+	AlertTitle,
+	AlertDescription,
+	Badge,
+	Box,
+} from "@chakra-ui/react";
+import { useSelector } from "@xstate/react";
+import { useEffect, useState } from "react";
+import { useRoomContext } from "../context/RoomContext";
 
 interface ErrorMeta {
-	[key: string]: string
+	[key: string]: string;
 }
 
 interface ErrorMessage {
@@ -14,41 +22,41 @@ interface ErrorMessage {
 
 const consolidateErrors = (meta: ErrorMeta): ErrorMessage[] => {
 	return Object.entries(meta).map(([path, meta]) => ({ path, message: meta }));
-}
+};
 
 const ErrorMessage = () => {
-	const stateService = useStateContext();
-	const failure = useSelector(stateService, (state) => state.matches("failure"))
-	const meta = useSelector(stateService, (state) => state.meta)
+	const stateService = useRoomContext();
+	const failure = useSelector(stateService, (state) =>
+		state.matches("failure")
+	);
+	const meta = useSelector(stateService, (state) => state.meta);
 
 	const [errors, setErrors] = useState<ErrorMessage[]>([]);
 
 	useEffect(() => {
 		setErrors(consolidateErrors(meta));
-	}, [meta])
+	}, [meta]);
 
 	if (failure)
 		return (
-			<Alert status='error'>
+			<Alert status="error">
 				<AlertIcon />
 				<Box>
-
 					<AlertTitle>Oh no!</AlertTitle>
 					<AlertDescription>
 						{errors.map(({ path, message }, i) => (
-							<>
-								<Text as="span">
-									{message}
-								</Text>
-								<Badge variant="subtle" colorScheme="red">{path}</Badge>
-							</>
+							<Box key={i}>
+								<Text as="span">{message}</Text>
+								<Badge variant="subtle" colorScheme="red">
+									{path}
+								</Badge>
+							</Box>
 						))}
 					</AlertDescription>
 				</Box>
-			</Alert >
-		)
-	else
-		return (<></>)
-}
+			</Alert>
+		);
+	else return <></>;
+};
 
 export default ErrorMessage;

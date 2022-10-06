@@ -1,4 +1,12 @@
-import { Badge, Heading, Stack, TabPanel, Text } from "@chakra-ui/react";
+import {
+	Heading,
+	IconButton,
+	Stack,
+	TabPanel,
+	Text,
+	useColorModeValue,
+} from "@chakra-ui/react";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { useQueueContext } from "../context/QueueContext";
 import TrackItem from "./TrackItem";
@@ -15,13 +23,28 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
 	);
 	const queue = useSelector(queueService, (state) => state.context.queue);
 
+	const bgHover = useColorModeValue("red.100", "red.400");
+	const bgActive = useColorModeValue("red.200", "red.500");
+
 	return (
 		<>
 			<TabPanel max-h="full">
 				<Heading fontSize={{ base: "md" }} mb={2}>
 					<Text>Up Next:</Text>
 				</Heading>
-				{upNext ? <TrackItem {...upNext}></TrackItem> : "Nothing up next"}
+				{upNext ? (
+					<TrackItem {...upNext}>
+						<IconButton
+							size="xs"
+							_hover={{ bg: bgHover }}
+							_active={{ bg: bgActive }}
+							aria-label="Leave room"
+							icon={<Cross1Icon />}
+						/>
+					</TrackItem>
+				) : (
+					"Nothing up next"
+				)}
 				<Heading fontSize={{ base: "md" }} mt={4} mb={2}>
 					<Text>In Queue:</Text>
 				</Heading>
@@ -32,7 +55,15 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
 								key={createdAt.toISOString()}
 								createdAt={createdAt}
 								{...track}
-							></TrackItem>
+							>
+								<IconButton
+									size="xs"
+									_hover={{ bg: bgHover }}
+									_active={{ bg: bgActive }}
+									aria-label="Leave room"
+									icon={<Cross1Icon />}
+								/>
+							</TrackItem>
 						))}
 					</Stack>
 				) : (

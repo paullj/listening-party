@@ -1,20 +1,16 @@
-import { createContext, useContext } from 'react';
-import { useInterpret } from '@xstate/react';
-import { queueMachine } from '../machines/queue';
+import { createContext, useContext } from "react";
+import { useInterpret } from "@xstate/react";
+import { queueMachine } from "../machines/queue";
 
-import type { PropsWithChildren } from 'react';
-import type { InterpreterFrom } from 'xstate';
+import type { PropsWithChildren } from "react";
+import type { InterpreterFrom } from "xstate";
 
 type QueueInterpreter = InterpreterFrom<typeof queueMachine>;
 
-const QueueContext = createContext(
-	{} as QueueInterpreter
-);
+const QueueContext = createContext({} as QueueInterpreter);
 
 const QueueProvider = ({ children }: PropsWithChildren) => {
-	const queueService = useInterpret(queueMachine, {
-	});
-
+	const queueService = useInterpret(queueMachine, {});
 
 	return (
 		<>

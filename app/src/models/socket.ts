@@ -13,11 +13,13 @@ interface SocketEventDataMap {
 	Error: { message: string };
 
 	// Room Events
-	JoinRoom: { roomId: string };
 	CreateRoom: { roomName: string };
+	JoinRoom: { roomId: string };
 	LeaveRoom: { roomId: string };
-	JoinSuccesful: { roomId: string; roomName: string; connections: string[] };
+	JoinSuccesful: { roomId: string; roomName: string };
 	CreateSuccessful: { roomId: string };
+	GetConnections: { roomId: string };
+	RecieveConnections: { connections: string[] };
 
 	// Peer Events
 	AddPeer: { roomId: string; userId: string };
@@ -31,6 +33,7 @@ interface SocketEventDataMap {
 	SendCandidate: { roomId: string; to: string; candidate: string };
 	RecieveCandidate: { from: string; candidate: string };
 }
+
 type SocketEventHandler<T extends SocketEventType> = (
 	userId: string,
 	socket: WebSocket,

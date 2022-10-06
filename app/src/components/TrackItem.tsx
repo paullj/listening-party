@@ -36,7 +36,9 @@ const TrackItem = ({
 				<Box min-w="15%">{album ?? <Text>{album}</Text>}</Box>
 				<Spacer></Spacer>
 				<Box>{createdBy ?? <Text>{createdBy}</Text>}</Box>
-				<Box>{children}</Box>
+				<Stack direction="row" spacing={1}>
+					{children}
+				</Stack>
 			</Stack>
 		</>
 	);

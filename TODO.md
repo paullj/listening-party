@@ -1,6 +1,8 @@
 - [x] Add Chakra UI
 - [x] Add idea of owner of room
-- [ ] Add tracks to rooms
+- [x] Add tracks to rooms
+- [ ] Get connections on room enter
+- [ ] Send tracks over RTC
 - [ ] Sync of data in room
 - [ ] Add votes to tracks
 - [ ] Ping/pong to check if user is alive

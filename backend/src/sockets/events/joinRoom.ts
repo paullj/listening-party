@@ -26,9 +26,6 @@ const joinRoom: SocketEventHandler<"JoinRoom"> = (userId, socket, data) => {
 			sendEvent("JoinSuccesful", roomId, userId, {
 				roomId,
 				roomName: room.name,
-				connections: [...room.connections.keys()].filter(
-					(peerId) => peerId != userId
-				),
 			});
 			broadcastEvent("AddPeer", roomId, userId, {
 				roomId,

@@ -1,0 +1,30 @@
+import { rooms } from "../../createServer";
+import { sendData } from "../sendData";
+
+import type { SocketEventHandler } from "../../models/socket";
+
+const getConnections: SocketEventHandler<"GetConnections"> = (
+	userId,
+	socket,
+	data
+) => {
+	let { roomId } = data;
+	roomId = roomId.toLocaleLowerCase();
+
+	if (rooms.has(roomId)) {
+		const room = rooms.get(roomId)!;
+		if (room.connections.has(userId)) {
+			sendData("RecieveConnections", socket, {
+				connections: [...room.connections.keys()].filter(
+					(peerId) => peerId != userId
+				),
+			});
+			return;
+		}
+	}
+	sendData("Error", socket, {
+		message: `Can't access connections!`,
+	});
+};
+
+export { getConnections };
