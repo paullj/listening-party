@@ -14,7 +14,7 @@ import { PeerAction, PeerActionData } from "../models/actions";
 import { useQueueContext } from "../context/QueueContext";
 
 const useMeshService = (): MeshInterpreter => {
-	const socket = useSocketContext();
+	const { socket } = useSocketContext();
 	const roomService = useRoomContext();
 	const feedService = useFeedContext();
 	const queueService = useQueueContext();

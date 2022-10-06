@@ -4,7 +4,7 @@ import { useSocketContext } from "../context/SocketContext";
 import type { RoomInterpreter } from "../context/RoomContext";
 
 const useRoomReciever = (roomService: RoomInterpreter) => {
-	const socket = useSocketContext();
+	const { socket } = useSocketContext();
 
 	const handleError = useCallback(({ message }: any) => {
 		roomService.send({ type: "ERROR", message });

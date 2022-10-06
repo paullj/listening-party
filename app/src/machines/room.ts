@@ -36,10 +36,11 @@ const roomMachine = createMachine(
 		initial: "initial",
 		predictableActionArguments: true,
 		on: {
-			RESET: { target: "idle", actions: "navigateToHome" },
+			RESET: { target: "initial", actions: "navigateToHome" },
 		},
 		states: {
 			initial: {
+				entry: "tryToConnect",
 				after: {
 					3000: { target: "failure.signal" },
 				},

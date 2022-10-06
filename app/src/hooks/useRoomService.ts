@@ -7,11 +7,16 @@ import { roomMachine } from "../machines/room";
 import type { RoomInterpreter } from "../context/RoomContext";
 
 const useRoomService = (): RoomInterpreter => {
-	const socket = useSocketContext();
+	const { socket, reconnect } = useSocketContext();
 	const navigate = useNavigate();
 
 	const roomService = useInterpret(roomMachine, {
 		actions: {
+			tryToConnect: (context) => {
+				if (context.userId.trim() === "") {
+					reconnect();
+				}
+			},
 			navigateToHome: () => navigate("/"),
 			navigateToRoom: ({ roomId }) => navigate(`/room/${roomId}`),
 			navigateToError: () => navigate("/error"),

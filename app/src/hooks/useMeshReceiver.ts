@@ -8,7 +8,7 @@ const useMeshReciever = (meshService: MeshInterpreter) => {
 	const roomService = useRoomContext();
 	const roomId = useSelector(roomService, (state) => state.context.roomId);
 
-	const socket = useSocketContext();
+	const { socket } = useSocketContext();
 
 	const isEmpty = useSelector(
 		meshService,

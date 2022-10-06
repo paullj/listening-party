@@ -3,18 +3,18 @@ interface RTCData {
 	createdBy: string;
 }
 
-interface Track extends RTCData {
+interface Track {
 	title: string;
 	artist: string;
 	album: string;
 	votes?: Vote[];
 }
 
-interface Vote extends RTCData {
+interface Vote {
 	trackId: RTCData;
 }
 
-interface Message extends RTCData {
+interface Message {
 	content: string;
 }
 
