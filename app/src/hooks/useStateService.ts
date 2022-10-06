@@ -1,9 +1,8 @@
 import { useInterpret } from "@xstate/react";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { assign, type InterpreterFrom } from "xstate";
 
-import { SocketContext } from "../context/SocketProvider";
+import { useSocketContext } from "../context/SocketContext";
 import { createPeer } from "../machines/peer";
 import { stateMachine } from "../machines/state";
 import { isJSON } from "../utils/isJSON";
@@ -12,7 +11,7 @@ import type { Mesh } from "../models/mesh";
 import type { Peer } from "../models/peer";
 
 const useStateService = (): InterpreterFrom<typeof stateMachine> => {
-	const socket = useContext(SocketContext);
+	const socket = useSocketContext();
 	const navigate = useNavigate();
 
 	const stateService = useInterpret(stateMachine, {
@@ -94,12 +93,12 @@ const useStateService = (): InterpreterFrom<typeof stateMachine> => {
 						if (isJSON(message.data)) {
 							const parsedMessage = JSON.parse(message.data);
 							console.log(parsedMessage);
-							stateService.send({
-								type: "ADD_MESSAGE",
-								content: parsedMessage.content,
-								created: new Date(parsedMessage.created),
-								userId: parsedMessage.userId,
-							});
+							// stateService.send({
+							// 	type: "ADD_MESSAGE",
+							// 	content: parsedMessage.content,
+							// 	createdAt: new Date(parsedMessage.created),
+							// 	createdBy: parsedMessage.userId,
+							// });
 						}
 					};
 

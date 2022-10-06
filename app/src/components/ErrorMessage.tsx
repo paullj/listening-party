@@ -1,7 +1,7 @@
 import { Text, Alert, AlertIcon, AlertTitle, AlertDescription, Badge, Box } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react"
-import { useContext, useEffect, useState } from "react"
-import { MachineContext } from "../context/MachineProvider"
+import { useEffect, useState } from "react"
+import { useStateContext } from "../context/StateContext"
 
 interface ErrorMeta {
 	[key: string]: string
@@ -17,7 +17,7 @@ const consolidateErrors = (meta: ErrorMeta): ErrorMessage[] => {
 }
 
 const ErrorMessage = () => {
-	const { stateService } = useContext(MachineContext)
+	const stateService = useStateContext();
 	const failure = useSelector(stateService, (state) => state.matches("failure"))
 	const meta = useSelector(stateService, (state) => state.meta)
 

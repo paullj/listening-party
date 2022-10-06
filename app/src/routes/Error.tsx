@@ -4,10 +4,10 @@ import { useSelector } from "@xstate/react";
 import { MouseEventHandler, useContext, useEffect } from "react";
 
 import ErrorMessage from "../components/ErrorMessage";
-import { MachineContext } from "../context/MachineProvider";
+import { StateContext, useStateContext } from "../context/StateContext";
 
 const Error = () => {
-	const { stateService } = useContext(MachineContext)
+	const stateService = useStateContext();
 	const hasFailed = useSelector(stateService, (state) => state.matches("failure"));
 
 	useEffect(() => {

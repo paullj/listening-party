@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes, } from "react-router-dom";
 
-import { MachineProvider } from './context/MachineProvider';
-import { SocketProvider } from './context/SocketProvider';
+import { StateProvider } from './context/StateContext';
+import { SocketProvider } from './context/SocketContext';
 import UserInfo from "./components/UserInfo";
 
 import Home from './routes/Home';
@@ -12,7 +12,7 @@ function App() {
 	return (
 		<BrowserRouter>
 			<SocketProvider>
-				<MachineProvider>
+				<StateProvider>
 					<Routes>
 						<Route path="/" element={<Home />}></Route>
 						<Route path="/room/:id" element={<Room />}></Route>
@@ -20,7 +20,7 @@ function App() {
 					</Routes>
 					<UserInfo></UserInfo>
 
-				</MachineProvider>
+				</StateProvider>
 			</SocketProvider>
 		</BrowserRouter>
 	)

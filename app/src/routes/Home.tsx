@@ -1,38 +1,33 @@
-import { useContext } from 'react';
-import { MachineContext } from '../context/MachineProvider';
-
-import {
-	Box,
-	Button,
-	Flex,
-	Heading,
-	Stack,
-	Text,
-	useBreakpointValue,
-	useDisclosure,
-} from '@chakra-ui/react';
-import Confetti from 'react-confetti'
 import { useSelector } from '@xstate/react';
+import { Box, Button, Flex, Heading, Stack, Text, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
+import Confetti from 'react-confetti'
+
+import { useStateContext } from '../context/StateContext';
 import JoinPartyModal from '../components/JoinPartyModal';
 import { useWindowSize } from '../hooks/useWindowSize';
 
 const Home = () => {
-	const { stateService } = useContext(MachineContext);
+	const stateService = useStateContext();
 	const isIdle = useSelector(stateService, (state) => state.matches("idle"));
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const { width, height } = useWindowSize();
 
 	return (
 		<Box>
-			<Confetti width={width} height={height} gravity={0.02} drawShape={ctx => {
-				ctx.beginPath()
-				for (let x = 0; x < 10; x++) {
-					const y = Math.cos(x)
-					ctx.lineTo(x, y)
-				}
-				ctx.stroke()
-				ctx.closePath()
-			}} />
+			{/* <Confetti numberOfPieces={(width * height) / 10000} width={width} height={height} gravity={0.015}
+				confettiSource={{
+					x: 0, y: 0, w: width, h: height / 2
+				}}
+				drawShape={ctx => {
+					ctx.beginPath()
+					for (let x = 0; x < 10; x++) {
+						const y = Math.cos(x)
+						ctx.lineTo(x, y)
+					}
+					ctx.stroke()
+					ctx.closePath()
+				}} /> */}
+
 			<Flex minH="100vh" p={8} flex={1} align={'center'} justify={'center'}>
 				<Stack spacing={6} w={'full'} maxW={'lg'}>
 					<Box>
@@ -52,29 +47,28 @@ const Home = () => {
 									position: 'absolute',
 									bottom: 1,
 									left: 0,
-									bg: 'teal.500',
+									bg: 'purple.300',
 									zIndex: -1,
 								}}>
 								with your friends
 							</Text>
 							<br />
-							<Text color={'teal.500'} as={'span'}>
+							<Text color={'purple.400'} as={'span'}>
 								effortlessly.
 							</Text>
 						</Heading>
 					</Box>
 					<Text fontSize={{ base: 'lg', lg: 'xl' }} color={'gray.500'}>
-						Host or join a party and add tracks from Spotify to a shared queue.
+						Host or join a party and add tracks from <Text as="span" color="black" fontWeight="semibold">Spotify</Text>, <Text as="span" color="black" fontWeight="semibold">Youtube</Text> or <Text as="span" color="black" fontWeight="semibold">Deezer</Text> to a shared queue.
 					</Text>
 					<Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
 						<Button
 							onClick={() => stateService.send("CREATE_ROOM")}
 							disabled={!isIdle}
 							rounded='lg'
-							bg='teal.600'
-							color={'white'}
-							_active={{ bg: 'teal.800' }}
-							_hover={{ bg: 'teal.700' }}
+							bg='purple.300'
+							_active={{ bg: 'purple.500' }}
+							_hover={{ bg: 'purple.400' }}
 						>
 							Host a Party
 						</Button>

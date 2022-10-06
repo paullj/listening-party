@@ -1,5 +1,5 @@
-import { useCallback, useContext, useEffect } from "react";
-import { SocketContext } from "../context/SocketProvider";
+import { useCallback, useEffect } from "react";
+import { useSocketContext } from "../context/SocketContext";
 import { stateMachine } from "../machines/state";
 
 import type { InterpreterFrom } from "xstate";
@@ -7,7 +7,7 @@ import type { InterpreterFrom } from "xstate";
 const useSocketReciever = (
 	stateService: InterpreterFrom<typeof stateMachine>
 ) => {
-	const socket = useContext(SocketContext);
+	const socket = useSocketContext();
 
 	const handleError = useCallback(({ message }: any) => {
 		stateService.send({ type: "ERROR", message });

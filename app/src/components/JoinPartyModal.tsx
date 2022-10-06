@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from '@xstate/react';
 import {
 	Button,
@@ -14,7 +14,7 @@ import {
 	PinInputField,
 	HStack
 } from '@chakra-ui/react';
-import { MachineContext } from '../context/MachineProvider';
+import { useStateContext } from '../context/StateContext';
 
 interface JoinPartyModalProps {
 	isOpen: boolean,
@@ -23,7 +23,7 @@ interface JoinPartyModalProps {
 }
 
 const JoinPartyModal = ({ isOpen, onClose, onSubmit }: JoinPartyModalProps) => {
-	const { stateService } = useContext(MachineContext);
+	const stateService = useStateContext();
 	const initialRoomId = useSelector(stateService, (state) => state.context.roomId);
 	const [pin, setPin] = useState(initialRoomId);
 

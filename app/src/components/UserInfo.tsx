@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { Badge, Stack } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { MachineContext } from "../context/MachineProvider";
+import { useStateContext } from "../context/StateContext";
 
 const UserInfo = () => {
-	const { stateService } = useContext(MachineContext);
+	const stateService = useStateContext();
 	const userId = useSelector(stateService, (state) => state.context.userId);
 	const states = useSelector(stateService, (state) => state.toStrings())
 

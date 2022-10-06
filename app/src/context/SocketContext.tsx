@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import { WebSocketDispatcher } from "../helpers/WebSocketDispatcher";
 
 import type { PropsWithChildren } from 'react';
@@ -18,6 +18,7 @@ const SocketProvider = ({ children }: PropsWithChildren) => (
 	</SocketContext.Provider>
 );
 
+const useSocketContext = () => useContext(SocketContext);
 
-export { SocketContext, SocketProvider };
+export { SocketContext, SocketProvider, useSocketContext };
 export type { Callback };

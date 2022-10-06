@@ -1,7 +1,6 @@
 import { createMachine, assign } from "xstate";
 import { Mesh } from "../models/mesh";
 import { Peer } from "../models/peer";
-import { Message, Track } from "../models/RTCData";
 import { clearMesh, removeFromMesh } from "./mesh";
 
 interface StateContext {
@@ -9,8 +8,6 @@ interface StateContext {
 	roomId: string;
 	roomName: string;
 	mesh: Mesh;
-	messages: Message[];
-	tracks: Track[];
 }
 
 type StateEvent =
@@ -23,12 +20,12 @@ type StateEvent =
 	| { type: "CREATE_ROOM" }
 	| { type: "ADD_TO_ROOM"; userId: string; initiate: boolean }
 	| { type: "REMOVE_FROM_ROOM"; userId: string }
-	| { type: "ADD_MESSAGE" } & Omit<Message, "id">
-	| { type: "ADD_TRACK"; } & Omit<Track, "id" | "votes">
-	| { type: "REMOVE_TRACK"; id: string}
-	| { type: "REMOVE_MESSAGE"; userId: string; content: string; created: Date }
 	| { type: "RECIEVE_OFFER"; userId: string; offer: RTCSessionDescriptionInit }
-	| { type: "RECIEVE_ANSWER"; userId: string; answer: RTCSessionDescriptionInit; }
+	| {
+			type: "RECIEVE_ANSWER";
+			userId: string;
+			answer: RTCSessionDescriptionInit;
+	  }
 	| { type: "RECIEVE_CANDIDATE"; userId: string; candidate: RTCIceCandidate }
 	| { type: "SEND_DATA"; data: any }
 	| { type: "LEAVE_ROOM" };
@@ -43,8 +40,6 @@ const initialContext: StateContext = {
 	userId: "",
 	roomName: "",
 	mesh: new Map<string, Peer>(),
-	messages: [],
-	tracks: [],
 };
 
 const stateMachine = createMachine(
@@ -103,15 +98,6 @@ const stateMachine = createMachine(
 					LEAVE_ROOM: {
 						target: "idle",
 						actions: ["sendLeaveRoom", "navigateToHome"],
-					},
-					ADD_MESSAGE: {
-						actions: "addMessage",
-					},
-					ADD_TRACK: {
-						actions: "addTrack",
-					},
-					REMOVE_TRACK: {
-						actions: "removeTrack",
 					},
 					RECIEVE_OFFER: {
 						actions: "recieveOffer",
@@ -173,30 +159,6 @@ const stateMachine = createMachine(
 		},
 		services: {},
 		actions: {
-			addMessage: assign({
-				messages: (context, event) => [
-					...context.messages,
-					{
-						id: event.userId + event.created.toISOString(),
-						userId: event.userId,
-						content: event.content,
-						created: event.created,
-					},
-				],
-			}),
-			addTrack: assign({
-				tracks: (context, event) => [
-					...context.tracks,
-					{
-						id: event.userId + event.created.toISOString(),
-						userId: event.userId,
-						created: event.created,
-						album: event.album,
-						artist: event.artist,
-						title: event.title,
-					},
-				],
-			}),
 			setUserId: assign({ userId: (_, event) => event.userId }),
 			setRoomId: assign({ roomId: (_, event) => event.roomId! }),
 			setRoomName: assign({ roomName: (_, event) => event.roomName! }),

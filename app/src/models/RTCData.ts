@@ -1,7 +1,6 @@
 interface RTCData {
-	id: string;
-	created: Date;
-	userId: string;
+	createdAt: Date;
+	createdBy: string;
 }
 
 interface Track extends RTCData {
@@ -12,11 +11,11 @@ interface Track extends RTCData {
 }
 
 interface Vote extends RTCData {
-	trackId: string;
+	trackId: RTCData;
 }
 
 interface Message extends RTCData {
 	content: string;
 }
 
-export type {Track, Vote, Message, RTCData}
+export type { Track, Vote, Message, RTCData };
