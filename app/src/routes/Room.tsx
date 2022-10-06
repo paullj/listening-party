@@ -61,7 +61,7 @@ const Room = () => {
 	return (
 		<>
 			<Flex h="100vh" direction={{ base: "column", md: "row" }}>
-				<Box flexShrink={0} padding={2}>
+				<Box flexShrink={0} padding={2} minW="xs">
 					<RoomSidebar />
 				</Box>
 				<Stack
