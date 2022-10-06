@@ -25,15 +25,15 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 	const nextTrackAction = usePeerAction("NextTrack");
 
 	const handlePreviousTrack = () => {
-		queueService.send("PREV_TRACK");
 		previousTrackAction();
+		queueService.send("PREV_TRACK");
 	};
 
 	const handlePlayTrack = () => {};
 
 	const handleNextTrack = () => {
-		queueService.send("NEXT_TRACK");
 		nextTrackAction();
+		queueService.send("NEXT_TRACK");
 	};
 
 	return (

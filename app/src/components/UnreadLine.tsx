@@ -15,7 +15,7 @@ const UnreadLine = ({ unreadCount }: UnreadLineProps) => {
 					fontWeight="medium"
 					color="gray.400"
 				>
-					{unreadCount} Unread Item{unreadCount === 1 ? "" : "s"}
+					{unreadCount} Update{unreadCount === 1 ? "" : "s"}
 				</Text>
 			</Box>
 		</>

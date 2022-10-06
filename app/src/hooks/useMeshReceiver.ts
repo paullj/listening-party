@@ -1,35 +1,9 @@
-import { useSelector } from "@xstate/react";
 import { useEffect, useCallback } from "react";
 import { MeshInterpreter } from "../context/MeshContext";
-import { useRoomContext } from "../context/RoomContext";
 import { useSocketContext } from "../context/SocketContext";
 
 const useMeshReciever = (meshService: MeshInterpreter) => {
-	const roomService = useRoomContext();
-	const roomId = useSelector(roomService, (state) => state.context.roomId);
-
 	const { socket } = useSocketContext();
-
-	const isEmpty = useSelector(
-		meshService,
-		(state) => state.context.mesh.size === 0
-	);
-
-	useEffect(() => {
-		const listener = (state: any) => {
-			if (state.matches("room") && isEmpty) {
-				socket.sendEvent("GetConnections", {
-					roomId,
-				});
-				roomService.off(listener);
-			}
-		};
-		roomService.onTransition(listener);
-
-		return () => {
-			roomService.off(listener);
-		};
-	}, [roomService]);
 
 	const handleRecieveConnections = useCallback((connections: string[]) => {
 		meshService.send({ type: "CLEAR_MESH" });

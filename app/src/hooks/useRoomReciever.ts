@@ -37,8 +37,6 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 			({ roomId }) => handleCreateSuccess(roomId)
 		);
 
-		socket.sendEvent("Connect", {});
-
 		return () => {
 			unsubscribeError();
 			unsubscribeConnectSucessful();
@@ -47,6 +45,7 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 		};
 	}, [
 		socket,
+		roomService,
 		handleError,
 		handleConnectSucessful,
 		handleJoinSuccess,

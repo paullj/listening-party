@@ -79,7 +79,7 @@ const roomMachine = createMachine(
 				},
 			},
 			room: {
-				entry: "navigateToRoom",
+				entry: ["navigateToRoom", "getConnections"],
 				on: {
 					LEAVE_ROOM: {
 						target: "idle",

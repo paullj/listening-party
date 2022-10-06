@@ -4,9 +4,10 @@ import Avatar from "boring-avatars";
 import { useRoomContext } from "../context/RoomContext";
 import { format } from "timeago.js";
 
-import type { Message } from "../models/RTCData";
+import type { Message } from "../models/message";
+import type { PeerActionIdentifier } from "../models/actions";
 
-interface FeedMessageProps extends Message {}
+type FeedMessageProps = Message & Partial<PeerActionIdentifier>;
 
 const FeedMessage = ({ createdBy, createdAt, content }: FeedMessageProps) => {
 	const roomService = useRoomContext();
@@ -37,7 +38,7 @@ const FeedMessage = ({ createdBy, createdAt, content }: FeedMessageProps) => {
 						</Text>
 					</Box>
 					<Text fontSize="xs" mt={1}>
-						{format(createdAt)}
+						{createdAt ? format(createdAt) : null}
 					</Text>
 				</Box>
 				<Spacer></Spacer>

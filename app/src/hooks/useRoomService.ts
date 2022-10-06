@@ -13,9 +13,13 @@ const useRoomService = (): RoomInterpreter => {
 	const roomService = useInterpret(roomMachine, {
 		actions: {
 			tryToConnect: (context) => {
+				if (socket.readyState === socket.CLOSED) reconnect();
 				if (context.userId.trim() === "") {
-					reconnect();
+					socket.sendEvent("Connect", {});
 				}
+			},
+			getConnections: ({ roomId }) => {
+				socket.sendEvent("GetConnections", { roomId });
 			},
 			navigateToHome: () => navigate("/"),
 			navigateToRoom: ({ roomId }) => navigate(`/room/${roomId}`),

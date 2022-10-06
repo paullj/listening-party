@@ -92,7 +92,7 @@ const useMeshService = (): MeshInterpreter => {
 								case "AddTrackToQueue":
 									queueService.send({
 										type: "ADD_TO_QUEUE",
-										newTrack: action.data as PeerActionData<"AddTrackToQueue">,
+										action,
 									});
 									break;
 								case "PreviousTrack":

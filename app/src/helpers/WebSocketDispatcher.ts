@@ -50,6 +50,7 @@ class WebSocketDispatcher<T extends TypeDataMap> extends WebSocket {
 			}
 			let parsedMessage = JSON.parse(message.data);
 			console.log(`[SOCKET]: ${parsedMessage.type}`);
+			// console.log(`[SOCKET]: ${parsedMessage.type}`, parsedMessage.data);
 			this.dispatch(parsedMessage.type, parsedMessage.data);
 		};
 	}

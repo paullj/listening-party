@@ -26,6 +26,8 @@ const usePeerAction = <T extends PeerActionType>(type: T) => {
 			type: "SEND_ACTION",
 			action,
 		});
+
+		return action;
 	};
 
 	return execute;

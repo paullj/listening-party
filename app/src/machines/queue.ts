@@ -1,15 +1,26 @@
 import { assign, createMachine } from "xstate";
-import { Track } from "../models/RTCData";
+import type {
+	PeerAction,
+	PeerActionData,
+	WithIdentifier,
+} from "../models/actions";
+import type { Track } from "../models/track";
 
 interface QueueContext {
-	history: Track[];
-	nowPlaying: Track | null;
-	queue: Track[];
+	history: WithIdentifier<Track>[];
+	nowPlaying: WithIdentifier<Track> | null;
+	queue: WithIdentifier<Track>[];
 }
 
 type QueueEvent =
-	| { type: "ADD_TO_QUEUE"; newTrack: Track }
-	| { type: "REMOVE_FROM_QUEUE"; id: string }
+	| {
+			type: "ADD_TO_QUEUE";
+			action: PeerAction;
+	  }
+	| {
+			type: "REMOVE_FROM_QUEUE";
+			action: PeerAction;
+	  }
 	| { type: "NEXT_TRACK" }
 	| { type: "PREV_TRACK" };
 
@@ -74,15 +85,20 @@ const queueMachine = createMachine(
 		services: {},
 		actions: {
 			addToQueue: assign((context, event) => {
+				const track: WithIdentifier<Track> = {
+					...(event.action.data as PeerActionData<"AddTrackToQueue">),
+					createdAt: event.action.createdAt,
+					createdBy: event.action.createdBy,
+				};
 				if (context.nowPlaying === null) {
 					return {
 						...context,
-						nowPlaying: event.newTrack,
+						nowPlaying: track,
 					};
 				} else {
 					return {
 						...context,
-						queue: [...context.queue, event.newTrack],
+						queue: [...context.queue, track],
 					};
 				}
 			}),
