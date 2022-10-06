@@ -4,14 +4,17 @@ interface RoomContext {
 	userId: string;
 	roomId: string;
 	roomName: string;
+	hostId: string;
 }
 
 type RoomEvent =
 	| { type: "ERROR"; message: string }
 	| { type: "RESET" }
 	| { type: "RETRY" }
-	| { type: "SUCCESS"; roomId?: string; roomName?: string }
+	| { type: "JOIN_SUCCESS"; roomId: string; roomName: string; hostId: string }
+	| { type: "CREATE_SUCCESS"; roomId: string }
 	| { type: "SET_USER_ID"; userId: string }
+	| { type: "SET_HOST_ID"; hostId: string }
 	| { type: "JOIN_ROOM"; roomId: string }
 	| { type: "CREATE_ROOM" }
 	| { type: "LEAVE_ROOM" };
@@ -25,6 +28,7 @@ const initialContext: RoomContext = {
 	roomId: "abc123",
 	userId: "",
 	roomName: "",
+	hostId: "",
 };
 
 const roomMachine = createMachine(
@@ -65,7 +69,10 @@ const roomMachine = createMachine(
 				},
 				on: {
 					ERROR: { target: "failure.join" },
-					SUCCESS: { target: "room", actions: "setRoomName" },
+					JOIN_SUCCESS: {
+						target: "room",
+						actions: ["setRoomName", "setHostId"],
+					},
 				},
 			},
 			create: {
@@ -75,7 +82,7 @@ const roomMachine = createMachine(
 				},
 				on: {
 					ERROR: { target: "failure.create" },
-					SUCCESS: { target: "join", actions: "setRoomId" },
+					CREATE_SUCCESS: { target: "join", actions: "setRoomId" },
 				},
 			},
 			room: {
@@ -85,6 +92,7 @@ const roomMachine = createMachine(
 						target: "idle",
 						actions: ["sendLeaveRoom", "navigateToHome"],
 					},
+					SET_HOST_ID: { actions: ["setHostId"] },
 				},
 			},
 			failure: {
@@ -126,8 +134,9 @@ const roomMachine = createMachine(
 		services: {},
 		actions: {
 			setUserId: assign({ userId: (_, event) => event.userId }),
-			setRoomId: assign({ roomId: (_, event) => event.roomId! }),
-			setRoomName: assign({ roomName: (_, event) => event.roomName! }),
+			setRoomId: assign({ roomId: (_, event) => event.roomId }),
+			setRoomName: assign({ roomName: (_, event) => event.roomName }),
+			setHostId: assign({ hostId: (_, event) => event.hostId }),
 		},
 	}
 );

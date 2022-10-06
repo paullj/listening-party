@@ -5,6 +5,7 @@ type PeerActionType = keyof PeerActionDataMap;
 
 interface PeerAction extends PeerActionIdentifier {
 	type: PeerActionType;
+	hide?: boolean;
 	data: PeerActionDataMap[keyof PeerActionDataMap];
 }
 
@@ -21,13 +22,20 @@ interface PeerActionIdentifier {
 type WithIdentifier<T> = PeerActionIdentifier & T;
 
 interface PeerActionDataMap {
+	// Player Actions
 	Pause: {};
 	Play: {};
 	NextTrack: {};
 	PreviousTrack: {};
+	// Queue Actions
 	AddTrackToQueue: Track;
 	RemoveTrackFromQueue: PeerActionIdentifier;
+	// Room Actions
 	AddMessage: Message;
+	RequestSync: {
+		userId: string;
+	};
+	Sync: PeerAction[];
 }
 
 export type {

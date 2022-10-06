@@ -23,8 +23,15 @@ const joinRoom: SocketEventHandler<"JoinRoom"> = (userId, socket, data) => {
 
 		if (!room.connections.has(userId)) {
 			room.connections.set(userId, socket);
+			if (room.hostId === "" || !room.connections.has(room.hostId)) {
+				room.hostId = userId;
+				broadcastEvent("TransferHost", data.roomId, userId, {
+					hostId: room.hostId,
+				});
+			}
 			sendEvent("JoinSuccesful", roomId, userId, {
 				roomId,
+				hostId: room.hostId,
 				roomName: room.name,
 			});
 			broadcastEvent("AddPeer", roomId, userId, {

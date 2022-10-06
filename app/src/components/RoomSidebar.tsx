@@ -9,6 +9,7 @@ import {
 	Flex,
 	useColorMode,
 	Spacer,
+	Button,
 } from "@chakra-ui/react";
 
 import { ResetIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
@@ -16,18 +17,25 @@ import { useRoomContext } from "../context/RoomContext";
 import { useMeshContext } from "../context/MeshContext";
 import { useSelector } from "@xstate/react";
 import AvatarWithName from "./AvatarWithName";
+import { useSendAction } from "../hooks/useSendAction";
+import { useFeedContext } from "../context/FeedContext";
+import { useBroadcastAction } from "../hooks/useBroadcastAction";
 
 interface RoomSidebarProps {}
 
 const RoomSidebar = (props: RoomSidebarProps) => {
 	const roomService = useRoomContext();
+	const feedContext = useFeedContext();
 	const meshService = useMeshContext();
 	const { toggleColorMode, colorMode } = useColorMode();
 
-	const { roomName, roomId, userId } = useSelector(
-		roomService,
-		(state) => state.context
-	);
+	const {
+		roomName,
+		roomId,
+		userId,
+		hostId: host,
+	} = useSelector(roomService, (state) => state.context);
+
 	const peers = useSelector(meshService, (state) =>
 		[...state.context.mesh.values()].map(({ userId, channel }) => ({
 			userId,
@@ -35,9 +43,22 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 		}))
 	);
 
+	const actions = useSelector(feedContext, (state) => state.context.feed);
+	const syncRequestAction = useSendAction("RequestSync");
+	const syncAction = useBroadcastAction("Sync");
+
+	const handleRequestSync = () => {
+		syncRequestAction(host, { userId });
+	};
+
+	const handleSync = () => {
+		syncAction(actions);
+	};
+
 	return (
 		<>
 			<Box w="full" h="full" padding={2}>
+				{/* Toolbar buttons*/}
 				<Stack direction="row" mb={{ base: 0, md: 4 }}>
 					<Tooltip hasArrow placement="right" label="Leave party?">
 						<IconButton
@@ -58,6 +79,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 						onClick={toggleColorMode}
 					/>
 				</Stack>
+				{/* Heading */}
 				<Heading>
 					<Text as="span" fontSize={{ base: "2xl", md: "3xl" }}>
 						{roomName}
@@ -71,6 +93,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 						{roomId}
 					</Badge>
 				</Heading>
+				{/* Attendees */}
 				<Box>
 					<Heading as="h3">
 						<Text as="span" fontSize={{ base: "lg" }}>
@@ -83,20 +106,32 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 					<Stack direction="column" spacing={2}>
 						<Flex alignItems="center" fontStyle="italic">
 							<AvatarWithName
-								key={userId}
 								userId={userId}
-								username={`${userId.slice(0, 6)} (Me)`}
+								username={`${userId.slice(0, 6)} ${
+									host === userId ? "(Host)" : ""
+								}`}
 							/>
 						</Flex>
+
 						{peers.map(({ userId, connected }) => (
 							<AvatarWithName
 								key={userId}
 								isConnected={connected}
 								userId={userId}
-								username={userId.slice(0, 6)}
+								username={`${userId.slice(0, 6)} ${
+									host === userId ? "(Host)" : ""
+								}`}
 							/>
 						))}
 					</Stack>
+				</Box>
+
+				<Box>
+					{host === userId ? (
+						<Button onClick={() => handleSync()}>Sync</Button>
+					) : (
+						<Button onClick={() => handleRequestSync()}>Request Sync</Button>
+					)}
 				</Box>
 			</Box>
 		</>

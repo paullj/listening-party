@@ -4,7 +4,7 @@ Features
 - [x] Add tracks to rooms
 - [x] Get connections on room enter
 - [x] Send tracks over RTC
-- [ ] Sync of data in room
+- [x] Sync of data in room
 - [ ] Add votes to tracks
 - [ ] Ping/pong to check if user is alive
 - [ ] Delete empty rooms

@@ -13,7 +13,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { useQueueContext } from "../context/QueueContext";
 import { useRoomContext } from "../context/RoomContext";
-import { usePeerAction } from "../hooks/useAction";
+import { useBroadcastAction } from "../hooks/useBroadcastAction";
 import type { Track } from "../models/track";
 import TrackItem from "./TrackItem";
 
@@ -24,7 +24,6 @@ interface SearchModalProps {
 
 const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 	const roomService = useRoomContext();
-	const userId = useSelector(roomService, (state) => state.context.userId);
 
 	const searchResults = [
 		{
@@ -45,7 +44,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 	];
 
 	const queueContext = useQueueContext();
-	const addTrackToQueueAction = usePeerAction("AddTrackToQueue");
+	const addTrackToQueueAction = useBroadcastAction("AddTrackToQueue");
 
 	const handleAddToQueue = (track: Omit<Track, "createdAt" | "createdBy">) => {
 		const action = addTrackToQueueAction(track);

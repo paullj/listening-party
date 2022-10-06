@@ -13,8 +13,12 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (_request, response) => {
-	rooms.forEach((room) => {
-		response.write(`${room.name} - ${room.connections.size} connection(s)\n`);
+	rooms.forEach((room, pin) => {
+		response.write(
+			`${room.name} (${pin.toUpperCase()}) - ${
+				room.hostId ? room.hostId.slice(0, 6) : "n/a"
+			} - ${room.connections.size} connection(s)\n`
+		);
 	});
 	response.end();
 });

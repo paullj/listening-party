@@ -13,7 +13,7 @@ const createRoom: SocketEventHandler<"CreateRoom"> = (userId, socket, data) => {
 
 	rooms.set(roomId, {
 		name: data.roomName,
-		owner: userId,
+		hostId: userId,
 		connections: new Map<string, WebSocket>(),
 	});
 

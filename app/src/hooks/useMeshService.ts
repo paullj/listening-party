@@ -21,6 +21,7 @@ const useMeshService = (): MeshInterpreter => {
 
 	const userId = useSelector(roomService, (state) => state.context.userId);
 	const roomId = useSelector(roomService, (state) => state.context.roomId);
+	const actions = useSelector(feedService, (state) => state.context.feed);
 
 	const meshService = useInterpret(meshMachine, {
 		actions: {
@@ -84,10 +85,13 @@ const useMeshService = (): MeshInterpreter => {
 								},
 							} as PeerAction;
 
-							feedService.send({
-								type: "ADD_ACTION",
-								action,
-							});
+							if (!action.hide) {
+								feedService.send({
+									type: "ADD_ACTION",
+									action,
+								});
+							}
+
 							switch (action.type) {
 								case "AddTrackToQueue":
 									queueService.send({
@@ -101,6 +105,19 @@ const useMeshService = (): MeshInterpreter => {
 								case "NextTrack":
 									queueService.send("NEXT_TRACK");
 									break;
+								case "RequestSync":
+									meshService.send({
+										type: "SEND_ACTION",
+										userId: (action.data as PeerActionData<"RequestSync">)
+											.userId!,
+										action: {
+											type: "Sync",
+											createdBy: userId,
+											hide: true,
+											createdAt: new Date(),
+											data: actions,
+										},
+									});
 							}
 						}
 					};

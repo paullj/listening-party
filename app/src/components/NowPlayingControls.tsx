@@ -7,7 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { useQueueContext } from "../context/QueueContext";
-import { usePeerAction } from "../hooks/useAction";
+import { useBroadcastAction } from "../hooks/useBroadcastAction";
 
 interface NowPlayingControlsProps {}
 
@@ -21,8 +21,8 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 		queueService,
 		(state) => state.context.history.length > 0
 	);
-	const previousTrackAction = usePeerAction("PreviousTrack");
-	const nextTrackAction = usePeerAction("NextTrack");
+	const previousTrackAction = useBroadcastAction("PreviousTrack");
+	const nextTrackAction = useBroadcastAction("NextTrack");
 
 	const handlePreviousTrack = () => {
 		previousTrackAction();

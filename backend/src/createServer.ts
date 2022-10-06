@@ -21,7 +21,7 @@ let rooms: Map<string, Room> = new Map();
 
 rooms.set("abc123", {
 	name: "Test Room",
-	owner: "SERVER",
+	hostId: "",
 	connections: new Map<string, WebSocket>(),
 });
 

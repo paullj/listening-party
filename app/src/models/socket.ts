@@ -16,10 +16,11 @@ interface SocketEventDataMap {
 	CreateRoom: { roomName: string };
 	JoinRoom: { roomId: string };
 	LeaveRoom: { roomId: string };
-	JoinSuccesful: { roomId: string; roomName: string };
+	JoinSuccesful: { roomId: string; roomName: string; hostId: string };
 	CreateSuccessful: { roomId: string };
 	GetConnections: { roomId: string };
 	RecieveConnections: { connections: string[] };
+	TransferHost: { hostId: string };
 
 	// Peer Events
 	AddPeer: { roomId: string; userId: string };

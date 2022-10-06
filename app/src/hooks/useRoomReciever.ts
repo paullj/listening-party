@@ -2,25 +2,40 @@ import { useCallback, useEffect } from "react";
 import { useSocketContext } from "../context/SocketContext";
 
 import type { RoomInterpreter } from "../context/RoomContext";
+import { SocketEventData } from "../models/socket";
 
 const useRoomReciever = (roomService: RoomInterpreter) => {
 	const { socket } = useSocketContext();
 
-	const handleError = useCallback(({ message }: any) => {
-		roomService.send({ type: "ERROR", message });
-	}, []);
+	const handleError = useCallback(
+		(data: SocketEventData<"Error">) =>
+			roomService.send({ type: "ERROR", ...data }),
+		[]
+	);
 
-	const handleConnectSucessful = useCallback(({ userId }: any) => {
-		roomService.send({ type: "SET_USER_ID", userId });
-	}, []);
+	const handleConnectSucessful = useCallback(
+		(data: SocketEventData<"ConnectSuccessful">) =>
+			roomService.send({ type: "SET_USER_ID", ...data }),
+		[]
+	);
 
-	const handleJoinSuccess = useCallback((roomName: string) => {
-		roomService.send({ type: "SUCCESS", roomName });
-	}, []);
+	const handleJoinSuccess = useCallback(
+		(data: SocketEventData<"JoinSuccesful">) =>
+			roomService.send({ type: "JOIN_SUCCESS", ...data }),
+		[]
+	);
 
-	const handleCreateSuccess = useCallback((roomId: string) => {
-		roomService.send({ type: "SUCCESS", roomId });
-	}, []);
+	const handleCreateSuccess = useCallback(
+		(data: SocketEventData<"CreateSuccessful">) =>
+			roomService.send({ type: "CREATE_SUCCESS", ...data }),
+		[]
+	);
+
+	const handleTransferHost = useCallback(
+		(data: SocketEventData<"TransferHost">) =>
+			roomService.send({ type: "SET_HOST_ID", ...data }),
+		[]
+	);
 
 	useEffect(() => {
 		const unsubscribeError = socket.subscribe("Error", handleError);
@@ -30,11 +45,15 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 		);
 		const unsubscribeJoinSuccesful = socket.subscribe(
 			"JoinSuccesful",
-			({ roomName }) => handleJoinSuccess(roomName)
+			handleJoinSuccess
 		);
 		const unsubscribeCreateSuccessful = socket.subscribe(
 			"CreateSuccessful",
-			({ roomId }) => handleCreateSuccess(roomId)
+			handleCreateSuccess
+		);
+		const unsubscribeTransferHost = socket.subscribe(
+			"TransferHost",
+			handleTransferHost
 		);
 
 		return () => {
@@ -42,6 +61,7 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 			unsubscribeConnectSucessful();
 			unsubscribeJoinSuccesful();
 			unsubscribeCreateSuccessful();
+			unsubscribeTransferHost();
 		};
 	}, [
 		socket,
@@ -50,6 +70,7 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 		handleConnectSucessful,
 		handleJoinSuccess,
 		handleCreateSuccess,
+		handleTransferHost,
 	]);
 };
 

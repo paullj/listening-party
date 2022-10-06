@@ -18,7 +18,8 @@ type MeshEvent =
 			answer: RTCSessionDescriptionInit;
 	  }
 	| { type: "RECIEVE_CANDIDATE"; userId: string; candidate: RTCIceCandidate }
-	| { type: "SEND_ACTION"; action: PeerAction };
+	| { type: "SEND_ACTION"; userId: string; action: PeerAction }
+	| { type: "BROADCAST_ACTION"; action: PeerAction };
 
 interface MeshSchema {
 	context: MeshContext;

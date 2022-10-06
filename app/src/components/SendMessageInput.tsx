@@ -2,12 +2,12 @@ import { useState } from "react";
 import { FormControl, Input, IconButton, Stack } from "@chakra-ui/react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
-import { usePeerAction } from "../hooks/useAction";
+import { useBroadcastAction } from "../hooks/useBroadcastAction";
 
 interface SendMessageInputProps {}
 
 const SendMessageInput = (props: SendMessageInputProps) => {
-	const addMessageAction = usePeerAction("AddMessage");
+	const addMessageAction = useBroadcastAction("AddMessage");
 	const [messageContent, setMessageContent] = useState("");
 
 	const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = async (
