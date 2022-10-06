@@ -1,9 +1,9 @@
 import { rooms } from "../createServer";
 
 import type { SocketEventData, SocketEventType } from "../models/socket";
-import { sendData } from "./sendData";
+import { sendToSocket } from "./sendToSocket";
 
-const broadcastEvent = <K extends SocketEventType>(
+const broadcastToRoom = <K extends SocketEventType>(
 	eventType: K,
 	roomId: string,
 	userId: string,
@@ -20,10 +20,10 @@ const broadcastEvent = <K extends SocketEventType>(
 			);
 		connectedPeers?.forEach((peerSocket, peerId) => {
 			if (peerId !== userId) {
-				sendData(eventType, peerSocket, eventData);
+				sendToSocket(eventType, peerSocket, eventData);
 			}
 		});
 	}
 };
 
-export { broadcastEvent };
+export { broadcastToRoom };

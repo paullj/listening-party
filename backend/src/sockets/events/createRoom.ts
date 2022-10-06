@@ -1,5 +1,5 @@
 import { rooms } from "../../createServer";
-import { sendData } from "../sendData";
+import { sendToSocket } from "../sendToSocket";
 import { generateRandomString } from "../../utils/generateRandomString";
 
 import type { WebSocket } from "ws";
@@ -17,7 +17,7 @@ const createRoom: SocketEventHandler<"CreateRoom"> = (userId, socket, data) => {
 		connections: new Map<string, WebSocket>(),
 	});
 
-	sendData("CreateSuccessful", socket, {
+	sendToSocket("CreateSuccessful", socket, {
 		roomId,
 	});
 };

@@ -1,4 +1,4 @@
-import { sendData } from "./sockets/sendData";
+import { sendToSocket } from "./sockets/sendToSocket";
 import {
 	createRoom,
 	joinRoom,
@@ -41,7 +41,7 @@ const createSocketServer = (httpServer: Server) => {
 
 			switch (parsedEvent.type) {
 				case "Connect":
-					sendData("ConnectSuccessful", socket, {
+					sendToSocket("ConnectSuccessful", socket, {
 						userId,
 					});
 					break;

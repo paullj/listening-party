@@ -5,7 +5,7 @@ import type {
 	SocketEventType,
 } from "../models/socket";
 
-const sendData = <K extends SocketEventType>(
+const sendToSocket = <K extends SocketEventType>(
 	type: K,
 	socket: WebSocket,
 	data: SocketEventData<K>
@@ -19,4 +19,4 @@ const sendData = <K extends SocketEventType>(
 	socket.send(response);
 };
 
-export { sendData };
+export { sendToSocket };

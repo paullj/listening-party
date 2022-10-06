@@ -1,9 +1,9 @@
 import { rooms } from "../createServer";
 
 import type { SocketEventData, SocketEventType } from "../models/socket";
-import { sendData } from "./sendData";
+import { sendToSocket } from "./sendToSocket";
 
-const sendEvent = <K extends SocketEventType>(
+const sendInRoom = <K extends SocketEventType>(
 	eventType: K,
 	roomId: string,
 	userId: string,
@@ -21,8 +21,8 @@ const sendEvent = <K extends SocketEventType>(
 			);
 
 		if (connectedPeers?.has(userId))
-			sendData(eventType, connectedPeers.get(userId)!, eventData);
+			sendToSocket(eventType, connectedPeers.get(userId)!, eventData);
 	}
 };
 
-export { sendEvent };
+export { sendInRoom };

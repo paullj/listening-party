@@ -1,8 +1,8 @@
 import type { SocketEventHandler } from "../../models/socket";
-import { sendEvent } from "../sendEvent";
+import { sendInRoom } from "../sendInRoom";
 
 const sendOffer: SocketEventHandler<"SendOffer"> = (userId, _socket, data) => {
-	sendEvent("RecieveOffer", data.roomId, data.to, {
+	sendInRoom("RecieveOffer", data.roomId, data.to, {
 		from: userId,
 		offer: data.offer,
 	});

@@ -1,7 +1,7 @@
 import { rooms } from "../../createServer";
-import { sendData } from "../sendData";
-import { sendEvent } from "../sendEvent";
-import { broadcastEvent } from "../broadcastEvent";
+import { sendToSocket } from "../sendToSocket";
+import { sendInRoom } from "../sendInRoom";
+import { broadcastToRoom } from "../broadcastToRoom";
 
 import type { SocketEventHandler } from "../../models/socket";
 
@@ -15,7 +15,7 @@ const joinRoom: SocketEventHandler<"JoinRoom"> = (userId, socket, data) => {
 		const room = rooms.get(roomId)!;
 
 		if (room.connections.size >= MAX_ROOM_SIZE) {
-			sendData("Error", socket, {
+			sendToSocket("Error", socket, {
 				message: `Room '${roomId}' is full`,
 			});
 			return;
@@ -25,23 +25,23 @@ const joinRoom: SocketEventHandler<"JoinRoom"> = (userId, socket, data) => {
 			room.connections.set(userId, socket);
 			if (room.hostId === "" || !room.connections.has(room.hostId)) {
 				room.hostId = userId;
-				broadcastEvent("TransferHost", data.roomId, userId, {
+				broadcastToRoom("TransferHost", data.roomId, userId, {
 					hostId: room.hostId,
 				});
 			}
-			sendEvent("JoinSuccesful", roomId, userId, {
+			sendInRoom("JoinSuccesful", roomId, userId, {
 				roomId,
 				hostId: room.hostId,
 				roomName: room.name,
 			});
-			broadcastEvent("AddPeer", roomId, userId, {
+			broadcastToRoom("AddPeer", roomId, userId, {
 				roomId,
 				userId,
 			});
 		}
 		return;
 	}
-	sendData("Error", socket, {
+	sendToSocket("Error", socket, {
 		message: `Can't find room, '${roomId}'!`,
 	});
 };
