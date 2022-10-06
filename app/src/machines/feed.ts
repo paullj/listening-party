@@ -1,20 +1,20 @@
 import { assign, createMachine } from "xstate";
+import { PeerAction } from "../models/actions";
 import { Message, Track, Vote } from "../models/RTCData";
 
 type Kind = "Track" | "Message" | "Vote";
 type WithKind<K> = K & { kind: Kind };
 
 interface FeedContext {
-	unread: number;
-	feed: WithKind<Track | Message | Vote>[];
+	count: number;
+	offset: number;
+	feed: PeerAction[];
 }
 
 type FeedEvent =
 	| { type: "OPEN_FEED" }
 	| { type: "CLOSE_FEED" }
-	| { type: "ADD_TRACK"; track: Track }
-	| { type: "ADD_MESSAGE"; message: Message }
-	| { type: "ADD_VOTE"; vote: Vote };
+	| { type: "ADD_ACTION"; action: PeerAction };
 
 interface FeedSchema {
 	context: FeedContext;
@@ -22,7 +22,8 @@ interface FeedSchema {
 }
 
 const initialContext: FeedContext = {
-	unread: 0,
+	count: 0,
+	offset: 0,
 	feed: [],
 };
 
@@ -40,18 +41,19 @@ const feedMachine = createMachine(
 					OPEN_FEED: {
 						target: "open",
 					},
-					ADD_MESSAGE: {
-						actions: ["addMessage", "addUnread"],
+					ADD_ACTION: {
+						actions: ["addAction", "addUnread"],
 					},
 				},
 			},
 			open: {
+				initial: "empty",
 				on: {
 					CLOSE_FEED: {
 						target: "closed",
 					},
-					ADD_MESSAGE: {
-						actions: ["addMessage"],
+					ADD_ACTION: {
+						actions: ["addAction", "addOffset"],
 					},
 				},
 				states: {
@@ -79,21 +81,15 @@ const feedMachine = createMachine(
 		},
 		services: {},
 		actions: {
-			addMessage: assign({
+			addAction: assign({
 				feed: (context, event) => {
-					const message: WithKind<Message> = {
-						kind: "Message",
-						...event.message,
-					};
-					return [message, ...context.feed];
+					const action: PeerAction = event.action;
+					return [action, ...context.feed];
 				},
 			}),
-			addUnread: assign({
-				unread: (context, _event) =>
-					context.unread === 0 ? 1 : context.unread + 1,
-			}),
 			markRead: assign({
-				unread: (_context, _event) => 0,
+				count: (_context, _event) => 0,
+				offset: (_context, _event) => 0,
 			}),
 		},
 	}

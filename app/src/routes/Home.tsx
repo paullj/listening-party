@@ -9,7 +9,7 @@ import {
 	useBreakpointValue,
 	useDisclosure,
 } from "@chakra-ui/react";
-import Confetti from "react-confetti";
+// import Confetti from "react-confetti";
 
 import { useRoomContext } from "../context/RoomContext";
 import JoinPartyModal from "../components/JoinPartyModal";
@@ -20,23 +20,31 @@ const Home = () => {
 	const roomService = useRoomContext();
 	const isIdle = useSelector(roomService, (state) => state.matches("idle"));
 	const { isOpen, onClose, onOpen } = useDisclosure();
-	const { width, height } = useWindowSize();
+	// const { width, height } = useWindowSize();
 
 	return (
 		<Box>
-			{/* <Confetti numberOfPieces={(width * height) / 10000} width={width} height={height} gravity={0.015}
+			{/* <Confetti
+				numberOfPieces={(width * height) / 10000}
+				width={width}
+				height={height}
+				gravity={0.015}
 				confettiSource={{
-					x: 0, y: 0, w: width, h: height / 2
+					x: 0,
+					y: 0,
+					w: width,
+					h: height / 2,
 				}}
-				drawShape={ctx => {
-					ctx.beginPath()
+				drawShape={(ctx) => {
+					ctx.beginPath();
 					for (let x = 0; x < 10; x++) {
-						const y = Math.cos(x)
-						ctx.lineTo(x, y)
+						const y = Math.cos(x);
+						ctx.lineTo(x, y);
 					}
-					ctx.stroke()
-					ctx.closePath()
-				}} /> */}
+					ctx.stroke();
+					ctx.closePath();
+				}}
+			/> */}
 			<UserInfo />
 
 			<Flex minH="100vh" p={8} flex={1} align={"center"} justify={"center"}>

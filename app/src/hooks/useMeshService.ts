@@ -10,6 +10,7 @@ import { isJSON } from "../utils/isJSON";
 import type { Peer } from "../models/peer";
 import type { Mesh } from "../models/mesh";
 import type { MeshInterpreter } from "../context/MeshContext";
+import { PeerAction, PeerActionData } from "../models/actions";
 
 const useMeshService = (): MeshInterpreter => {
 	const socket = useSocketContext();
@@ -21,8 +22,8 @@ const useMeshService = (): MeshInterpreter => {
 
 	const meshService = useInterpret(meshMachine, {
 		actions: {
-			sendMessage: (context, event) =>
-				sendData(userId, context.mesh, event.message),
+			sendAction: (context, event) =>
+				sendAction(userId, context.mesh, event.action),
 			addToMesh: assign({
 				mesh: (context, event) => {
 					if (context.mesh.has(event.userId)) return context.mesh;
@@ -68,20 +69,11 @@ const useMeshService = (): MeshInterpreter => {
 
 					channel.onmessage = (message) => {
 						if (isJSON(message.data)) {
-							const { kind, data } = JSON.parse(message.data);
-
-							switch (kind) {
-								case "Message":
-									console.log(data.createdAt);
-									feedService.send({
-										type: "ADD_MESSAGE",
-										message: {
-											...data,
-											createdAt: new Date(data.createdAt),
-										},
-									});
-									break;
-							}
+							let action = JSON.parse(message.data) as PeerAction;
+							feedService.send({
+								type: "ADD_ACTION",
+								action,
+							});
 						}
 					};
 
@@ -141,14 +133,14 @@ const createPeer = (userId: string): Peer => {
 	};
 };
 
-const sendData = (userId: string, mesh: Mesh, payload: any) => {
+const sendAction = (userId: string, mesh: Mesh, action: PeerAction) => {
 	mesh.forEach((peer) => {
 		if (peer.channel.readyState === "open") {
 			peer.channel.send(
 				JSON.stringify({
-					kind: "Message",
+					type: action.type,
 					data: {
-						...payload,
+						...action.data,
 						createdAt: new Date().toISOString(),
 						createdBy: userId,
 					},

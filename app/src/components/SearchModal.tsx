@@ -10,7 +10,12 @@ import {
 	Button,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useSelector } from "@xstate/react";
+import { useFeedContext } from "../context/FeedContext";
+import { useMeshContext } from "../context/MeshContext";
 import { useQueueContext } from "../context/QueueContext";
+import { useRoomContext } from "../context/RoomContext";
+import { PeerAction } from "../models/actions";
 import { Track } from "../models/RTCData";
 import TrackItem from "./TrackItem";
 
@@ -20,36 +25,52 @@ interface SearchModalProps {
 }
 
 const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
+	const roomService = useRoomContext();
+	const userId = useSelector(roomService, (state) => state.context.userId);
+
 	const searchResults = [
 		{
 			title: "Track 1",
 			artist: "Alice",
 			album: "Worst Hits 1",
-			createdAt: new Date(2022, 1, 1),
-			createdBy: "Me",
 		},
 		{
 			title: "Track 2",
 			artist: "Bob",
 			album: "Worst Hits 2",
-			createdAt: new Date(2022, 1, 2),
-			createdBy: "You",
 		},
 		{
 			title: "Track 3",
 			artist: "Charlie",
 			album: "Worst Hits 3",
-			createdAt: new Date(2022, 1, 3),
-			createdBy: "Me",
 		},
 	];
 
-	const queueService = useQueueContext();
+	const queueContext = useQueueContext();
+	const meshContext = useMeshContext();
+	const feedContext = useFeedContext();
 
-	const handleAddToQueue = (track: Omit<Track, "createdAt">) => {
-		queueService.send({
+	const handleAddToQueue = (track: Omit<Track, "createdAt" | "createdBy">) => {
+		const addTrackToQueueAction: PeerAction = {
+			type: "AddTrackToQueue",
+			data: {
+				...track,
+				createdBy: userId,
+				createdAt: new Date(),
+			},
+		};
+
+		queueContext.send({
 			type: "ADD_TO_QUEUE",
-			newTrack: { createdAt: new Date(), ...track },
+			newTrack: addTrackToQueueAction.data as Track,
+		});
+		feedContext.send({
+			type: "ADD_ACTION",
+			action: addTrackToQueueAction,
+		});
+		meshContext.send({
+			type: "SEND_ACTION",
+			action: addTrackToQueueAction,
 		});
 	};
 
@@ -69,12 +90,8 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 						</InputGroup>
 						<hr />
 						<Stack>
-							{searchResults.map(({ createdAt, ...track }) => (
-								<TrackItem
-									key={createdAt.toISOString()}
-									createdAt={createdAt}
-									{...track}
-								>
+							{searchResults.map((track, i) => (
+								<TrackItem key={i} {...track}>
 									<Button size="sm" onClick={() => handleAddToQueue(track)}>
 										Add
 									</Button>

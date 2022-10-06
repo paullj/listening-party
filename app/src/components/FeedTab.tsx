@@ -6,7 +6,7 @@ interface FeedTabProps {}
 
 const FeedTab = (props: FeedTabProps) => {
 	const feedService = useFeedContext();
-	const unreadCount = useSelector(feedService, (state) => state.context.unread);
+	const unreadCount = useSelector(feedService, (state) => state.context.count);
 	return (
 		<>
 			<Tab rounded="lg">

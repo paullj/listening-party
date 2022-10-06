@@ -9,6 +9,7 @@ import { useRoomContext } from "../context/RoomContext";
 import type { Message } from "../models/RTCData";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
 import { useMeshContext } from "../context/MeshContext";
+import { PeerAction } from "../models/actions";
 
 interface SendMessageInputProps {}
 
@@ -30,13 +31,17 @@ const SendMessageInput = (props: SendMessageInputProps) => {
 	const handleSend: MouseEventHandler<HTMLButtonElement> = async (event) => {
 		event.preventDefault();
 
-		const message: Message = {
-			createdBy: userId,
-			createdAt: new Date(),
-			content: messageContent,
+		const addMessageAction: PeerAction = {
+			type: "AddMessage",
+			data: {
+				createdBy: userId,
+				createdAt: new Date(),
+				content: messageContent,
+			},
 		};
-		feedService.send({ type: "ADD_MESSAGE", message });
-		meshService.send({ type: "SEND_MESSAGE", message });
+
+		feedService.send({ type: "ADD_ACTION", action: addMessageAction });
+		meshService.send({ type: "SEND_ACTION", action: addMessageAction });
 		setMessageContent("");
 	};
 	return (
