@@ -4,12 +4,12 @@ import { useRoomContext } from "../context/RoomContext";
 import AvatarWithName from "./AvatarWithName";
 
 const UserInfo = () => {
-	const stateService = useRoomContext();
-	const userId = useSelector(stateService, (state) => state.context.userId);
-	const states = useSelector(stateService, (state) => state.toStrings());
+	const roomService = useRoomContext();
+	const userId = useSelector(roomService, (state) => state.context.userId);
+	const states = useSelector(roomService, (state) => state.toStrings());
 
 	const isConnected = useSelector(
-		stateService,
+		roomService,
 		(state) => !state.matches("initial")
 	);
 

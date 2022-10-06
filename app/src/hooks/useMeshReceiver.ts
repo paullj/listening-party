@@ -5,8 +5,8 @@ import { useRoomContext } from "../context/RoomContext";
 import { useSocketContext } from "../context/SocketContext";
 
 const useMeshReciever = (meshService: MeshInterpreter) => {
-	const stateService = useRoomContext();
-	const roomId = useSelector(stateService, (state) => state.context.roomId);
+	const roomService = useRoomContext();
+	const roomId = useSelector(roomService, (state) => state.context.roomId);
 
 	const socket = useSocketContext();
 
@@ -21,15 +21,15 @@ const useMeshReciever = (meshService: MeshInterpreter) => {
 				socket.sendEvent("GetConnections", {
 					roomId,
 				});
-				stateService.off(listener);
+				roomService.off(listener);
 			}
 		};
-		stateService.onTransition(listener);
+		roomService.onTransition(listener);
 
 		return () => {
-			stateService.off(listener);
+			roomService.off(listener);
 		};
-	}, [stateService]);
+	}, [roomService]);
 
 	const handleRecieveConnections = useCallback((connections: string[]) => {
 		meshService.send({ type: "CLEAR_MESH" });

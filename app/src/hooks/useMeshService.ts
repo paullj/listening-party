@@ -13,27 +13,16 @@ import type { MeshInterpreter } from "../context/MeshContext";
 
 const useMeshService = (): MeshInterpreter => {
 	const socket = useSocketContext();
-	const stateService = useRoomContext();
+	const roomService = useRoomContext();
 	const feedService = useFeedContext();
 
-	const userId = useSelector(stateService, (state) => state.context.userId);
-	const roomId = useSelector(stateService, (state) => state.context.roomId);
+	const userId = useSelector(roomService, (state) => state.context.userId);
+	const roomId = useSelector(roomService, (state) => state.context.roomId);
 
 	const meshService = useInterpret(meshMachine, {
 		actions: {
-			sendData: (context, event) => {
-				context.mesh.forEach((peer) => {
-					if (peer.channel.readyState === "open") {
-						peer.channel.send(
-							JSON.stringify({
-								...event.data,
-								createdAt: new Date(),
-								createdBy: userId,
-							})
-						);
-					}
-				});
-			},
+			sendMessage: (context, event) =>
+				sendData(userId, context.mesh, event.message),
 			addToMesh: assign({
 				mesh: (context, event) => {
 					if (context.mesh.has(event.userId)) return context.mesh;
@@ -79,15 +68,20 @@ const useMeshService = (): MeshInterpreter => {
 
 					channel.onmessage = (message) => {
 						if (isJSON(message.data)) {
-							const parsedMessage = JSON.parse(message.data);
-							feedService.send({
-								type: "ADD_MESSAGE",
-								message: {
-									...parsedMessage,
-									createdAt: new Date(parsedMessage.createdAt),
-								},
-							});
-							console.log(parsedMessage);
+							const { kind, data } = JSON.parse(message.data);
+
+							switch (kind) {
+								case "Message":
+									console.log(data.createdAt);
+									feedService.send({
+										type: "ADD_MESSAGE",
+										message: {
+											...data,
+											createdAt: new Date(data.createdAt),
+										},
+									});
+									break;
+							}
 						}
 					};
 
@@ -145,6 +139,23 @@ const createPeer = (userId: string): Peer => {
 		connection,
 		channel,
 	};
+};
+
+const sendData = (userId: string, mesh: Mesh, payload: any) => {
+	mesh.forEach((peer) => {
+		if (peer.channel.readyState === "open") {
+			peer.channel.send(
+				JSON.stringify({
+					kind: "Message",
+					data: {
+						...payload,
+						createdAt: new Date().toISOString(),
+						createdBy: userId,
+					},
+				})
+			);
+		}
+	});
 };
 
 export { useMeshService };

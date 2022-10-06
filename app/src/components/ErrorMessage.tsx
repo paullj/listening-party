@@ -25,11 +25,9 @@ const consolidateErrors = (meta: ErrorMeta): ErrorMessage[] => {
 };
 
 const ErrorMessage = () => {
-	const stateService = useRoomContext();
-	const failure = useSelector(stateService, (state) =>
-		state.matches("failure")
-	);
-	const meta = useSelector(stateService, (state) => state.meta);
+	const roomService = useRoomContext();
+	const failure = useSelector(roomService, (state) => state.matches("failure"));
+	const meta = useSelector(roomService, (state) => state.meta);
 
 	const [errors, setErrors] = useState<ErrorMessage[]>([]);
 

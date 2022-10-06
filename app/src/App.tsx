@@ -7,6 +7,9 @@ import UserInfo from "./components/UserInfo";
 import Home from "./routes/Home";
 import Room from "./routes/Room";
 import Error from "./routes/Error";
+import { FeedProvider } from "./context/FeedContext";
+import { MeshProvider } from "./context/MeshContext";
+import { QueueProvider } from "./context/QueueContext";
 
 function App() {
 	return (
@@ -14,9 +17,20 @@ function App() {
 			<SocketProvider>
 				<RoomProvider>
 					<Routes>
-						<Route path="/" element={<Home />}></Route>
-						<Route path="/room/:id" element={<Room />}></Route>
-						<Route path="/error" element={<Error />}></Route>
+						<Route path="/" element={<Home />} />
+						<Route
+							path="/room/:id"
+							element={
+								<QueueProvider>
+									<FeedProvider>
+										<MeshProvider>
+											<Room />
+										</MeshProvider>
+									</FeedProvider>
+								</QueueProvider>
+							}
+						/>
+						<Route path="/error" element={<Error />} />
 					</Routes>
 				</RoomProvider>
 			</SocketProvider>

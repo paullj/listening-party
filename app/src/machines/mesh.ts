@@ -1,6 +1,7 @@
 import { createMachine, assign } from "xstate";
 import type { Mesh } from "../models/mesh";
 import type { Peer } from "../models/peer";
+import type { Message, Track } from "../models/RTCData";
 
 interface MeshContext {
 	mesh: Mesh;
@@ -17,7 +18,8 @@ type MeshEvent =
 			answer: RTCSessionDescriptionInit;
 	  }
 	| { type: "RECIEVE_CANDIDATE"; userId: string; candidate: RTCIceCandidate }
-	| { type: "SEND_DATA"; data: any };
+	| { type: "SEND_MESSAGE"; message: Message }
+	| { type: "SEND_ADD_TRACK"; track: Track };
 
 interface MeshSchema {
 	context: MeshContext;
@@ -62,8 +64,11 @@ const meshMachine = createMachine(
 					RECIEVE_CANDIDATE: {
 						actions: "recieveCandidate",
 					},
-					SEND_DATA: {
-						actions: "sendData",
+					SEND_MESSAGE: {
+						actions: "sendMessage",
+					},
+					SEND_ADD_TRACK: {
+						// actions: "sendData",
 					},
 				},
 			},

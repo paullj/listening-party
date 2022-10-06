@@ -2,7 +2,7 @@ Features
 - [x] Add Chakra UI
 - [x] Add idea of owner of room
 - [x] Add tracks to rooms
-- [ ] Get connections on room enter
+- [x] Get connections on room enter
 - [ ] Send tracks over RTC
 - [ ] Sync of data in room
 - [ ] Add votes to tracks

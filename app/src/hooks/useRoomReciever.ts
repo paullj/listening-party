@@ -3,23 +3,23 @@ import { useSocketContext } from "../context/SocketContext";
 
 import type { RoomInterpreter } from "../context/RoomContext";
 
-const useRoomReciever = (stateService: RoomInterpreter) => {
+const useRoomReciever = (roomService: RoomInterpreter) => {
 	const socket = useSocketContext();
 
 	const handleError = useCallback(({ message }: any) => {
-		stateService.send({ type: "ERROR", message });
+		roomService.send({ type: "ERROR", message });
 	}, []);
 
 	const handleConnectSucessful = useCallback(({ userId }: any) => {
-		stateService.send({ type: "SET_USER_ID", userId });
+		roomService.send({ type: "SET_USER_ID", userId });
 	}, []);
 
 	const handleJoinSuccess = useCallback((roomName: string) => {
-		stateService.send({ type: "SUCCESS", roomName });
+		roomService.send({ type: "SUCCESS", roomName });
 	}, []);
 
 	const handleCreateSuccess = useCallback((roomId: string) => {
-		stateService.send({ type: "SUCCESS", roomId });
+		roomService.send({ type: "SUCCESS", roomId });
 	}, []);
 
 	useEffect(() => {

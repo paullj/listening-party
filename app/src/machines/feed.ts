@@ -1,11 +1,17 @@
 import { assign, createMachine } from "xstate";
 import { Message, Track, Vote } from "../models/RTCData";
 
+type Kind = "Track" | "Message" | "Vote";
+type WithKind<K> = K & { kind: Kind };
+
 interface FeedContext {
-	feed: (Track | Message | Vote)[];
+	unread: number;
+	feed: WithKind<Track | Message | Vote>[];
 }
 
 type FeedEvent =
+	| { type: "OPEN_FEED" }
+	| { type: "CLOSE_FEED" }
 	| { type: "ADD_TRACK"; track: Track }
 	| { type: "ADD_MESSAGE"; message: Message }
 	| { type: "ADD_VOTE"; vote: Vote };
@@ -16,6 +22,7 @@ interface FeedSchema {
 }
 
 const initialContext: FeedContext = {
+	unread: 0,
 	feed: [],
 };
 
@@ -25,26 +32,43 @@ const feedMachine = createMachine(
 		context: initialContext,
 		tsTypes: {} as import("./feed.typegen").Typegen0,
 		schema: {} as FeedSchema,
-		initial: "empty",
+		initial: "closed",
 		predictableActionArguments: true,
-		on: {
-			ADD_MESSAGE: {
-				actions: "addMessage",
-			},
-		},
 		states: {
-			empty: {
-				always: {
-					target: "active",
-					cond: "isNotEmpty",
+			closed: {
+				on: {
+					OPEN_FEED: {
+						target: "open",
+					},
+					ADD_MESSAGE: {
+						actions: ["addMessage", "addUnread"],
+					},
 				},
 			},
-			active: {
-				always: {
-					target: "empty",
-					cond: "isEmpty",
+			open: {
+				on: {
+					CLOSE_FEED: {
+						target: "closed",
+					},
+					ADD_MESSAGE: {
+						actions: ["addMessage"],
+					},
 				},
-				on: {},
+				states: {
+					empty: {
+						always: {
+							target: "active",
+							cond: "isNotEmpty",
+						},
+					},
+					active: {
+						always: {
+							target: "empty",
+							cond: "isEmpty",
+						},
+					},
+				},
+				exit: "markRead",
 			},
 		},
 	},
@@ -56,7 +80,20 @@ const feedMachine = createMachine(
 		services: {},
 		actions: {
 			addMessage: assign({
-				feed: (context, event) => [event.message, ...context.feed],
+				feed: (context, event) => {
+					const message: WithKind<Message> = {
+						kind: "Message",
+						...event.message,
+					};
+					return [message, ...context.feed];
+				},
+			}),
+			addUnread: assign({
+				unread: (context, _event) =>
+					context.unread === 0 ? 1 : context.unread + 1,
+			}),
+			markRead: assign({
+				unread: (_context, _event) => 0,
 			}),
 		},
 	}

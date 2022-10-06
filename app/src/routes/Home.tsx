@@ -17,8 +17,8 @@ import { useWindowSize } from "../hooks/useWindowSize";
 import UserInfo from "../components/UserInfo";
 
 const Home = () => {
-	const stateService = useRoomContext();
-	const isIdle = useSelector(stateService, (state) => state.matches("idle"));
+	const roomService = useRoomContext();
+	const isIdle = useSelector(roomService, (state) => state.matches("idle"));
 	const { isOpen, onClose, onOpen } = useDisclosure();
 	const { width, height } = useWindowSize();
 
@@ -93,7 +93,7 @@ const Home = () => {
 					</Text>
 					<Stack direction={{ base: "column", md: "row" }} spacing={4}>
 						<Button
-							onClick={() => stateService.send("CREATE_ROOM")}
+							onClick={() => roomService.send("CREATE_ROOM")}
 							disabled={!isIdle}
 							rounded="lg"
 							bg="purple.300"
@@ -109,7 +109,7 @@ const Home = () => {
 							isOpen={isOpen}
 							onClose={onClose}
 							onSubmit={(pin) =>
-								stateService.send({ type: "JOIN_ROOM", roomId: pin })
+								roomService.send({ type: "JOIN_ROOM", roomId: pin })
 							}
 						/>
 					</Stack>

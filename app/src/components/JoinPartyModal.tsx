@@ -13,6 +13,7 @@ import {
 	PinInput,
 	PinInputField,
 	HStack,
+	ModalHeader,
 } from "@chakra-ui/react";
 import { useRoomContext } from "../context/RoomContext";
 
@@ -23,9 +24,9 @@ interface JoinPartyModalProps {
 }
 
 const JoinPartyModal = ({ isOpen, onClose, onSubmit }: JoinPartyModalProps) => {
-	const stateService = useRoomContext();
+	const roomService = useRoomContext();
 	const initialRoomId = useSelector(
-		stateService,
+		roomService,
 		(state) => state.context.roomId
 	);
 	const [pin, setPin] = useState(initialRoomId);
@@ -50,8 +51,8 @@ const JoinPartyModal = ({ isOpen, onClose, onSubmit }: JoinPartyModalProps) => {
 			>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalCloseButton />
-					<ModalBody py={5}>
+					<ModalBody mt={2} mb={4}>
+						<ModalCloseButton zIndex={10} />
 						<FormControl>
 							<FormLabel>Party code:</FormLabel>
 							<HStack>

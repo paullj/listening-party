@@ -20,12 +20,12 @@ import AvatarWithName from "./AvatarWithName";
 interface RoomSidebarProps {}
 
 const RoomSidebar = (props: RoomSidebarProps) => {
-	const stateService = useRoomContext();
+	const roomService = useRoomContext();
 	const meshService = useMeshContext();
 	const { toggleColorMode, colorMode } = useColorMode();
 
 	const { roomName, roomId, userId } = useSelector(
-		stateService,
+		roomService,
 		(state) => state.context
 	);
 	const peers = useSelector(meshService, (state) =>
@@ -46,7 +46,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 							_active={{ bg: "red.200" }}
 							aria-label="Leave room"
 							icon={<ResetIcon />}
-							onClick={() => stateService.send("LEAVE_ROOM")}
+							onClick={() => roomService.send("LEAVE_ROOM")}
 						/>
 					</Tooltip>
 					<Spacer></Spacer>

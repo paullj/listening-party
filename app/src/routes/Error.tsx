@@ -1,39 +1,41 @@
-import { Button, Container, Flex, IconButton } from "@chakra-ui/react";
+import { Container, IconButton } from "@chakra-ui/react";
 import { ResetIcon, ReloadIcon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { MouseEventHandler, useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 import ErrorMessage from "../components/ErrorMessage";
-import { RoomContext, useRoomContext } from "../context/RoomContext";
+import { useRoomContext } from "../context/RoomContext";
 
 const Error = () => {
-	const stateService = useRoomContext();
-	const hasFailed = useSelector(stateService, (state) =>
+	const roomService = useRoomContext();
+	const hasFailed = useSelector(roomService, (state) =>
 		state.matches("failure")
 	);
 
 	useEffect(() => {
 		if (!hasFailed) {
-			stateService.send({ type: "RESET" });
+			roomService.send({ type: "RESET" });
 		}
-	}, [hasFailed, stateService]);
+	}, [hasFailed, roomService]);
 
 	return (
 		<>
 			<Container h="100vh">
 				<IconButton
 					bg="red.300"
+					size="sm"
 					_hover={{ bg: "red.400" }}
 					_active={{ bg: "red.500" }}
 					aria-label="Reset"
 					icon={<ResetIcon />}
-					onClick={() => stateService.send("RESET")}
+					onClick={() => roomService.send("RESET")}
 				/>
 				<IconButton
 					ml={2}
+					size="sm"
 					aria-label="Retry"
 					icon={<ReloadIcon />}
-					onClick={() => stateService.send("RETRY")}
+					onClick={() => roomService.send("RETRY")}
 				/>
 				<ErrorMessage />
 			</Container>

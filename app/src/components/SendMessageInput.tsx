@@ -13,11 +13,11 @@ import { useMeshContext } from "../context/MeshContext";
 interface SendMessageInputProps {}
 
 const SendMessageInput = (props: SendMessageInputProps) => {
-	const stateService = useRoomContext();
+	const roomService = useRoomContext();
 	const meshService = useMeshContext();
 	const feedService = useFeedContext();
 
-	const userId = useSelector(stateService, (state) => state.context.userId);
+	const userId = useSelector(roomService, (state) => state.context.userId);
 
 	const [messageContent, setMessageContent] = useState("");
 
@@ -36,10 +36,7 @@ const SendMessageInput = (props: SendMessageInputProps) => {
 			content: messageContent,
 		};
 		feedService.send({ type: "ADD_MESSAGE", message });
-		meshService.send({
-			type: "SEND_DATA",
-			data: message,
-		});
+		meshService.send({ type: "SEND_MESSAGE", message });
 		setMessageContent("");
 	};
 	return (
