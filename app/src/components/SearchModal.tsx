@@ -7,15 +7,14 @@ import {
 	InputLeftElement,
 	InputGroup,
 	Stack,
+	Box,
 	Button,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { useFeedContext } from "../context/FeedContext";
-import { useMeshContext } from "../context/MeshContext";
 import { useQueueContext } from "../context/QueueContext";
 import { useRoomContext } from "../context/RoomContext";
-import { PeerAction } from "../models/actions";
+import { usePeerAction } from "../hooks/useAction";
 import { Track } from "../models/RTCData";
 import TrackItem from "./TrackItem";
 
@@ -30,57 +29,46 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
 	const searchResults = [
 		{
-			title: "Track 1",
+			title: "Example Track 1",
 			artist: "Alice",
-			album: "Worst Hits 1",
+			album: "Album 1",
 		},
 		{
-			title: "Track 2",
+			title: "Example Track 2",
 			artist: "Bob",
-			album: "Worst Hits 2",
+			album: "Album 2",
 		},
 		{
-			title: "Track 3",
+			title: "Example Track 3",
 			artist: "Charlie",
-			album: "Worst Hits 3",
+			album: "Album 3",
 		},
 	];
 
 	const queueContext = useQueueContext();
-	const meshContext = useMeshContext();
-	const feedContext = useFeedContext();
+	const addTrackToQueueAction = usePeerAction("AddTrackToQueue");
 
 	const handleAddToQueue = (track: Omit<Track, "createdAt" | "createdBy">) => {
-		const addTrackToQueueAction: PeerAction = {
-			type: "AddTrackToQueue",
-			data: {
-				...track,
-				createdBy: userId,
-				createdAt: new Date(),
-			},
+		const newTrack: Track = {
+			...track,
+			createdBy: userId,
+			createdAt: new Date(),
 		};
 
 		queueContext.send({
 			type: "ADD_TO_QUEUE",
-			newTrack: addTrackToQueueAction.data as Track,
+			newTrack,
 		});
-		feedContext.send({
-			type: "ADD_ACTION",
-			action: addTrackToQueueAction,
-		});
-		meshContext.send({
-			type: "SEND_ACTION",
-			action: addTrackToQueueAction,
-		});
+		addTrackToQueueAction(newTrack);
 	};
 
 	return (
 		<>
-			<Modal isOpen={isOpen} onClose={onClose}>
+			<Modal isOpen={isOpen} onClose={onClose} size="2xl">
 				<ModalOverlay />
 				<ModalContent>
 					<ModalBody py={5}>
-						<InputGroup variant="outline">
+						<InputGroup variant="flushed" mb={4}>
 							<InputLeftElement
 								color="gray.700"
 								pointerEvents="none"
@@ -88,7 +76,6 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 							/>
 							<Input placeholder="Search for a track" />
 						</InputGroup>
-						<hr />
 						<Stack>
 							{searchResults.map((track, i) => (
 								<TrackItem key={i} {...track}>

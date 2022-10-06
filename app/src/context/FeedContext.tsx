@@ -18,13 +18,13 @@ const FeedProvider = ({ children }: PropsWithChildren) => {
 		actions: {
 			addOffset: assign({
 				offset: (context, event) =>
-					event.action.data?.createdBy === userId
+					event.action?.createdBy === userId
 						? context.offset
 						: context.offset + 1,
 			}),
 			addUnread: assign({
 				count: (context, event) =>
-					event.action.data?.createdBy === userId
+					event.action?.createdBy === userId
 						? context.count
 						: context.count + 1,
 			}),

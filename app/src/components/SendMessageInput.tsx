@@ -1,25 +1,13 @@
 import { useState } from "react";
 import { FormControl, Input, IconButton, Stack } from "@chakra-ui/react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import { useSelector } from "@xstate/react";
-
-import { useFeedContext } from "../context/FeedContext";
-import { useRoomContext } from "../context/RoomContext";
-
-import type { Message } from "../models/RTCData";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
-import { useMeshContext } from "../context/MeshContext";
-import { PeerAction } from "../models/actions";
+import { usePeerAction } from "../hooks/useAction";
 
 interface SendMessageInputProps {}
 
 const SendMessageInput = (props: SendMessageInputProps) => {
-	const roomService = useRoomContext();
-	const meshService = useMeshContext();
-	const feedService = useFeedContext();
-
-	const userId = useSelector(roomService, (state) => state.context.userId);
-
+	const addMessageAction = usePeerAction("AddMessage");
 	const [messageContent, setMessageContent] = useState("");
 
 	const handleChangeMessage: ChangeEventHandler<HTMLInputElement> = async (
@@ -31,17 +19,7 @@ const SendMessageInput = (props: SendMessageInputProps) => {
 	const handleSend: MouseEventHandler<HTMLButtonElement> = async (event) => {
 		event.preventDefault();
 
-		const addMessageAction: PeerAction = {
-			type: "AddMessage",
-			data: {
-				createdBy: userId,
-				createdAt: new Date(),
-				content: messageContent,
-			},
-		};
-
-		feedService.send({ type: "ADD_ACTION", action: addMessageAction });
-		meshService.send({ type: "SEND_ACTION", action: addMessageAction });
+		addMessageAction({ content: messageContent });
 		setMessageContent("");
 	};
 	return (

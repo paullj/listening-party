@@ -1,9 +1,5 @@
 import { assign, createMachine } from "xstate";
 import { PeerAction } from "../models/actions";
-import { Message, Track, Vote } from "../models/RTCData";
-
-type Kind = "Track" | "Message" | "Vote";
-type WithKind<K> = K & { kind: Kind };
 
 interface FeedContext {
 	count: number;

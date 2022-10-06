@@ -1,7 +1,8 @@
-import { Box, Flex, AspectRatio, Text, Spacer, Stack } from "@chakra-ui/react";
+import { Box, AspectRatio, Text, Spacer, Stack } from "@chakra-ui/react";
 import { Track } from "../models/RTCData";
 
 import type { PropsWithChildren } from "react";
+import Avatar from "boring-avatars";
 
 interface TrackItemProps extends Partial<Track> {}
 
@@ -14,7 +15,7 @@ const TrackItem = ({
 }: PropsWithChildren<TrackItemProps>) => {
 	return (
 		<>
-			<Stack direction="row" alignItems="center">
+			<Stack direction="row" alignItems="center" spacing={4} fontSize="sm">
 				<Box>
 					<Box w="50px" h="50px">
 						<AspectRatio
@@ -28,14 +29,21 @@ const TrackItem = ({
 						</AspectRatio>
 					</Box>
 				</Box>
-				<Box w="25%">
-					{title ?? <Text>{title}</Text>}
+				<Box min-w="25%">
+					{title}
 					<br />
-					{artist ?? <Text>{artist}</Text>}
+					{artist}
 				</Box>
-				<Box min-w="15%">{album ?? <Text>{album}</Text>}</Box>
+				<Box textAlign="center" min-w="15%">
+					{album}
+				</Box>
 				<Spacer></Spacer>
-				<Box>{createdBy ?? <Text>{createdBy}</Text>}</Box>
+				<Box>
+					{createdBy ? (
+						<Avatar size={20} variant="beam" name={createdBy}></Avatar>
+					) : null}
+				</Box>
+
 				<Stack direction="row" spacing={1}>
 					{children}
 				</Stack>

@@ -2,7 +2,7 @@ import { Message, Track } from "./RTCData";
 
 type PeerActionType = keyof PeerActionDataMap;
 
-interface PeerAction {
+interface PeerAction extends PeerActionIdentifier {
 	type: PeerActionType;
 	data: PeerActionDataMap[keyof PeerActionDataMap];
 }
@@ -15,10 +15,10 @@ interface PeerActionIdentifier {
 }
 
 interface PeerActionDataMap {
-	Pause: null;
-	Play: null;
-	NextTrack: null;
-	PreviousTrack: null;
+	Pause: {};
+	Play: {};
+	NextTrack: {};
+	PreviousTrack: {};
 	AddTrackToQueue: Track;
 	RemoveTrackFromQueue: PeerActionIdentifier;
 	AddMessage: Message;

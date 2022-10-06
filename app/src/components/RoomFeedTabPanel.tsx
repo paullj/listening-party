@@ -4,7 +4,11 @@ import { useFeedContext } from "../context/FeedContext";
 import FeedMessage from "./FeedMessage";
 import { Fragment } from "react";
 import UnreadLine from "./UnreadLine";
-import type { PeerActionData, PeerActionType } from "../models/actions";
+import type {
+	PeerAction,
+	PeerActionData,
+	PeerActionType,
+} from "../models/actions";
 
 interface RoomFeedTabPanelProps {}
 
@@ -22,10 +26,10 @@ const RoomFeedTabPanel = (props: RoomFeedTabPanelProps) => {
 			<TabPanel>
 				{feed && feed.length >= 1 ? (
 					<Stack overflowY="scroll" spacing={2}>
-						{feed.map(({ type, data }, i) => (
+						{feed.map((action, i) => (
 							<Fragment key={i}>
-								{getFeedItem(type, data)}
-								{i === unreadOffset + unreadCount - 1 ? (
+								{getFeedItem(action)}
+								{unreadCount && i === unreadOffset + unreadCount - 1 ? (
 									<UnreadLine unreadCount={unreadCount} />
 								) : null}
 							</Fragment>
@@ -39,13 +43,10 @@ const RoomFeedTabPanel = (props: RoomFeedTabPanelProps) => {
 	);
 };
 
-const getFeedItem = <T extends PeerActionType>(
-	type: T,
-	data: PeerActionData<T>
-) => {
-	switch (type) {
+const getFeedItem = (action: PeerAction) => {
+	switch (action.type) {
 		case "AddMessage":
-			return <FeedMessage {...(data as PeerActionData<"AddMessage">)} />;
+			return <FeedMessage {...(action.data as PeerActionData<"AddMessage">)} />;
 		default:
 			return (
 				<Text
@@ -53,7 +54,7 @@ const getFeedItem = <T extends PeerActionType>(
 					fontSize="xs"
 					textAlign="center"
 					color="red.200"
-				>{`${type} by ${data?.createdBy.slice(0, 6)}`}</Text>
+				>{`${action.type} by ${action.createdBy.slice(0, 6)}`}</Text>
 			);
 	}
 };

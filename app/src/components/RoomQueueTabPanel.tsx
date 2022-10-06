@@ -1,4 +1,5 @@
 import {
+	Badge,
 	Heading,
 	IconButton,
 	Stack,
@@ -29,7 +30,7 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
 	return (
 		<>
 			<TabPanel max-h="full">
-				<Heading fontSize={{ base: "md" }} mb={2}>
+				<Heading fontSize={{ base: "md" }} color="gray.700" mb={2}>
 					<Text>Up Next:</Text>
 				</Heading>
 				{upNext ? (
@@ -45,7 +46,7 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
 				) : (
 					"Nothing up next"
 				)}
-				<Heading fontSize={{ base: "md" }} mt={4} mb={2}>
+				<Heading fontSize={{ base: "md" }} color="gray.700" mt={4} mb={2}>
 					<Text>In Queue:</Text>
 				</Heading>
 				{queue && queue.length >= 1 ? (

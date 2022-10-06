@@ -43,8 +43,12 @@ const roomMachine = createMachine(
 				after: {
 					3000: { target: "failure.signal" },
 				},
+				always: {
+					cond: "hasUserId",
+					target: "idle",
+				},
 				on: {
-					SET_USER_ID: { target: "idle", actions: ["setUserId"] },
+					SET_USER_ID: { actions: ["setUserId"] },
 				},
 			},
 			idle: {
@@ -115,7 +119,9 @@ const roomMachine = createMachine(
 		},
 	},
 	{
-		guards: {},
+		guards: {
+			hasUserId: (context) => context.userId.trim() !== "",
+		},
 		services: {},
 		actions: {
 			setUserId: assign({ userId: (_, event) => event.userId }),

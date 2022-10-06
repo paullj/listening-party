@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
 import { useQueueContext } from "../context/QueueContext";
+import { usePeerAction } from "../hooks/useAction";
 
 interface NowPlayingControlsProps {}
 
@@ -20,6 +21,20 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 		queueService,
 		(state) => state.context.history.length > 0
 	);
+	const previousTrackAction = usePeerAction("PreviousTrack");
+	const nextTrackAction = usePeerAction("NextTrack");
+
+	const handlePreviousTrack = () => {
+		queueService.send("PREV_TRACK");
+		previousTrackAction();
+	};
+
+	const handlePlayTrack = () => {};
+
+	const handleNextTrack = () => {
+		queueService.send("NEXT_TRACK");
+		nextTrackAction();
+	};
 
 	return (
 		<>
@@ -31,7 +46,7 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 							size="md"
 							aria-label="Previous track"
 							disabled={!hasPrevTrack}
-							onClick={() => queueService.send("PREV_TRACK")}
+							onClick={() => handlePreviousTrack()}
 							icon={<TrackPreviousIcon />}
 						/>
 						<IconButton
@@ -39,6 +54,7 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 							size="md"
 							aria-label="Play track"
 							disabled
+							onClick={() => handlePlayTrack()}
 							icon={<PlayIcon />}
 						/>
 						<IconButton
@@ -46,7 +62,7 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 							size="md"
 							aria-label="Next track"
 							disabled={!hasNextTrack}
-							onClick={() => queueService.send("NEXT_TRACK")}
+							onClick={() => handleNextTrack()}
 							icon={<TrackNextIcon />}
 						/>
 					</Box>

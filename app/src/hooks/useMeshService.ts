@@ -11,11 +11,13 @@ import type { Peer } from "../models/peer";
 import type { Mesh } from "../models/mesh";
 import type { MeshInterpreter } from "../context/MeshContext";
 import { PeerAction, PeerActionData } from "../models/actions";
+import { useQueueContext } from "../context/QueueContext";
 
 const useMeshService = (): MeshInterpreter => {
 	const socket = useSocketContext();
 	const roomService = useRoomContext();
 	const feedService = useFeedContext();
+	const queueService = useQueueContext();
 
 	const userId = useSelector(roomService, (state) => state.context.userId);
 	const roomId = useSelector(roomService, (state) => state.context.roomId);
@@ -69,11 +71,37 @@ const useMeshService = (): MeshInterpreter => {
 
 					channel.onmessage = (message) => {
 						if (isJSON(message.data)) {
-							let action = JSON.parse(message.data) as PeerAction;
+							let { type, createdBy, createdAt, data } = JSON.parse(
+								message.data
+							);
+							const action = {
+								type,
+								createdBy,
+								createdAt: new Date(createdAt),
+								data: {
+									...data,
+									createdAt: new Date(data.createdAt),
+								},
+							} as PeerAction;
+
 							feedService.send({
 								type: "ADD_ACTION",
 								action,
 							});
+							switch (action.type) {
+								case "AddTrackToQueue":
+									queueService.send({
+										type: "ADD_TO_QUEUE",
+										newTrack: action.data as PeerActionData<"AddTrackToQueue">,
+									});
+									break;
+								case "PreviousTrack":
+									queueService.send("PREV_TRACK");
+									break;
+								case "NextTrack":
+									queueService.send("NEXT_TRACK");
+									break;
+							}
 						}
 					};
 
@@ -139,11 +167,9 @@ const sendAction = (userId: string, mesh: Mesh, action: PeerAction) => {
 			peer.channel.send(
 				JSON.stringify({
 					type: action.type,
-					data: {
-						...action.data,
-						createdAt: new Date().toISOString(),
-						createdBy: userId,
-					},
+					createdAt: new Date().toISOString(),
+					createdBy: userId,
+					data: action.data,
 				})
 			);
 		}
