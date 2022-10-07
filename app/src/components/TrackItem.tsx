@@ -3,9 +3,9 @@ import { Track } from "../models/track";
 
 import type { PropsWithChildren } from "react";
 import Avatar from "boring-avatars";
-import { PeerActionIdentifier } from "../models/actions";
+import { PeerActionIdentifier, WithIdentifier } from "../models/actions";
 
-type TrackItemProps = Track & Partial<PeerActionIdentifier>;
+type TrackItemProps = WithIdentifier<Track>;
 
 const TrackItem = ({
 	children,

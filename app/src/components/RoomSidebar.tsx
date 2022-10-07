@@ -44,11 +44,11 @@ const RoomSidebar = (props: RoomSidebarProps) => {
 	);
 
 	const actions = useSelector(feedContext, (state) => state.context.feed);
-	const syncRequestAction = useSendAction("RequestSync");
+	const requestSyncAction = useSendAction("RequestSync");
 	const syncAction = useBroadcastAction("Sync");
 
 	const handleRequestSync = () => {
-		syncRequestAction(host, { userId });
+		requestSyncAction(host, { userId });
 	};
 
 	const handleSync = () => {

@@ -21,12 +21,14 @@ const useMeshService = (): MeshInterpreter => {
 
 	const userId = useSelector(roomService, (state) => state.context.userId);
 	const roomId = useSelector(roomService, (state) => state.context.roomId);
-	const actions = useSelector(feedService, (state) => state.context.feed);
+	const feedActions = useSelector(feedService, (state) => state.context.feed);
 
 	const meshService = useInterpret(meshMachine, {
 		actions: {
 			sendAction: (context, event) =>
-				sendAction(userId, context.mesh, event.action),
+				sendAction(userId, event.userId, context.mesh, event.action),
+			broadcastAction: (context, event) =>
+				broadcastAction(userId, context.mesh, event.action),
 			addToMesh: assign({
 				mesh: (context, event) => {
 					if (context.mesh.has(event.userId)) return context.mesh;
@@ -72,53 +74,76 @@ const useMeshService = (): MeshInterpreter => {
 
 					channel.onmessage = (message) => {
 						if (isJSON(message.data)) {
-							let { type, createdBy, createdAt, data } = JSON.parse(
-								message.data
-							);
-							const action = {
-								type,
-								createdBy,
-								createdAt: new Date(createdAt),
-								data: {
-									...data,
-									createdAt: new Date(data.createdAt),
-								},
+							let action = JSON.parse(message.data);
+							console.log(action);
+							const parsedAction = {
+								...action,
+								createdAt:
+									typeof action.createdAt === "string"
+										? new Date(action.createdAt)
+										: action.createdAt,
 							} as PeerAction;
 
-							if (!action.hide) {
-								feedService.send({
-									type: "ADD_ACTION",
-									action,
-								});
-							}
-
-							switch (action.type) {
-								case "AddTrackToQueue":
-									queueService.send({
-										type: "ADD_TO_QUEUE",
+							const recursiveAction = (action: PeerAction) => {
+								if (!action.hide) {
+									feedService.send({
+										type: "ADD_ACTION",
 										action,
 									});
-									break;
-								case "PreviousTrack":
-									queueService.send("PREV_TRACK");
-									break;
-								case "NextTrack":
-									queueService.send("NEXT_TRACK");
-									break;
-								case "RequestSync":
-									meshService.send({
-										type: "SEND_ACTION",
-										userId: (action.data as PeerActionData<"RequestSync">)
-											.userId!,
-										action: {
+								}
+
+								switch (action.type) {
+									case "AddTrackToQueue":
+										queueService.send({
+											type: "ADD_TO_QUEUE",
+											action,
+										});
+										break;
+									case "PreviousTrack":
+										queueService.send("PREV_TRACK");
+										break;
+									case "NextTrack":
+										queueService.send("NEXT_TRACK");
+										break;
+									case "RequestSync":
+										const actionData =
+											action.data as PeerActionData<"RequestSync">;
+
+										const syncAction: PeerAction = {
 											type: "Sync",
+											createdAt: new Date(),
 											createdBy: userId,
 											hide: true,
-											createdAt: new Date(),
-											data: actions,
-										},
-									});
-							}
+											data: feedActions,
+										};
+										console.log(feedActions);
+										meshService.send({
+											type: "SEND_ACTION",
+											userId: actionData.userId!,
+											action: syncAction,
+										});
+										break;
+									case "Sync":
+										queueService.send("CLEAR_QUEUE");
+										feedService.send("CLEAR_FEED");
+										const actions = action.data as PeerActionData<"Sync">;
+										const nonSyncActions = actions.filter(
+											({ type }) => type !== "Sync" && type !== "RequestSync"
+										);
+
+										nonSyncActions
+											.map(({ createdAt, ...a }) => ({
+												...a,
+												createdAt: new Date(createdAt),
+											}))
+											.sort(
+												(b, a) => b.createdAt.valueOf() - a.createdAt.valueOf()
+											)
+											.forEach((a) => recursiveAction(a));
+										break;
+								}
+							};
+							recursiveAction(parsedAction);
 						}
 					};
 
@@ -178,19 +203,29 @@ const createPeer = (userId: string): Peer => {
 	};
 };
 
-const sendAction = (userId: string, mesh: Mesh, action: PeerAction) => {
+const broadcastAction = (userId: string, mesh: Mesh, action: PeerAction) => {
 	mesh.forEach((peer) => {
+		sendAction(userId, peer.userId, mesh, action);
+	});
+};
+const sendAction = (
+	userId: string,
+	to: string,
+	mesh: Mesh,
+	action: PeerAction
+) => {
+	const peer = mesh.get(to);
+	if (peer) {
 		if (peer.channel.readyState === "open") {
 			peer.channel.send(
 				JSON.stringify({
-					type: action.type,
-					createdAt: new Date().toISOString(),
+					...action,
+					createdAt: new Date(),
 					createdBy: userId,
-					data: action.data,
 				})
 			);
 		}
-	});
+	}
 };
 
 export { useMeshService };

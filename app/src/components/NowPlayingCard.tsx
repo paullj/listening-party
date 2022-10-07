@@ -15,7 +15,7 @@ const NowPlayingCard = (props: NowPlayingCardProps) => {
 	// TODO: replace this with an actual now playing card
 	return (
 		<>
-			<TrackItem {...nowPlaying}></TrackItem>
+			{nowPlaying ? <TrackItem {...nowPlaying}></TrackItem> : null}
 			{/* <Flex direction="row" alignItems="center">
 				<Box w="100px" h="100px">
 					<AspectRatio

@@ -10,6 +10,7 @@ interface FeedContext {
 type FeedEvent =
 	| { type: "OPEN_FEED" }
 	| { type: "CLOSE_FEED" }
+	| { type: "CLEAR_FEED" }
 	| { type: "ADD_ACTION"; action: PeerAction };
 
 interface FeedSchema {
@@ -31,6 +32,11 @@ const feedMachine = createMachine(
 		schema: {} as FeedSchema,
 		initial: "closed",
 		predictableActionArguments: true,
+		on: {
+			CLEAR_FEED: {
+				actions: "clearFeed",
+			},
+		},
 		states: {
 			closed: {
 				on: {
@@ -77,6 +83,11 @@ const feedMachine = createMachine(
 		},
 		services: {},
 		actions: {
+			clearFeed: assign((context, event) => ({
+				count: 0,
+				offset: 0,
+				feed: [],
+			})),
 			addAction: assign({
 				feed: (context, event) => {
 					const action: PeerAction = event.action;

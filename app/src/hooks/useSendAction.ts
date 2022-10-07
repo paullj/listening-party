@@ -10,13 +10,13 @@ const useSendAction = <T extends PeerActionType>(type: T) => {
 	const roomContext = useRoomContext();
 	const userId = useSelector(roomContext, (state) => state.context.userId);
 
-	const execute = (to: string, data?: PeerActionData<T>, hide = true) => {
+	const execute = (to: string, data: PeerActionData<T>, hide = true) => {
 		const action: PeerAction = {
 			type,
 			createdAt: new Date(),
 			createdBy: userId,
 			hide,
-			data: { ...data },
+			data,
 		};
 
 		if (!hide) {

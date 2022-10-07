@@ -67,6 +67,9 @@ const meshMachine = createMachine(
 					SEND_ACTION: {
 						actions: "sendAction",
 					},
+					BROADCAST_ACTION: {
+						actions: "broadcastAction",
+					},
 				},
 			},
 		},

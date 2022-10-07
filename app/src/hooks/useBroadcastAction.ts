@@ -10,13 +10,13 @@ const useBroadcastAction = <T extends PeerActionType>(type: T) => {
 	const roomContext = useRoomContext();
 	const userId = useSelector(roomContext, (state) => state.context.userId);
 
-	const execute = (data?: PeerActionData<T>, hide = false) => {
+	const execute = (data: PeerActionData<T>, hide = false) => {
 		const action: PeerAction = {
 			type,
 			createdAt: new Date(),
 			createdBy: userId,
 			hide,
-			data: { ...data },
+			data,
 		};
 
 		if (!hide) {

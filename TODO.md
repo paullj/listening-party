@@ -10,5 +10,5 @@ Features
 - [ ] Delete empty rooms
 
 Bugs
-- Sidepanel need a fixed/min width
 - Dark mode colours for lots of things need adjusting
+- Requesting sync seems out of whack, doesn;t update after initial

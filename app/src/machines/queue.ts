@@ -13,6 +13,7 @@ interface QueueContext {
 }
 
 type QueueEvent =
+	| { type: "CLEAR_QUEUE" }
 	| {
 			type: "ADD_TO_QUEUE";
 			action: PeerAction;
@@ -61,6 +62,9 @@ const queueMachine = createMachine(
 					cond: "isEmpty",
 				},
 				on: {
+					CLEAR_QUEUE: {
+						actions: "clearQueue",
+					},
 					PREV_TRACK: {
 						cond: "hasHistory",
 						actions: "previousTrack",
@@ -84,6 +88,11 @@ const queueMachine = createMachine(
 		},
 		services: {},
 		actions: {
+			clearQueue: assign((context, event) => ({
+				history: [],
+				nowPlaying: null,
+				queue: [],
+			})),
 			addToQueue: assign((context, event) => {
 				const track: WithIdentifier<Track> = {
 					...(event.action.data as PeerActionData<"AddTrackToQueue">),

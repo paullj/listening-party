@@ -46,7 +46,13 @@ const RoomFeedTabPanel = (props: RoomFeedTabPanelProps) => {
 const getFeedItem = (action: PeerAction) => {
 	switch (action.type) {
 		case "AddMessage":
-			return <FeedMessage {...(action.data as PeerActionData<"AddMessage">)} />;
+			return (
+				<FeedMessage
+					createdAt={action.createdAt}
+					createdBy={action.createdBy}
+					{...(action.data as PeerActionData<"AddMessage">)}
+				/>
+			);
 		default:
 			return (
 				<Text
