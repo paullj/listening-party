@@ -25,14 +25,14 @@ const NowPlayingControls = (props: NowPlayingControlsProps) => {
 	const nextTrackAction = useBroadcastAction("NextTrack");
 
 	const handlePreviousTrack = () => {
-		previousTrackAction();
+		previousTrackAction({});
 		queueService.send("PREV_TRACK");
 	};
 
 	const handlePlayTrack = () => {};
 
 	const handleNextTrack = () => {
-		nextTrackAction();
+		nextTrackAction({});
 		queueService.send("NEXT_TRACK");
 	};
 

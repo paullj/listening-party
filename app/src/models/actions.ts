@@ -19,7 +19,7 @@ interface PeerActionIdentifier {
 	createdBy: string;
 }
 
-type WithIdentifier<T> = PeerActionIdentifier & T;
+type WithIdentifier<T> = Partial<PeerActionIdentifier> & T;
 
 interface PeerActionDataMap {
 	// Player Actions
