@@ -51,12 +51,8 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
 				</Heading>
 				{queue && queue.length >= 1 ? (
 					<Stack overflowY="scroll" spacing={2}>
-						{queue.slice(1).map(({ createdAt, ...track }) => (
-							<TrackItem
-								key={createdAt.toISOString()}
-								createdAt={createdAt}
-								{...track}
-							>
+						{queue.slice(1).map(({ createdAt, ...track }, i) => (
+							<TrackItem key={i} createdAt={createdAt} {...track}>
 								<IconButton
 									size="xs"
 									_hover={{ bg: bgHover }}

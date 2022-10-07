@@ -16,12 +16,8 @@ const RoomHistoryTabPanel = (props: RoomHistoryTabPanelProps) => {
 			<TabPanel>
 				{history && history.length >= 1 ? (
 					<Stack spacing={2}>
-						{history.map(({ createdAt, ...track }) => (
-							<TrackItem
-								key={createdAt.toISOString()}
-								createdAt={createdAt}
-								{...track}
-							></TrackItem>
+						{history.map(({ createdAt, ...track }, i) => (
+							<TrackItem key={i} createdAt={createdAt} {...track}></TrackItem>
 						))}
 					</Stack>
 				) : (
