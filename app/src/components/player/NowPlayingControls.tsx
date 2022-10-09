@@ -6,8 +6,8 @@ import {
 	SpeakerModerateIcon,
 } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { useQueueContext } from "../context/QueueContext";
-import { useBroadcastAction } from "../hooks/useBroadcastAction";
+import { useQueueContext } from "../../context/QueueContext";
+import { useBroadcastAction } from "../../hooks/useBroadcastAction";
 
 interface NowPlayingControlsProps {}
 

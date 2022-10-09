@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { RoomProvider } from "./context/RoomContext";
 import { SocketProvider } from "./context/SocketContext";
-import UserInfo from "./components/UserInfo";
+import UserInfo from "./components/home/UserInfo";
 
 import Home from "./routes/Home";
 import Room from "./routes/Room";

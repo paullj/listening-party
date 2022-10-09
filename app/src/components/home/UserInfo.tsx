@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { useRoomContext } from "../context/RoomContext";
-import AvatarWithName from "./AvatarWithName";
+import { useRoomContext } from "../../context/RoomContext";
+import AvatarWithName from "../shared/AvatarWithName";
 
 const UserInfo = () => {
 	const roomService = useRoomContext();

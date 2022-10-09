@@ -9,8 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { useQueueContext } from "../context/QueueContext";
-import TrackItem from "./TrackItem";
+import { useQueueContext } from "../../context/QueueContext";
+import TrackItem from "../shared/TrackItem";
 
 interface RoomQueuePanelProps {
 	// tracks: Track[]

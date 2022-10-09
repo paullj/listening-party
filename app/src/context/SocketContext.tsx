@@ -4,9 +4,17 @@ import { WebSocketDispatcher } from "../helpers/WebSocketDispatcher";
 import type { PropsWithChildren } from "react";
 import type { SocketEventType, SocketEventDataMap } from "../models/socket";
 
-const socket = new WebSocketDispatcher<SocketEventDataMap>(
-	import.meta.env.VITE_SOCKET_ENDPOINT
-);
+const getDispatcher = () => {
+	let socketEndpoint = import.meta.env.VITE_SOCKET_ENDPOINT;
+
+	const socketId = localStorage.getItem("socketId");
+	if (socketId) {
+		socketEndpoint += `/${socketId}`;
+	}
+	return new WebSocketDispatcher<SocketEventDataMap>(socketEndpoint);
+};
+
+const socket = getDispatcher();
 
 type Callback<T extends SocketEventType> = (
 	data: SocketEventDataMap[T]
@@ -21,9 +29,7 @@ const SocketProvider = ({ children }: PropsWithChildren) => {
 	const [dispatcher, setDispatcher] = useState(socket);
 
 	const handleReconnect = () => {
-		const newDispatcher = new WebSocketDispatcher<SocketEventDataMap>(
-			import.meta.env.VITE_SOCKET_ENDPOINT
-		);
+		const newDispatcher = getDispatcher();
 		setDispatcher(newDispatcher);
 	};
 

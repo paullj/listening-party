@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FormControl, Input, IconButton, Stack } from "@chakra-ui/react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import type { ChangeEventHandler, MouseEventHandler } from "react";
-import { useBroadcastAction } from "../hooks/useBroadcastAction";
+import { useBroadcastAction } from "../../hooks/useBroadcastAction";
 
 interface SendMessageInputProps {}
 

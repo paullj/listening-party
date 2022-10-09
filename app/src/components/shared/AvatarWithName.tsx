@@ -20,7 +20,7 @@ const AvatarWithName = ({
 						hasArrow
 						closeOnClick={false}
 						isDisabled={isConnected === undefined}
-						placement="auto"
+						placement="bottom-end"
 						label={isConnected ? "Connected" : "Disconnected"}
 					>
 						<Box position="relative">

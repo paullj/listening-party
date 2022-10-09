@@ -13,13 +13,13 @@ import {
 } from "@chakra-ui/react";
 
 import { ResetIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
-import { useRoomContext } from "../context/RoomContext";
-import { useMeshContext } from "../context/MeshContext";
+import { useRoomContext } from "../../context/RoomContext";
+import { useMeshContext } from "../../context/MeshContext";
 import { useSelector } from "@xstate/react";
-import AvatarWithName from "./AvatarWithName";
-import { useSendAction } from "../hooks/useSendAction";
-import { useFeedContext } from "../context/FeedContext";
-import { useBroadcastAction } from "../hooks/useBroadcastAction";
+import AvatarWithName from "../shared/AvatarWithName";
+import { useSendAction } from "../../hooks/useSendAction";
+import { useFeedContext } from "../../context/FeedContext";
+import { useBroadcastAction } from "../../hooks/useBroadcastAction";
 
 interface RoomSidebarProps {}
 

@@ -1,7 +1,7 @@
 import { Heading, Stack, TabPanel, Text } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { useQueueContext } from "../context/QueueContext";
-import TrackItem from "./TrackItem";
+import { useQueueContext } from "../../context/QueueContext";
+import TrackItem from "../shared/TrackItem";
 
 interface RoomHistoryTabPanelProps {
 	// tracks: Track[]

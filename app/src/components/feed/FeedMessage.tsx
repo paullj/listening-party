@@ -1,11 +1,11 @@
 import { Stack, Box, Text, Spacer } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
 import Avatar from "boring-avatars";
-import { useRoomContext } from "../context/RoomContext";
+import { useRoomContext } from "../../context/RoomContext";
 import { format } from "timeago.js";
 
-import type { Message } from "../models/message";
-import type { PeerActionIdentifier } from "../models/actions";
+import type { Message } from "../../models/message";
+import type { PeerActionIdentifier } from "../../models/actions";
 
 type FeedMessageProps = Message & Partial<PeerActionIdentifier>;
 

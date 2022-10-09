@@ -16,19 +16,20 @@ import {
 
 import { useRoomContext } from "../context/RoomContext";
 
-import RoomSidebar from "../components/RoomSidebar";
-import RoomQueueTabPanel from "../components/RoomQueueTabPanel";
-import RoomFeedTabPanel from "../components/RoomFeedTabPanel";
-import RoomHistoryTabPanel from "../components/RoomHistoryTabPanel";
-import SearchButton from "../components/SearchButton";
-import SearchModal from "../components/SearchModal";
-import NowPlayingCard from "../components/NowPlayingCard";
-import NowPlayingControls from "../components/NowPlayingControls";
-import SendMessageInput from "../components/SendMessageInput";
+import RoomSidebar from "../components/room/RoomSidebar";
+import RoomQueueTabPanel from "../components/room/RoomQueueTabPanel";
+import RoomFeedTabPanel from "../components/room/RoomFeedTabPanel";
+import RoomHistoryTabPanel from "../components/room/RoomHistoryTabPanel";
+import SearchButton from "../components/search/SearchButton";
+import SearchModal from "../components/search/SearchModal";
+import NowPlayingCard from "../components/player/NowPlayingCard";
+import NowPlayingControls from "../components/player/NowPlayingControls";
+import SendMessageInput from "../components/feed/SendMessageInput";
 import { FeedProvider, useFeedContext } from "../context/FeedContext";
 import { QueueProvider } from "../context/QueueContext";
 import { MeshProvider } from "../context/MeshContext";
-import FeedTab from "../components/FeedTab";
+import FeedTab from "../components/room/FeedTab";
+import SpotifyWebPlayback from "../components/SpotifyWebPlayback";
 
 const Room = () => {
 	const { id } = useParams();
@@ -36,6 +37,11 @@ const Room = () => {
 	const feedService = useFeedContext();
 
 	const hasJoined = useSelector(roomService, (state) => state.matches("room"));
+	const isHost = useSelector(
+		roomService,
+		(state) => state.context.userId === state.context.hostId
+	);
+
 	const { isOpen, onClose, onOpen } = useDisclosure();
 
 	const handleTabChange = (index: number) => {

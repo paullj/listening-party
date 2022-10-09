@@ -1,9 +1,9 @@
 import { Box, AspectRatio, Text, Spacer, Stack } from "@chakra-ui/react";
-import { Track } from "../models/track";
+import { Track } from "../../models/track";
 
 import type { PropsWithChildren } from "react";
 import Avatar from "boring-avatars";
-import { PeerActionIdentifier, WithIdentifier } from "../models/actions";
+import { PeerActionIdentifier, WithIdentifier } from "../../models/actions";
 
 type TrackItemProps = WithIdentifier<Track>;
 

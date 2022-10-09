@@ -1,6 +1,6 @@
 import { Badge, Tab } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { useFeedContext } from "../context/FeedContext";
+import { useFeedContext } from "../../context/FeedContext";
 
 interface FeedTabProps {}
 

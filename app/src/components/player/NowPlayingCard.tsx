@@ -1,7 +1,7 @@
 import { Text, Box, Flex, AspectRatio } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { useQueueContext } from "../context/QueueContext";
-import TrackItem from "./TrackItem";
+import { useQueueContext } from "../../context/QueueContext";
+import TrackItem from "../shared/TrackItem";
 
 interface NowPlayingCardProps {}
 

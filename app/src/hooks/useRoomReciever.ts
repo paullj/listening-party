@@ -14,8 +14,10 @@ const useRoomReciever = (roomService: RoomInterpreter) => {
 	);
 
 	const handleConnectSucessful = useCallback(
-		(data: SocketEventData<"ConnectSuccessful">) =>
-			roomService.send({ type: "SET_USER_ID", ...data }),
+		(data: SocketEventData<"ConnectSuccessful">) => {
+			localStorage.setItem("socketId", data.userId);
+			roomService.send({ type: "SET_USER_ID", ...data });
+		},
 		[]
 	);
 

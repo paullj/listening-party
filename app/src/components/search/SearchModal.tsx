@@ -11,11 +11,11 @@ import {
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useSelector } from "@xstate/react";
-import { useQueueContext } from "../context/QueueContext";
-import { useRoomContext } from "../context/RoomContext";
-import { useBroadcastAction } from "../hooks/useBroadcastAction";
-import type { Track } from "../models/track";
-import TrackItem from "./TrackItem";
+import { useQueueContext } from "../../context/QueueContext";
+import { useRoomContext } from "../../context/RoomContext";
+import { useBroadcastAction } from "../../hooks/useBroadcastAction";
+import type { Track } from "../../models/track";
+import TrackItem from "../shared/TrackItem";
 
 interface SearchModalProps {
 	isOpen: boolean;

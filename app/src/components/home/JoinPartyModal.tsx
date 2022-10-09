@@ -15,7 +15,7 @@ import {
 	HStack,
 	ModalHeader,
 } from "@chakra-ui/react";
-import { useRoomContext } from "../context/RoomContext";
+import { useRoomContext } from "../../context/RoomContext";
 
 interface JoinPartyModalProps {
 	isOpen: boolean;

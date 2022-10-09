@@ -28,8 +28,12 @@ rooms.set("abc123", {
 const createSocketServer = (httpServer: Server) => {
 	const server = new WebSocketServer({ server: httpServer });
 
-	server.on("connection", (socket: WebSocket) => {
-		let userId: string = generateUUID();
+	server.on("connection", (socket: WebSocket, request) => {
+		const incommingId = request?.url?.split("/").pop();
+		// TODO: When using redis for all connections, make sure no ids overlap
+		// FIXME: Can't use multiple windows if you use this
+		// const userId: string = incommingId ?? generateUUID();
+		const userId: string = generateUUID();
 
 		socket.on("message", (message: string) => {
 			if (!isJSON(message)) {

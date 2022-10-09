@@ -1,14 +1,14 @@
 import { Text, Stack, TabPanel } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
-import { useFeedContext } from "../context/FeedContext";
-import FeedMessage from "./FeedMessage";
+import { useFeedContext } from "../../context/FeedContext";
+import FeedMessage from "../feed/FeedMessage";
 import { Fragment } from "react";
-import UnreadLine from "./UnreadLine";
+import UnreadLine from "../feed/UnreadLine";
 import type {
 	PeerAction,
 	PeerActionData,
 	PeerActionType,
-} from "../models/actions";
+} from "../../models/actions";
 
 interface RoomFeedTabPanelProps {}
 
