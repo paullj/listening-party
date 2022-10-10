@@ -6,16 +6,21 @@ Features
 - [x] Send tracks over RTC
 - [x] Sync of data in room
 - [ ] Add votes to tracks
+	- [ ] Make votes for pause and skip as well
 - [ ] Ping/pong to check if user is alive
 - [ ] Delete empty rooms
 
 - [ ] Restrict backend to certain domains
+	- put front end and backend on same domain 
+		- would solve this
+		- and make auth easier
+
 - [ ] Auth: Spotify, Deezer, Youtube
 - [ ] Use redis for caching and maybe also rooms??????
 
 Bugs
 - Dark mode colours for lots of things need adjusting
-- Requesting sync seems out of whack, doesn;t update after initial
+- Requesting sync seems out of whack, doesn't update after initial
 
 
 Search results
