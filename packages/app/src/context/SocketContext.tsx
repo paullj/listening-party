@@ -6,8 +6,8 @@ import type { SocketEventType, SocketEventDataMap } from "../models/socket";
 
 const getDispatcher = () => {
 	let socketEndpoint =  import.meta.env.DEV ?
-		import.meta.env.VITE_DEV_SOCKET_ENDPOINT : import.meta.env.VITE_PROD_SOCKET_ENDPOINT;
-
+		import.meta.env.VITE_SOCKET_ENDPOINT : 
+((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host;
 	const socketId = localStorage.getItem("socketId");
 	if (socketId) {
 		socketEndpoint += `/${socketId}`;
