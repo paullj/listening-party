@@ -32,8 +32,9 @@ COPY --from=base /usr/base ./
 RUN pnpm build --projects=@listening-party/server
 
 FROM base
+WORKDIR /usr/app
 COPY --from=builder /usr/builder ./
 ARG PORT=8080
 EXPOSE $PORT
 ENV PORT=$PORT       
-RUN pnpm start
+CMD pnpm start
