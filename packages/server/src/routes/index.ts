@@ -1,7 +1,7 @@
 import express from "express";
 import { rooms } from "../createServer";
 
-import auth from "./auth/";
+import auth from "./auth";
 
 const router = express.Router();
 router.use("/auth", auth);

@@ -1,0 +1,12 @@
+{
+	"private": true,
+	"name": "@listening-party/core",
+	"description": "Shared types",
+	"scripts": {},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"typescript": "^4.8.4"
+	}
+}
