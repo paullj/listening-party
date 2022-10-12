@@ -26,11 +26,11 @@ This monorepo contains all the code required to run Listening Party, it is split
 - `@listening-party/core` - Shared code between `app` and `server`
 
 All packages use:
-- TypeScript for development which is transpiled into JavaScript
-- ESLint 
-- Prettier
-- Jest
-- Husky
+- `TypeScript` - For development which is transpiled into JavaScript
+- `ESLint` - Finds and fixes problems in code 
+- `Prettier` - Automatically formats code to be consistent
+- `Jest`/`Vitest` - For automatic unit testing
+- `Husky` - Automatically runs linting, testing and formatting before commiting
 
 The monorepo uses `pnpm` and `nx` to handle workspaces and internal dependencies between packages (since both the `app` and `server` depend on `core`). `nx` is also used to handle build, dev and test scripts.
 
@@ -66,12 +66,23 @@ Initially however, to facilitate the creation of each peer-to-peer connection, a
 		Note left of A: Peer Connected!
 ```
 
-## Setup
+## Project Setup
 ### Prerequisites
 - Make sure you have PNPM installed
 - Have a Spotify Application
 - Have a LastFM Application
+- Have Docker installed
 
+### Installation
 1. Clone this repository using `git clone https://github.com/paullj/listening-party.git`
-2. 
+2. Run `pnpm install`
+
+### Running
+Run `pnpm dev` and navigate to the frontend endpoint in the terminal for development. This used `vite` and `nodemon` for the frontend and backend respectively
+
+For building for production, use `pnpm build`
+
+### Deploying
+I use render.com but this should be deployable anywhere with Docker. The Dockerfile runs a build step and serves the frontend using an express server.
+
 
