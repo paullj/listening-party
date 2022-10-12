@@ -9,6 +9,10 @@ Users can either just add songs and vote or also play music along with the room.
 
 *A paid spotify account is required to play songs.*
 
+## Project Information
+
+## How does it work?
+
 ## What libraries does this use?
 - React - For reactivity in the app
 - XState - For global state management

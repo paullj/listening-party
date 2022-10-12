@@ -5,7 +5,8 @@ import type { PropsWithChildren } from "react";
 import type { SocketEventType, SocketEventDataMap } from "../models/socket";
 
 const getDispatcher = () => {
-	let socketEndpoint = import.meta.env.VITE_SOCKET_ENDPOINT;
+	let socketEndpoint =  import.meta.env.DEV ?
+		import.meta.env.VITE_DEV_SOCKET_ENDPOINT : import.meta.env.VITE_PROD_SOCKET_ENDPOINT;
 
 	const socketId = localStorage.getItem("socketId");
 	if (socketId) {
