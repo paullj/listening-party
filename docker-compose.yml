@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
+      - ./:/usr/base
+      - ./:/usr/builder
       - ./:/usr/app
     container_name: listening-party
     expose:
