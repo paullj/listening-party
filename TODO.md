@@ -13,7 +13,10 @@
 - [ ] Auth: Spotify, Deezer, Youtube
 - [ ] Use redis for caching and maybe also rooms??????
 
-- [ ] 
+- [ ] Add prettier
+- [ ] Add eslint
+- [ ] Add Jest
+- [ ] Add Husky
 
 ## Bugs
 - Dark mode colours for lots of things need adjusting

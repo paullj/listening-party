@@ -2,15 +2,27 @@
 	"name": "listening-party",
 	"version": "1.0.0",
 	"description": "A shared peer-to-peer music queue for you and your friends",
-	"private": true,
+	"author": "Paul Lavender-Jones",
+	"license": "MIT",
 	"scripts": {
 		"clean": "nx run-many --target=clean --all",
+		"format": "nx run-many --target=format --all",
+		"lint": "nx run-many --target=lint --all",
+		"test": "nx run-many --target=test --all",
 		"dev": "nx run-many --target=dev --all",
 		"build": "nx run-many --target=build --all",
 		"start": "nx start @listening-party/server",
-		"lint": "nx run-many --target=lint --all",
-		"test": "nx run-many --target=test --all",
-		"graph": "nx graph"
+		"graph": "nx graph",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"husky": "^8.0.0",
+		"nx": "^14.8.4"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "npm run test && npm run format && npm run lint"
+		}
 	},
 	"keywords": [
 		"P2P",
@@ -20,9 +32,5 @@
 		"Music",
 		"Music"
 	],
-	"author": "Paul Lavender-Jones",
-	"license": "MIT",
-	"devDependencies": {
-		"nx": "^14.8.4"
-	}
+	"private": true
 }
