@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import { createServer } from "./createServer";
-
 dotenv.config();
+
+import { createServer } from "./createServer";
 
 const port = Number.parseInt(process.env.PORT!) || 8080;
 

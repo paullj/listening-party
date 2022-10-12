@@ -9,35 +9,36 @@ import { FeedProvider } from "./context/FeedContext";
 import { MeshProvider } from "./context/MeshContext";
 import { QueueProvider } from "./context/QueueContext";
 
-const HomePage = lazy(() => import("./routes/Home"));
-const RoomPage = lazy(() => import("./routes/Room"));
-const ErrorPage = lazy(() => import("./routes/Error"));
+import HomePage from "./routes/Home";
+import RoomPage from "./routes/Room";
+import ErrorPage from "./routes/Error";
+// const RoomPage = lazy(() => import("./routes/Room"));
 
 function App() {
-	return (
-		<BrowserRouter>
-			<SocketProvider>
-				<RoomProvider>
-					<Routes>
-						<Route path="/" element={<HomePage />} />
-						<Route
-							path="/room/:id"
-							element={
-								<QueueProvider>
-									<FeedProvider>
-										<MeshProvider>
-											<RoomPage />
-										</MeshProvider>
-									</FeedProvider>
-								</QueueProvider>
-							}
-						/>
-						<Route path="/error" element={<ErrorPage />} />
-					</Routes>
-				</RoomProvider>
-			</SocketProvider>
-		</BrowserRouter>
-	);
+  return (
+    <BrowserRouter>
+      <SocketProvider>
+        <RoomProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/room/:id"
+              element={
+                <QueueProvider>
+                  <FeedProvider>
+                    <MeshProvider>
+                      <RoomPage />
+                    </MeshProvider>
+                  </FeedProvider>
+                </QueueProvider>
+              }
+            />
+            <Route path="/error" element={<ErrorPage />} />
+          </Routes>
+        </RoomProvider>
+      </SocketProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;
