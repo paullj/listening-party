@@ -11,5 +11,5 @@ RUN pnpm install
 COPY . .
 EXPOSE $PORT
 ENV PORT=$PORT                                                                                                       
-RUN pnpm build
+RUN pnpm build --projects=@listening-party/server
 CMD pnpm start
