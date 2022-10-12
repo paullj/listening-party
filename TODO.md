@@ -1,4 +1,4 @@
-Features
+## Features
 - [x] Add Chakra UI
 - [x] Add idea of owner of room
 - [x] Add tracks to rooms
@@ -10,21 +10,17 @@ Features
 - [ ] Ping/pong to check if user is alive
 - [ ] Delete empty rooms
 
-- [ ] Restrict backend to certain domains
-	- put front end and backend on same domain 
-		- would solve this
-		- and make auth easier
-
 - [ ] Auth: Spotify, Deezer, Youtube
 - [ ] Use redis for caching and maybe also rooms??????
 
-Bugs
+- [ ] 
+
+## Bugs
 - Dark mode colours for lots of things need adjusting
 - Requesting sync seems out of whack, doesn't update after initial
 
-
-Search results
-
+## Other ideas
+### Search results
 - Search cache first
 - Search on LastFm
 	- For each result
