@@ -1,6 +1,5 @@
 {
 	"name": "@listening-party/server",
-	"version": "1.0.0",
 	"description": "Express server hosted",
 	"main": "/dist/index.js",
 	"scripts": {
@@ -10,9 +9,6 @@
 		"build": "pnpm clean && NODE_ENV=production tsc --project tsconfig.build.json",
 		"start": "NODE_ENV=production node ./dist/index.js"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"dependencies": {
 		"@listening-party/app": "workspace:*",
 		"@listening-party/core": "workspace:*",

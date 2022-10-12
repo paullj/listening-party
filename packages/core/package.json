@@ -2,11 +2,21 @@
 	"private": true,
 	"name": "@listening-party/core",
 	"description": "Shared types",
-	"scripts": {},
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"test": "jest",
+		"dev": "nodemon -w src -i **.test.ts src/index.ts",
+		"clean": "rimraf ./dist",
+		"build": "pnpm clean && NODE_ENV=production tsc --project tsconfig.build.json",
+		"start": "NODE_ENV=production node ./dist/index.js"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
+		"jest": "^29.0.1",
+		"rimraf": "^3.0.2",
 		"typescript": "^4.8.4"
 	}
 }
