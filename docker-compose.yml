@@ -1,0 +1,18 @@
+version: "3"
+services:
+  node-docker:
+    environment:
+      - NODE_ENV=production
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/usr/base
+      - ./:/usr/builder
+      - ./:/usr/app
+    container_name: listening-party
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    command: pnpm start

@@ -1,4 +1,4 @@
-Features
+## Features
 - [x] Add Chakra UI
 - [x] Add idea of owner of room
 - [x] Add tracks to rooms
@@ -6,20 +6,24 @@ Features
 - [x] Send tracks over RTC
 - [x] Sync of data in room
 - [ ] Add votes to tracks
+	- [ ] Make votes for pause and skip as well
 - [ ] Ping/pong to check if user is alive
 - [ ] Delete empty rooms
 
-- [ ] Restrict backend to certain domains
 - [ ] Auth: Spotify, Deezer, Youtube
 - [ ] Use redis for caching and maybe also rooms??????
 
-Bugs
+- [ ] Add prettier
+- [ ] Add eslint
+- [ ] Add Jest
+- [ ] Add Husky
+
+## Bugs
 - Dark mode colours for lots of things need adjusting
-- Requesting sync seems out of whack, doesn;t update after initial
+- Requesting sync seems out of whack, doesn't update after initial
 
-
-Search results
-
+## Other ideas
+### Search results
 - Search cache first
 - Search on LastFm
 	- For each result

@@ -1,0 +1,38 @@
+{
+	"name": "@listening-party/app",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "pnpm clean && NODE_ENV=production tsc && vite build",
+		"clean": "rimraf ./dist",
+		"preview": "vite preview",
+		"postinstall": "xstate typegen \"./src/**/*.ts?(x)\""
+	},
+	"dependencies": {
+		"@chakra-ui/react": "^2.3.5",
+		"@emotion/react": "^11.10.4",
+		"@emotion/styled": "^11.10.4",
+		"@listening-party/core": "workspace:*",
+		"@radix-ui/react-icons": "^1.1.1",
+		"@xstate/react": "^3.0.1",
+		"boring-avatars": "^1.7.0",
+		"framer-motion": "^7.5.2",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^6.4.1",
+		"react-spotify-web-playback": "^0.10.0",
+		"timeago.js": "^4.0.2",
+		"xstate": "^4.33.6"
+	},
+	"devDependencies": {
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"@vitejs/plugin-react": "^2.1.0",
+		"@xstate/cli": "^0.3.3",
+		"prettier": "^2.7.1",
+		"rimraf": "^3.0.2",
+		"typescript": "^4.8.4",
+		"vite": "^3.1.4"
+	}
+}

@@ -1,0 +1,15 @@
+Dockerfile
+docker*.yml
+node_modules
+**/*node_modules
+dist
+**/*dist
+.git
+.gitignore
+.editorconfig
+.config
+.npm
+.vscode
+LICENSE
+**.md
+**/*logs
