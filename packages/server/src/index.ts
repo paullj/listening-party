@@ -1,6 +1,12 @@
 import dotenv from "dotenv";
-import { createApp } from "./app";
+import { createServer } from "./createServer";
 
 dotenv.config();
 
-createApp();
+const port = Number.parseInt(process.env.PORT!) || 8080;
+
+const server = createServer();
+
+server.listen(port, () => {
+  console.log(`Server started on port ${port} :)`);
+});

@@ -2,14 +2,13 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 
-import router from "../routes";
-import { createSocketServer } from "../sockets";
+import router from "./routes";
+import { createSocketServer } from "./sockets";
 import http from "http";
 
 import path from "path";
 
-const createApp = () => {
-  const port = Number.parseInt(process.env.PORT!) || 8080;
+const createServer = () => {
   const production = process.env.NODE_ENV === "production";
 
   const app = express();
@@ -23,7 +22,7 @@ const createApp = () => {
 
   createSocketServer(server);
 
-  if (!production) {
+  if (production) {
     const appDir = path.join(__dirname, "../../", "app");
     app.use(express.static(path.join(appDir, "dist")));
     app.use(express.static(path.join(appDir, "public")));
@@ -33,9 +32,7 @@ const createApp = () => {
     });
   }
 
-  server.listen(port, () => {
-    console.log(`Server started on port ${port} :)`);
-  });
+  return server;
 };
 
-export { createApp };
+export { createServer };
