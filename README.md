@@ -1,6 +1,6 @@
 # Listening Party
 
-Full-stack TypeScript app for a shared peer-to-peer music queue between friends. React frontend with state machines, docker-ised node backend with WebSocket signalling server for peer-to-peer WebRTC.
+Full-stack TypeScript app for a shared peer-to-peer music queue between you and your friends. React frontend with state machines, docker-ised node backend with WebSocket signalling server for peer-to-peer WebRTC.
 
 ## What is this?
 This web app lets users joins rooms and add songs to a shared queue. Users can search Spotify for songs to add to the queue.

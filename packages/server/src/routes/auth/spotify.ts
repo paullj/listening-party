@@ -61,4 +61,4 @@ spotify.get("/token", (request, response) => {
 	response.status(200).json({ access_token: access_token });
 });
 
-export { spotify };
+export default spotify;

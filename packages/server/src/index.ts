@@ -9,8 +9,10 @@ import { createSocketServer, rooms } from "./createServer";
 import http from "http";
 
 import { getSearch } from "./search";
+import path from "path";
 
 const port = Number.parseInt(process.env.PORT!) || 8080;
+const production = process.env.NODE_ENV === "production";
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +36,13 @@ app.use(router);
 // app.get("/api/search/:query", getSearch);
 
 createSocketServer(server);
+
+if (production) {
+	const appDir = path.join(__dirname, "../../", "app");
+
+	app.use(express.static(path.join(appDir, "dist")));
+	app.use(express.static(path.join(appDir, "public")));
+}
 
 server.listen(port, () => {
 	console.log(`Server started on port ${port} :)`);

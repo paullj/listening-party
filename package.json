@@ -1,0 +1,28 @@
+{
+	"name": "listening-party",
+	"version": "1.0.0",
+	"description": "A shared peer-to-peer music queue for you and your friends",
+	"private": true,
+	"scripts": {
+		"clean": "nx run-many --target=clean --all",
+		"dev": "nx run-many --target=dev --all",
+		"build": "nx run-many --target=build --all",
+		"start": "nx start @listening-party/server",
+		"lint": "nx run-many --target=lint --all",
+		"test": "nx run-many --target=test --all",
+		"graph": "nx graph"
+	},
+	"keywords": [
+		"P2P",
+		"WebRTC",
+		"React",
+		"Express",
+		"Music",
+		"Music"
+	],
+	"author": "Paul Lavender-Jones",
+	"license": "MIT",
+	"devDependencies": {
+		"nx": "^14.8.4"
+	}
+}

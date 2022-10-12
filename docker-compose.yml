@@ -2,13 +2,13 @@ version: "3"
 services:
   node-docker:
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
       - ./:/usr/app
-    container_name: node-express-docker
+    container_name: listening-party
     expose:
       - "8080"
     ports:

@@ -1,8 +1,8 @@
 import express from "express";
 
-import spotify from "./spotify";
+import rooms from "./rooms";
 
 const router = express.Router();
-router.use("/spotify", spotify);
+router.use("/rooms", rooms);
 
 export default router;
