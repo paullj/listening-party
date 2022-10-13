@@ -26,12 +26,12 @@ router.use("/:query", cache("5 minutes"), async (request, response) => {
         artist: track.artist,
         mbid: track.mbid,
       });
-      const videoSearch = await youtube.videos
-        .search({
-          q: `${track.name} ${track.artist}`,
-          maxResults: 1,
-        })
-        .catch((error) => console.log(error));
+      // const videoSearch = await youtube.videos
+      //   .search({
+      //     q: `${track.name} ${track.artist}`,
+      //     maxResults: 1,
+      //   })
+      //   .catch((error) => console.log(error));
 
       return {
         title: lastFmInfo.name,
