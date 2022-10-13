@@ -21,11 +21,16 @@ import type { Server } from "http";
 import type { SocketEvent, SocketEventData } from "../models/socket";
 import type { WebSocket } from "ws";
 
+WebSocketServer.prototype.shouldHandle = (request) => {
+  return request.url?.startsWith("/ws") ?? false;
+};
+
 const createSocketServer = (httpServer: Server) => {
   const server = new WebSocketServer({ server: httpServer });
 
   server.on("connection", (socket: WebSocket, request) => {
     const incommingId = request?.url?.split("/").pop();
+
     // TODO: When using redis for all connections, make sure no ids overlap
     // FIXME: Can't use multiple windows if you use this
     // const userId: string = incommingId ?? generateUUID();

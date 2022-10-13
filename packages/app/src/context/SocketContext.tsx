@@ -5,42 +5,44 @@ import type { PropsWithChildren } from "react";
 import type { SocketEventType, SocketEventDataMap } from "../models/socket";
 
 const getDispatcher = () => {
-	let socketEndpoint =  import.meta.env.DEV ?
-		import.meta.env.VITE_SOCKET_ENDPOINT : 
-((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host;
-	const socketId = localStorage.getItem("socketId");
-	if (socketId) {
-		socketEndpoint += `/${socketId}`;
-	}
-	return new WebSocketDispatcher<SocketEventDataMap>(socketEndpoint);
+  const socketProtocol =
+    window.location.protocol === "https:" ? "wss://" : "ws://";
+  let socketEndpoint = `${socketProtocol}${window.location.host}/ws`;
+
+  const socketId = localStorage.getItem("socketId");
+  if (socketId) {
+    socketEndpoint += `/${socketId}`;
+  }
+  console.log(socketEndpoint);
+  return new WebSocketDispatcher<SocketEventDataMap>(socketEndpoint);
 };
 
 const socket = getDispatcher();
 
 type Callback<T extends SocketEventType> = (
-	data: SocketEventDataMap[T]
+  data: SocketEventDataMap[T]
 ) => void;
 
 const SocketContext = createContext({
-	socket,
-	reconnect: () => {},
+  socket,
+  reconnect: () => {},
 });
 
 const SocketProvider = ({ children }: PropsWithChildren) => {
-	const [dispatcher, setDispatcher] = useState(socket);
+  const [dispatcher, setDispatcher] = useState(socket);
 
-	const handleReconnect = () => {
-		const newDispatcher = getDispatcher();
-		setDispatcher(newDispatcher);
-	};
+  const handleReconnect = () => {
+    const newDispatcher = getDispatcher();
+    setDispatcher(newDispatcher);
+  };
 
-	return (
-		<SocketContext.Provider
-			value={{ socket: dispatcher, reconnect: handleReconnect }}
-		>
-			{children}
-		</SocketContext.Provider>
-	);
+  return (
+    <SocketContext.Provider
+      value={{ socket: dispatcher, reconnect: handleReconnect }}
+    >
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 const useSocketContext = () => useContext(SocketContext);

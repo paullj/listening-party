@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import router from "./routes";
@@ -10,12 +11,12 @@ import path from "path";
 
 const createServer = () => {
   const production = process.env.NODE_ENV === "production";
-
   const app = express();
-  app.use(bodyParser.json());
   const server = http.createServer(app);
 
+  app.use(bodyParser.json());
   app.use(express.json());
+  app.use(cookieParser());
   app.use(cors());
 
   app.use(router);
