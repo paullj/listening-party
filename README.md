@@ -2,7 +2,9 @@
 
 Full-stack TypeScript app for a shared peer-to-peer music queue between you and your friends.
 
-**NOTE:** This is a WIP project, many features will not work or have not been implemented yet.
+[Link to deployed app](https://test-d20m.onrender.com/)
+
+**NOTE:** Since I am using the free tier of render.com it might take a while to load. Also this is a WIP project, many features will not work or have not been implemented yet.
 
 ### What is it?
 This web app lets users joins rooms and add songs to a shared queue. Users can search Youtube (will eventually support other platforms) for songs to add to the queue.
