@@ -15,7 +15,6 @@ import { useQueueContext } from "../../context/QueueContext";
 import { useBroadcastAction } from "../../hooks/useBroadcastAction";
 import type { Track } from "../../models/track";
 import TrackItem from "../shared/TrackItem";
-import debounce from "lodash.debounce";
 import { useSearch } from "../../hooks/useSearch";
 
 interface SearchModalProps {
