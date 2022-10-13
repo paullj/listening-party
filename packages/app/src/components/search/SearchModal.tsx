@@ -8,9 +8,10 @@ import {
   InputGroup,
   Stack,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { ChangeEventHandler, useCallback, useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import { useQueueContext } from "../../context/QueueContext";
 import { useBroadcastAction } from "../../hooks/useBroadcastAction";
 import type { Track } from "../../models/track";
@@ -27,7 +28,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const queueContext = useQueueContext();
   const addTrackToQueueAction = useBroadcastAction("AddTrackToQueue");
 
-  const { results } = useSearch(query);
+  const { results, isLoading } = useSearch(query);
 
   const handleChangeQuery: ChangeEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
@@ -50,7 +51,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
         <ModalOverlay />
         <ModalContent>
           <ModalBody py={5}>
-            <InputGroup variant="flushed" mb={4}>
+            <InputGroup variant="flushed">
               <InputLeftElement
                 color="gray.700"
                 pointerEvents="none"
@@ -62,15 +63,21 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                 onChange={handleChangeQuery}
               />
             </InputGroup>
-            <Stack>
-              {results?.map((track, i) => (
-                <TrackItem key={i} {...track}>
-                  <Button size="sm" onClick={() => handleAddToQueue(track)}>
-                    Add
-                  </Button>
-                </TrackItem>
-              )) ?? null}
-            </Stack>
+            {isLoading || results?.length > 0 ? (
+              <Stack mt={4}>
+                {isLoading ? (
+                  <Text>Loading...</Text>
+                ) : (
+                  results.map((track, i) => (
+                    <TrackItem key={i} {...track}>
+                      <Button size="sm" onClick={() => handleAddToQueue(track)}>
+                        Add
+                      </Button>
+                    </TrackItem>
+                  ))
+                )}
+              </Stack>
+            ) : null}
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -144,7 +144,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
                 </Stack>
               </Button>
             </Tooltip>
-            <Tooltip label="Coming Soon!" hasArrow>
+            <Tooltip label="Spotify Coming Soon!" hasArrow>
               <IconButton
                 aria-label="Spotify"
                 icon={<FaSpotify />}
@@ -153,7 +153,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
                 size="sm"
               />
             </Tooltip>
-            <Tooltip label="Coming Soon!" hasArrow>
+            <Tooltip label="Deezer Coming Soon!" hasArrow>
               <IconButton
                 aria-label="Deezer"
                 icon={<FaDeezer />}

@@ -74,7 +74,8 @@ const Home = () => {
               Deezer*
             </Text>{" "}
             to a shared queue.
-            <Text fontSize="sm" mt={2}>
+            <br />
+            <Text as="span" fontSize="sm" mt={2}>
               * Coming soon!
             </Text>
           </Text>

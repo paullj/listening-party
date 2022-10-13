@@ -34,11 +34,12 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
           <Text>Up Next:</Text>
         </Heading>
         {upNext ? (
-          <TrackItem {...upNext}>
+          <TrackItem {...upNext} album={""} duration={0}>
             <IconButton
               size="xs"
               _hover={{ bg: bgHover }}
               _active={{ bg: bgActive }}
+              disabled
               aria-label="Leave room"
               icon={<Cross1Icon />}
             />
@@ -61,6 +62,7 @@ const RoomQueueTabPanel = (props: RoomQueuePanelProps) => {
               >
                 <IconButton
                   size="xs"
+                  disabled
                   _hover={{ bg: bgHover }}
                   _active={{ bg: bgActive }}
                   aria-label="Leave room"
