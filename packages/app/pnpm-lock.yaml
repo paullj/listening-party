@@ -7,6 +7,7 @@ specifiers:
   '@radix-ui/react-icons': ^1.1.1
   '@types/react': ^18.0.21
   '@types/react-dom': ^18.0.6
+  '@types/spotify-web-playback-sdk': ^0.1.15
   '@vitejs/plugin-react': ^2.1.0
   '@xstate/cli': ^0.3.3
   '@xstate/react': ^3.0.1
@@ -43,6 +44,7 @@ dependencies:
 devDependencies:
   '@types/react': 18.0.21
   '@types/react-dom': 18.0.6
+  '@types/spotify-web-playback-sdk': 0.1.15
   '@vitejs/plugin-react': 2.1.0_vite@3.1.4
   '@xstate/cli': 0.3.3_prettier@2.7.1
   prettier: 2.7.1
@@ -1635,6 +1637,10 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+
+  /@types/spotify-web-playback-sdk/0.1.15:
+    resolution: {integrity: sha512-DBXmPajTtrm4Ykf2waHZAW6UR6Jqv8fKRTTDfXcSkse2VzF9uDdj7gb4mcwKMxdDrjJ4npy4EbnxH/xxuiKtoQ==}
+    dev: true
 
   /@vitejs/plugin-react/2.1.0_vite@3.1.4:
     resolution: {integrity: sha512-am6rPyyU3LzUYne3Gd9oj9c4Rzbq5hQnuGXSMT6Gujq45Il/+bunwq3lrB7wghLkiF45ygMwft37vgJ/NE8IAA==}

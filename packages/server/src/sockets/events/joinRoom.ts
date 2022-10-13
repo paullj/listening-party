@@ -25,19 +25,37 @@ const joinRoom: SocketEventHandler<"JoinRoom"> = (userId, socket, data) => {
       room.connections.set(userId, socket);
       if (room.hostId === "" || !room.connections.has(room.hostId)) {
         room.hostId = userId;
-        broadcastToRoom("TransferHost", data.roomId, userId, {
-          hostId: room.hostId,
-        });
+        broadcastToRoom(
+          "TransferHost",
+          data.roomId,
+          userId,
+          {
+            hostId: room.hostId,
+          },
+          false
+        );
       }
-      sendInRoom("JoinSuccesful", roomId, userId, {
-        roomId,
-        hostId: room.hostId,
-        roomName: room.name,
-      });
-      broadcastToRoom("AddPeer", roomId, userId, {
+      sendInRoom(
+        "JoinSuccesful",
         roomId,
         userId,
-      });
+        {
+          roomId,
+          hostId: room.hostId,
+          roomName: room.name,
+        },
+        false
+      );
+      broadcastToRoom(
+        "AddPeer",
+        roomId,
+        userId,
+        {
+          roomId,
+          userId,
+        },
+        false
+      );
     }
     return;
   }

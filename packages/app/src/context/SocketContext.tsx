@@ -13,7 +13,7 @@ const getDispatcher = () => {
   if (socketId) {
     socketEndpoint += `/${socketId}`;
   }
-  console.log(socketEndpoint);
+
   return new WebSocketDispatcher<SocketEventDataMap>(socketEndpoint);
 };
 

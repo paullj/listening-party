@@ -10,7 +10,9 @@ import {
   useColorMode,
   Spacer,
   Button,
+  Fade,
 } from "@chakra-ui/react";
+import { FaLastfm, FaYoutube, FaSpotify, FaDeezer } from "react-icons/fa";
 
 import { ResetIcon, SunIcon, MoonIcon } from "@radix-ui/react-icons";
 import { useRoomContext } from "../../context/RoomContext";
@@ -38,6 +40,14 @@ const RoomSidebar = (props: RoomSidebarProps) => {
     }))
   );
 
+  const openAuthWindow = () => {
+    window.open(
+      `/auth/spotify/login?room=${roomId}`,
+      "Spotify Window",
+      "left=100,top=100,width=640,height=1000"
+    );
+  };
+
   return (
     <>
       <Box w="full" h="full" padding={2}>
@@ -63,7 +73,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
           />
         </Stack>
         {/* Heading */}
-        <Heading>
+        <Heading mb={4}>
           <Text as="span" fontSize={{ base: "2xl", md: "3xl" }}>
             {roomName}
           </Text>
@@ -77,7 +87,7 @@ const RoomSidebar = (props: RoomSidebarProps) => {
           </Badge>
         </Heading>
         {/* Attendees */}
-        <Box>
+        <Box mb={8}>
           <Heading as="h3" flex={1}>
             <Flex alignItems="center">
               <Text as="span" fontSize={{ base: "lg" }}>
@@ -90,12 +100,12 @@ const RoomSidebar = (props: RoomSidebarProps) => {
               <SyncButton></SyncButton>
             </Flex>
           </Heading>
-          <Stack direction="column" spacing={2}>
+          <Stack direction="column" spacing={2} mt={1}>
             <Flex alignItems="center" fontStyle="italic">
               <AvatarWithName
                 userId={userId}
                 username={`${userId.slice(0, 6)} ${
-                  hostId === userId ? "(Host)" : ""
+                  hostId === userId ? "(Me, Host)" : "(Me)"
                 }`}
               />
             </Flex>
@@ -110,6 +120,48 @@ const RoomSidebar = (props: RoomSidebarProps) => {
                 }`}
               />
             ))}
+          </Stack>
+        </Box>
+        <Box>
+          <Heading as="h3" flex={1}>
+            <Flex alignItems="center">
+              <Text as="span" fontSize={{ base: "lg" }}>
+                Integrations
+              </Text>
+            </Flex>
+          </Heading>
+          <Stack direction="row" mt={2}>
+            <Tooltip label="Last.fm + Youtube" hasArrow>
+              <Button
+                colorScheme="red"
+                aria-label="Last.fm and Youtube"
+                size="sm"
+              >
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <FaLastfm />
+                  <Text>+</Text>
+                  <FaYoutube />
+                </Stack>
+              </Button>
+            </Tooltip>
+            <Tooltip label="Coming Soon!" hasArrow>
+              <IconButton
+                aria-label="Spotify"
+                icon={<FaSpotify />}
+                disabled
+                onClick={() => openAuthWindow()}
+                size="sm"
+              />
+            </Tooltip>
+            <Tooltip label="Coming Soon!" hasArrow>
+              <IconButton
+                aria-label="Deezer"
+                icon={<FaDeezer />}
+                disabled
+                onClick={() => openAuthWindow()}
+                size="sm"
+              />
+            </Tooltip>
           </Stack>
         </Box>
       </Box>

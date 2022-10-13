@@ -2,18 +2,17 @@
 
 Full-stack TypeScript app for a shared peer-to-peer music queue between you and your friends.
 
+**NOTE:** This is a WIP project, many features will not work or have not been implemented yet.
+
 ### What is it?
-This web app lets users joins rooms and add songs to a shared queue. Users can search Spotify (eventually will support Youtube and Deezer) for songs to add to the queue.
+This web app lets users joins rooms and add songs to a shared queue. Users can search Youtube (will eventually support other platforms) for songs to add to the queue.
 
-Users can either just add songs and vote or also play music along with the room. ie. If you are in the same room/car you can join as a voter or if you are remote you can all listen* to a synced music queue.
-
-**A paid spotify account is required to play songs.*
+Users can either just add songs and vote or also play music along with the room. ie. If you are in the same room/car you can join as a voter or if you are remote you can all listen to a synced music queue.
 
 ### Why?
 Have you ever been in a car, at home, or in an office where everybody wants to listen and add songs to the queue?
 
 This project is partly for fun and to show a production ready application.
-
 
 ## Project Overview
 This monorepo contains all the code required to run Listening Party, it is split into 3 packages:

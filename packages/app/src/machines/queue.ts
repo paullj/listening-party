@@ -7,9 +7,11 @@ import type {
 import type { Track } from "../models/track";
 
 interface QueueContext {
+	isPlaying: boolean;
 	history: WithIdentifier<Track>[];
 	nowPlaying: WithIdentifier<Track> | null;
 	queue: WithIdentifier<Track>[];
+	elapsed: number;
 }
 
 type QueueEvent =
@@ -23,7 +25,10 @@ type QueueEvent =
 			action: PeerAction;
 	  }
 	| { type: "NEXT_TRACK" }
-	| { type: "PREV_TRACK" };
+	| { type: "PREV_TRACK" }
+	| { type: "SET_ELAPSED"; time: number }
+	| { type: "TOGGLE_PLAY" }
+	| { type: "SET_PLAY"; playing: boolean };
 
 interface QueueSchema {
 	context: QueueContext;
@@ -31,9 +36,11 @@ interface QueueSchema {
 }
 
 const initialContext: QueueContext = {
+	isPlaying: false,
 	history: [],
 	nowPlaying: null,
 	queue: [],
+	elapsed: 0,
 };
 
 const queueMachine = createMachine(
@@ -73,6 +80,12 @@ const queueMachine = createMachine(
 						cond: "hasQueue",
 						actions: "nextTrack",
 					},
+					SET_ELAPSED: {
+						actions: "setElapsed",
+					},
+					TOGGLE_PLAY: {
+						actions: "togglePlay",
+					},
 				},
 			},
 		},
@@ -89,9 +102,11 @@ const queueMachine = createMachine(
 		services: {},
 		actions: {
 			clearQueue: assign((context, event) => ({
+				isPlaying: false,
 				history: [],
 				nowPlaying: null,
 				queue: [],
+				elapsed: 0,
 			})),
 			addToQueue: assign((context, event) => {
 				const track: WithIdentifier<Track> = {
@@ -103,6 +118,7 @@ const queueMachine = createMachine(
 					return {
 						...context,
 						nowPlaying: track,
+						isPlaying: true,
 					};
 				} else {
 					return {
@@ -117,6 +133,8 @@ const queueMachine = createMachine(
 					: context.queue,
 				nowPlaying: context.history[0],
 				history: context.history.slice(1),
+				elapsed: 0,
+				isPlaying: true,
 			})),
 			nextTrack: assign((context) => ({
 				queue: context.queue.slice(1),
@@ -124,7 +142,16 @@ const queueMachine = createMachine(
 				history: context.nowPlaying
 					? [context.nowPlaying, ...context.history]
 					: context.history,
+				elapsed: 0,
+				isPlaying: true,
 			})),
+			setElapsed: assign({
+				elapsed: (_, event) => event.time,
+			}),
+			togglePlay: assign({
+				isPlaying: (context) =>
+					!context.isPlaying && context.nowPlaying !== null,
+			}),
 		},
 	}
 );

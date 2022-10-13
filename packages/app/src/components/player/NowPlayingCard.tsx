@@ -2,21 +2,23 @@ import { Text, Box, Flex, AspectRatio } from "@chakra-ui/react";
 import { useSelector } from "@xstate/react";
 import { useQueueContext } from "../../context/QueueContext";
 import TrackItem from "../shared/TrackItem";
+import SpotifyWebPlayback from "./SpotifyPlayer";
 
 interface NowPlayingCardProps {}
 
 const NowPlayingCard = (props: NowPlayingCardProps) => {
-	const queueService = useQueueContext();
-	const nowPlaying = useSelector(
-		queueService,
-		(state) => state.context.nowPlaying
-	);
+  const queueService = useQueueContext();
+  const nowPlaying = useSelector(
+    queueService,
+    (state) => state.context.nowPlaying
+  );
 
-	// TODO: replace this with an actual now playing card
-	return (
-		<>
-			{nowPlaying ? <TrackItem {...nowPlaying}></TrackItem> : null}
-			{/* <Flex direction="row" alignItems="center">
+  // TODO: replace this with an actual now playing card
+  return (
+    <>
+      {nowPlaying ? <TrackItem {...nowPlaying}></TrackItem> : null}
+      {/* <SpotifyWebPlayback></SpotifyWebPlayback> */}
+      {/* <Flex direction="row" alignItems="center">
 				<Box w="100px" h="100px">
 					<AspectRatio
 						flexShrink={0}
@@ -36,7 +38,7 @@ const NowPlayingCard = (props: NowPlayingCardProps) => {
 					<Text>{nowPlaying?.album}</Text>
 				</Box>
 			</Flex> */}
-		</>
-	);
+    </>
+  );
 };
 export default NowPlayingCard;
